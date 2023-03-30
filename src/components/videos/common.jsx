@@ -1,10 +1,11 @@
 import { Avatar, Group, Text, Tooltip } from "@mantine/core";
 import { IconCheck } from "@tabler/icons-react";
+import TextWithTooltip from "../util/TextWithTooltip";
 
 export function Channel(props) {
     return (
         <Group align="center" spacing="xs">
-            {props.channel?.avatar && <Avatar size="sm" radius="xl" src={props.channel?.avatar} />}
+            {props.channel?.avatar && <Avatar size="sm" radius="xl" src={props.channel?.avatar} imageProps={{ loading: "lazy" }} />}
             <Text>
                 {props.channel?.title}
             </Text>
@@ -18,11 +19,10 @@ export function Channel(props) {
 }
 
 export function MiniInfo(props) {
+    if(!props.viewCount && !props.published && !props.dateText) return <></>;
     return (
-        <Text inherit c="dimmed" fz="sm">
-            <Text inherit>
+        <TextWithTooltip inherit c="dimmed" fz="sm" lineClamp={props.size && 1}>
                 {props.viewCount} - {props.published || props.dateText}
-            </Text>
-        </Text>
+        </TextWithTooltip>
     );
 }

@@ -68,7 +68,7 @@ class APIController {
     // -- instances --
 
     async getAllInstances() {
-        let final = [{
+        let final = [/* {
             type: "yt",
             list: [
                 {
@@ -76,7 +76,7 @@ class APIController {
                     host: "https://youtube.com",
                 },
             ],
-        }];
+        } */];
 
         for(let platform of Platforms) {
             try {

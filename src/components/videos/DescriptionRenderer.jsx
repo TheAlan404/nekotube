@@ -1,4 +1,4 @@
-import { Box, Button, Center, Collapse, Grid, Text, TypographyStylesProvider } from '@mantine/core';
+import { Box, Button, Center, Collapse, Grid, Text, Tooltip, TypographyStylesProvider } from '@mantine/core';
 import { useDisclosure, useScrollIntoView } from '@mantine/hooks';
 import React, { useEffect } from 'react';
 import useFormatter from '../../hooks/useFormatter';
@@ -36,9 +36,9 @@ export default function DescriptionRenderer({ description }) {
                     </Center>
                 </Grid.Col>
                 <Grid.Col span="content">
-                    <Box h="100%" bg="dark" w="sm" onClick={close}>
-                        
-                    </Box>
+                    <Tooltip.Floating c="gray" label="Click to collapse description">
+                        <Box h="100%" bg="dark" w="sm" onClick={close} style={{ cursor: "pointer" }} />
+                    </Tooltip.Floating>
                 </Grid.Col>
             </Grid>
         </Collapse>}

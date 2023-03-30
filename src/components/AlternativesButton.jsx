@@ -42,6 +42,12 @@ export default function AlternativesButton() {
 						</ActionIcon></Tooltip>
 				</Menu.Target>
 				<Menu.Dropdown>
+					<Menu.Item
+						icon={icons.yt}
+						component="a"
+						href={"https://youtube.com/watch?" + createQuery({ v: getQueryLoc(location, "v") })}>
+						YouTube
+					</Menu.Item>
 					{alts.length ? <>
 						{alts.map(({ type, list }, i) => (
 							<Box key={i}>

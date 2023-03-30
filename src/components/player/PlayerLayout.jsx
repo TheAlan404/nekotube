@@ -3,19 +3,21 @@ import { useHover } from '@mantine/hooks';
 import React, { useContext } from 'react'
 import { PlayerContext } from '../../contexts/PlayerContext';
 import { SettingsContext } from '../../contexts/SettingsContext';
+import { UIContext } from '../../contexts/UIContext';
 import PlayerControls from './PlayerControls';
 import PlayerProgressBar from './PlayerProgressBar';
 
 const PlayerLayout = () => {
     const ctx = useContext(PlayerContext);
     const pref = useContext(SettingsContext);
+    const [{ hoveredTime }] = useContext(UIContext);
     const { ref, hovered } = useHover();
 
     return (
         <Box
             ref={ref}>
             <Transition
-                mounted={(ctx.paused || hovered || pref.keepControls)}
+                mounted={(ctx.paused || hovered || pref.keepControls || (hoveredTime > 0))}
                 transition="fade"
                 duration={200}>
                 {(styles) => <Overlay

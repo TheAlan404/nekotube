@@ -41,7 +41,11 @@ export const timestampRegex = new RegExp(/([0-9]{1,2}:)?[0-9]{1,2}:[0-9]{1,2}/g)
 const fixup = (s) => s.trim().startsWith("-") ? s.trim().replace("-", "").trim() : s.trim();
 
 export function parseChapters(text = "") {
-    let lines = text.split(/\n+/g);
+    text = text.replace(/\n/g, "<br>");
+    text = text.replace(/(<a href\=\")(.+)(\">)(.+)(<\/a>)/g, (match, p1, uri, p3, content, p5) => {
+        return content;
+    });
+    let lines = text.split(/<br>+/g);
     let chapters = [];
     for(let line of lines) {
         let matches = line.match(timestampRegex);
@@ -54,7 +58,7 @@ export function parseChapters(text = "") {
 
     return chapters
         .sort((a, b) => a.time - b.time)
-        .map(c => ({ time: c.time, name: fixup(c.name) }));
+        .map((c, i) => ({ time: c.time, name: fixup(c.name), i }));
 }
 
 export function calcChapterSegments({
@@ -64,6 +68,28 @@ export function calcChapterSegments({
 }) {
     if(!chapters || !chapters.length) return [{ pos: [0, 100], value: progress / duration * 100 }];
     let segments = [];
+
+    if(chapters[0].time > 0) {
+        let startTime = 0;
+        let endTime = chapters[0]?.time || duration;
+
+        let startPer = startTime / duration;
+        let endPer = (endTime / duration) - startPer;
+
+        let value = Math.min(
+            1,
+            Math.max(
+                0,
+                (progress - startTime) / (endTime - startTime)
+            )
+        );
+
+        segments.push({
+            pos: [startPer * 100, endPer * 100],
+            value: value * 100,
+            name: "",
+        });
+    }
 
     for(let i = 0 ; chapters[i] ; i++) {
         let startTime = chapters[i].time;

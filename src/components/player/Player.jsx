@@ -18,7 +18,7 @@ export default function Player() {
     let location = useLocation();
     let video = useContext(VideoContext);
     let [{ useProxy }] = useContext(SettingsContext);
-    let [{ jumpTo }] = useContext(UIContext);
+    let [{ jumpTo, currentChapter, hasChapters }, set] = useContext(UIContext);
 
     let [formats, handlers] = useListState([]);
     let [formatIndex, setFormatIndex] = useState(0);
@@ -93,7 +93,8 @@ export default function Player() {
                 color: "green",
             });
         };
-        ref.current.play().catch(() => {});
+        //ref.current.play().catch(() => {});
+        play();
     }, [video.id]);
 
     useEffect(() => {
@@ -112,7 +113,7 @@ export default function Player() {
     }, []);
 
     useEffect(() => {
-        if(!jumpTo) return;
+        if(jumpTo === undefined) return;
         seekTo(jumpTo);
     }, [jumpTo]);
 
@@ -129,6 +130,7 @@ export default function Player() {
     useEffect(() => {
         if(!ref.current) {
             showNotification({
+                id: "refnull",
                 title: "Error",
                 message: "Video ref doesn't exist",
                 color: "orange",
@@ -145,6 +147,7 @@ export default function Player() {
         if(!ref.current) {
             showNotification({
                 title: "Error",
+                id: "refnull",
                 message: "Video ref doesn't exist",
                 color: "orange",
             });
@@ -156,6 +159,28 @@ export default function Player() {
             setVolume(0.1);
         };
     }, [volume]);
+
+    // -- chapters control --
+
+    useEffect(() => {
+        let list = ([
+            video.chapters,
+            video.descChapters,
+        ].find(x => x.length));
+        if(!list) {
+            if(currentChapter || hasChapters) set({ currentChapter: null, hasChapters: false });
+            return;
+        };
+        let chp = list.findLast(x => x.time <= progress);
+        if(!hasChapters) set({ hasChapters: true });
+        if(!chp) {
+            if(currentChapter) set({ currentChapter: null });
+            return;
+        };
+        if(!currentChapter || currentChapter.i != chp.i) set({ currentChapter: chp });
+    }, [progress, video.chapters, video.descChapters]);
+
+    // hotkeys etc
 
     useHotkeys([
         ["space", togglePause],

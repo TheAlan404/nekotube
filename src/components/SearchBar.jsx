@@ -1,6 +1,6 @@
-import { ActionIcon, Autocomplete, Box, Highlight, MediaQuery, Paper, Popover, Stack, Text, TextInput, useMantineTheme } from '@mantine/core'
+import { ActionIcon, Autocomplete, Box, Group, Highlight, MediaQuery, Paper, Popover, Stack, Text, TextInput, useMantineTheme } from '@mantine/core'
 import { useDebouncedValue, useDisclosure, useHotkeys, useMediaQuery } from '@mantine/hooks';
-import { IconSearch } from '@tabler/icons'
+import { IconPencil, IconSearch } from '@tabler/icons'
 import React, { Component, useEffect, useRef, useState } from 'react'
 import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import useIsMobile from '../hooks/useIsMobile';
@@ -11,6 +11,7 @@ import { getMeta, isChannelID, isPlaylistID, isUrl, isVideoID, VideoIDRegex } fr
 import HorizontalVideoCard from './videos/HorizontalVideoCard';
 
 function SearchBar() {
+    let theme = useMantineTheme();
     let navigate = useNavigate();
     let location = useLocation();
     let isMobile = useIsMobile();
@@ -44,13 +45,13 @@ function SearchBar() {
 
         let { video, channel, playlist } = getMeta(debouncedQuery);
 
-        if(video) {
+        if (video) {
             APIController.video(video).then((data) => {
-                if(data && data.id) setIDRenderer({ ...data, type: "video" });
-            }).catch(() => {});
-        } else if(channel) {
+                if (data && data.id) setIDRenderer({ ...data, type: "video" });
+            }).catch(() => { });
+        } else if (channel) {
 
-        } else if(playlist) {
+        } else if (playlist) {
 
         }
 
@@ -117,10 +118,10 @@ function SearchBar() {
                 close();
 
                 let { video, channel, playlist } = getMeta(query);
-                if(video) navigate("/watch?" + createQuery({ v: video }));
-                else if(channel) navigate("/channel/" + channel);
-                else if(playlist) navigate("/playlist?" + createQuery({ list: playlist }));
-                
+                if (video) navigate("/watch?" + createQuery({ v: video }));
+                else if (channel) navigate("/channel/" + channel);
+                else if (playlist) navigate("/playlist?" + createQuery({ list: playlist }));
+
                 else navigate("/results?" + createQuery({ query }));
                 break;
             }
@@ -172,53 +173,49 @@ function SearchBar() {
                             </Text>
                         </Stack>}
                         {suggestions.map((s, i) =>
-                            <SuggestionItem
-                                key={i}
-                                suggestion={s}
-                                index={i}
-                                query={queryBefore}
-                                onSearch={(q) => setQuery(q)}
-                                p={isMobile ? "sm" : 0}
-                                active={highlightedSuggest === i}
-                            />)}
+                            <Box
+                                sx={(theme) => ({
+                                    backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[0],
+                                    cursor: 'pointer',
+                                    '&:hover': {
+                                        backgroundColor:
+                                            theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[1],
+                                    },
+                                })}
+                                /* TODO hacky way because i couldnt get sx to work */
+                                style={(highlightedSuggest === i) ? {
+                                    backgroundColor:
+                                        theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[1],
+                                } : {}}
+                                onClick={() => {
+                                    navigate("/results?" + (new URLSearchParams({ query: s }).toString()));
+                                    setQuery(s);
+                                }}
+                                p={isMobile ? "sm" : 0}>
+                                <Group position='apart'>
+                                    <Text align='start'>
+                                        {chunkifySearchSuggestions(queryBefore, s).map(({ includes, text }, i) => (
+                                            <Text span c={includes && "dimmed"} key={i}>
+                                                {text}
+                                            </Text>
+                                        ))}
+                                    </Text>
+                                    <Group>
+                                        {isMobile && <ActionIcon onClick={(e) => {
+                                            e.stopPropagation();
+                                            setQuery(s);
+                                            inputRef.current?.select();
+                                        }}>
+                                            <IconPencil />
+                                        </ActionIcon>}
+                                    </Group>
+                                </Group>
+                            </Box>)}
                     </Box>
                 </Popover.Dropdown>
             </Popover>
         </Box >
     )
-}
-
-function SuggestionItem(props) {
-    let navigate = useNavigate();
-    let theme = useMantineTheme();
-
-    return (<Box
-        sx={(theme) => ({
-            backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[0],
-            cursor: 'pointer',
-            '&:hover': {
-                backgroundColor:
-                    theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[1],
-            },
-        })}
-        /* TODO hacky way because i couldnt get sx to work */
-        style={props.active ? {
-            backgroundColor:
-                theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[1],
-        } : {}}
-        onClick={() => {
-            navigate("/results?" + (new URLSearchParams({ query: props.suggestion }).toString()));
-            props.onSearch(props.suggestion);
-        }}
-        p={props.p}>
-        <Text align='start'>
-            {chunkifySearchSuggestions(props.query, props.suggestion).map(({ includes, text }, i) => (
-                <Text span c={includes && "dimmed"} key={i}>
-                    {text}
-                </Text>
-            ))}
-        </Text>
-    </Box>);
 }
 
 export default SearchBar;

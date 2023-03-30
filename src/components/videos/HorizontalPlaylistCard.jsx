@@ -14,7 +14,7 @@ function HorizontalPlaylistCard(props) {
                 backgroundColor:
                     theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[1],
             },
-		})} component={Link} to={"/watch?" + createQuery({ v: props.firstVideoId, list: props.id })}>
+		})} component={Link} to={"/watch?" + createQuery({ v: props.firstVideoId || (props.videos && props.videos[0]?.id), list: props.id })}>
 		<Grid gutter={props.size}>
 			<Grid.Col span="content">
 				<AspectRatio ratio={16 / 9}
@@ -30,7 +30,7 @@ function HorizontalPlaylistCard(props) {
 						<TextWithTooltip inherit fz="lg" fw={500}
 							lineClamp={1}>{props.title}</TextWithTooltip>
 						<Channel {...props} />
-						<Text>{props.videoCountText}</Text>
+						<Text>{props.videoCountText || (props.videoCount + " videos")}</Text>
 					</Text>
 				</Stack>
 			</Grid.Col>

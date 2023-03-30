@@ -8,6 +8,7 @@ import Comment from '../comments/Comment';
 import ControllableList from '../ControllableList';
 import HorizontalPlaylistCard from './HorizontalPlaylistCard';
 import HorizontalVideoCard from './HorizontalVideoCard';
+import PlaylistVideoCard from './PlaylistVideoCard';
 import VideoCard from './VideoCard';
 
 const Renderers = {
@@ -24,6 +25,9 @@ const Renderers = {
 
 	playlistRenderer: ({ item, i }) => (<HorizontalPlaylistCard key={i} {...item} />),
 	compactPlaylistRenderer: ({ item, i }) => (<HorizontalPlaylistCard key={i} {...item} size="xs" />),
+	playlistPanelVideoRenderer: ({ item, i }) => (
+		<PlaylistVideoCard {...item} key={i} index={i} />
+	),
 
 	commentThreadRenderer: ({ item, i }) => (<Comment {...item} key={i} />),
 
@@ -39,7 +43,9 @@ const Renderers = {
 			</Anchor>
 		</Text>),
 
-	_: ({ item, i }) => (<Text m="md">Unknown renderer: {item.type}</Text>),
+	messageRenderer: ({ item, i }) => (<Text key={i}>{item.message}</Text>),
+
+	_: ({ item, i }) => (<Text>Unknown renderer: {item.type}</Text>),
 };
 
 const ListRenderer = ({

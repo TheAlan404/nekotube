@@ -5,22 +5,21 @@ import { IconChevronRight } from '@tabler/icons-react'
 import React, { useCallback, useContext, useEffect, useRef, useState } from 'react'
 import { PlayerContext } from '../../contexts/PlayerContext'
 import { SettingsContext } from '../../contexts/SettingsContext'
+import { UIContext } from '../../contexts/UIContext'
 import { VideoContext } from '../../contexts/VideoContext'
 import { toTimestamp } from '../../lib/utils'
 import PopupTooltip from '../util/PopupTooltip'
+import HorizontalPlaylistCard from '../videos/HorizontalPlaylistCard'
+import HorizontalVideoCard from '../videos/HorizontalVideoCard'
+import PlaylistVideoCard from '../videos/PlaylistVideoCard'
 
 const PlayerControls = (props) => {
     const ctx = useContext(PlayerContext);
-    let {
-        descChapters,
-        chapters,
-    } = useContext(VideoContext);
+    const { playlist, playlistIndex, plNext, plPrev } = useContext(VideoContext);
+    const [{ currentChapter, hasChapters }, set, tabs, tabsFn] = useContext(UIContext);
 
-    let chapter = ([
-        chapters,
-        descChapters,
-    ].find(x => x.length) || [])
-        .findLast(x => x.time <= ctx.progress);
+    let prev = playlist && playlist.videos[playlistIndex - 1];
+    let next = playlist && playlist.videos[Number(playlistIndex) + 1];
 
     return (
         <>
@@ -28,9 +27,14 @@ const PlayerControls = (props) => {
                 <Group m="xs" position='apart'>
                     <Group>
                         {
-                            props.playlistTodo &&
-                            <Tooltip label="Previous (todo thumbbail)">
-                                <ActionIcon disabled={props.playlistTodo}>
+                            playlist &&
+                            <Tooltip offset={20} label={<Box>
+                                <Text>Previous</Text>
+                                <HorizontalVideoCard size="xs" {...prev} />
+                            </Box>}>
+                                <ActionIcon
+                                    onClick={() => plPrev()}
+                                    disabled={!prev}>
                                     <IconPlayerTrackPrev />
                                 </ActionIcon>
                             </Tooltip>
@@ -43,9 +47,14 @@ const PlayerControls = (props) => {
                             </ActionIcon>
                         </Tooltip>
                         {
-                            ctx.playlistTodo &&
-                            <Tooltip label="Next (todo thumbbail)">
-                                <ActionIcon disabled={ctx.playlistTodo}>
+                            playlist &&
+                            <Tooltip offset={20} label={<Box>
+                                <Text>Next</Text>
+                                <HorizontalVideoCard size="xs" {...next} />
+                            </Box>}>
+                                <ActionIcon
+                                    onClick={() => plNext()}
+                                    disabled={!next}>
                                     <IconPlayerTrackNext />
                                 </ActionIcon>
                             </Tooltip>
@@ -65,22 +74,22 @@ const PlayerControls = (props) => {
                                 </Text>
                             </Tooltip>)}
                         </CopyButton>
-                        {chapter && <Center inline sx={(theme) => ({
+                        {hasChapters && <Center inline sx={(theme) => ({
                             color: theme.fn.dimmed(),
                             cursor: "pointer",
                             '&:hover': {
                                 color: "white",
                             },
-                        })}>
+                        })} onClick={() => tabsFn.toggle("chapters")}>
                             <Text fz="sm">
-                                {chapter.name}
+                                {currentChapter ? currentChapter.name : "Chapters"}
                             </Text>
                             <IconChevronRight />
                         </Center>}
                     </Group>
                     <Group>
                         <Tooltip label="Options (o)">
-                            <ActionIcon onClick={() => {}}>
+                            <ActionIcon onClick={() => tabsFn.toggle("settings")}>
                                 <IconSettings />
                             </ActionIcon>
                         </Tooltip>
@@ -207,7 +216,7 @@ function VolumeController({ }) {
 
 function OptionsMenu() {
     return (<Menu>
-        
+
     </Menu>);
 }
 

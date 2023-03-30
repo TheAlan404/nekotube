@@ -1,5 +1,5 @@
 import { showNotification } from "@mantine/notifications";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import UIFx from "uifx";
 import { SettingsContext } from "../contexts/SettingsContext";
 
@@ -19,6 +19,8 @@ const SOUNDS = Object.fromEntries([
 
 export function useSoundEffect(id) {
     const { uiSounds } = useContext(SettingsContext);
+
+    useEffect(() => {}, [uiSounds]);
 
     if (!uiSounds) return () => { };
 

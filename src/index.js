@@ -9,7 +9,7 @@ import HomePage from './pages/HomePage';
 import WatchPage from './pages/WatchPage';
 import SearchPage from './pages/SearchPage';
 import { SettingsContext } from './contexts/SettingsContext';
-import { useSetState } from '@mantine/hooks';
+import { useListState, useSetState } from '@mantine/hooks';
 import { UIContext } from './contexts/UIContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -41,13 +41,23 @@ root.render(
 );
 
 function LightTubeReact() {
-    let [settings, setSettings] = useSetState({});
+    let [settings, setSettings] = useSetState({
+        useProxy: true,
+    });
     let [uiContext, setUIContext] = useSetState({});
+    let [tabs, tabHandlers] = useListState();
 
     return (<SettingsContext.Provider value={[settings, setSettings]}>
         <UIContext.Provider value={[
             uiContext,
             setUIContext,
+            tabs,
+            {
+                ...tabHandlers,
+                open: (x) => !tabs.includes(x) && tabHandlers.prepend(x),
+                close: (x) => tabs.includes(x) && tabHandlers.filter(y => y != x),
+                toggle: (x) => tabs.includes(x) ? tabHandlers.filter(y => y != x) : tabHandlers.prepend(x),
+            },
         ]}>
             <BrowserRouter>
                 <Routes>

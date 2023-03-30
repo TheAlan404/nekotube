@@ -5,9 +5,11 @@ import { VideoContext } from '../../contexts/VideoContext';
 import { PlayerContext } from '../../contexts/PlayerContext'
 import { calcChapterSegments, toTimestamp } from '../../lib/utils';
 import { CProgress } from '../modded/CProgress';
+import { UIContext } from '../../contexts/UIContext';
 
 const PlayerProgressBar = () => {
     let ctx = useContext(PlayerContext);
+    let [{ hoveredTime }] = useContext(UIContext);
     let {
         descChapters,
         chapters,
@@ -49,16 +51,17 @@ const PlayerProgressBar = () => {
     let prog = ((isMoving || seekOverride) ? seekTarget : ctx.progress);
     let percentage = prog / ctx.duration * 100;
 
-    let hoverPos = isMoving ? percentage : (mouseX / barWidth) * 100;
-    let hoverTime = isMoving ? seekTarget : ((mouseX / barWidth) * ctx.duration);
+    let hoverPos = isMoving ? percentage : ((hoveredTime > 0) ? ((hoveredTime / ctx.duration) * 100) : ((mouseX / barWidth) * 100));
+    let hoverTime = isMoving ? seekTarget : ((hoveredTime > 0) ? hoveredTime : ((mouseX / barWidth) * ctx.duration));
 
     return (
         <>
             <Box style={{ position: "relative" }}>
                 <BarHover
-                        active={hovered || isMoving}
+                        active={hovered || isMoving || (hoveredTime > 0)}
                         pos={hoverPos}
                         ts={toTimestamp(hoverTime)}
+                        altVariant={hoveredTime > 0}
                         name={([
                             chapters,
                             descChapters,
@@ -135,24 +138,33 @@ const BarHover = memo(({
     pos,
     name,
     ts,
+    altVariant,
 }) => {
     return (
         <Box style={{
-            position: "absolute",
             left: `${pos}%`,
+        }} sx={(theme) => ({
+            position: "absolute",
             bottom: "100%",
-            boxSizing: "border-box", 
-        }}>
-            {active && <Box style={{
-                position: "relative",
-                boxSizing: "border-box",
-                right: "50%",
-            }}>
-                <Text align='center'>
-                    {name && <Text inherit>{name}</Text>}
-                    <Text inherit>{ts}</Text>
-                </Text>
-            </Box>}
+            boxSizing: "border-box",
+        })}>
+            {active &&
+                <Box sx={(theme) => ({
+                    position: "relative",
+                    boxSizing: "border-box",
+                    right: "50%",
+                    backgroundColor: altVariant && (theme.fn.variant({ variant: 'filled', color: "gray" }).background),
+                    opacity: altVariant && 0.7,
+                    color: altVariant && (theme.colorScheme === 'dark' ? theme.white : theme.black),
+                    borderRadius: theme.fn.radius(),
+                    borderBottom: altVariant && "0.5em",
+                })} px="md">
+                    <Text align='center'>
+                        {name && <Text inherit>{name}</Text>}
+                        <Text inherit>{ts}</Text>
+                    </Text>
+                </Box>
+            }
         </Box>
     );
 });

@@ -42,7 +42,7 @@ export default function WatchPage() {
 			playlistId: getQuery("list"),
 			playlistIndex: getQuery("index"),
 		}).then(data => {
-			if(!data.playlist) data.playlist = null;
+			if (!data.playlist) data.playlist = null;
 			setVideo(data);
 			setLoading(false);
 			if (data.playlist) {
@@ -76,19 +76,39 @@ export default function WatchPage() {
 	let playlistIndex = Number(getQuery("index"));
 
 	let plPrev = () => {
-		navigate({ search: createQuery({
-			v: video.playlist.videos[Number(playlistIndex) - 1].id,
-			list: video.playlist.playlistId,
-			index: Number(playlistIndex) - 1,
-		}) });
+		if (!video.playlist.videos[playlistIndex - 1]) return;
+		navigate({
+			search: createQuery({
+				v: video.playlist.videos[playlistIndex - 1].id,
+				list: video.playlist.playlistId,
+				index: playlistIndex - 1,
+			})
+		});
 	};
 
 	let plNext = () => {
-		navigate({ search: createQuery({
-			v: video.playlist.videos[playlistIndex + 2].id,
-			list: video.playlist.playlistId,
-			index: playlistIndex + 1,
-		}) });
+		if (!video.playlist.videos[playlistIndex + 2]) return;
+		navigate({
+			search: createQuery({
+				v: video.playlist.videos[playlistIndex + 2].id,
+				list: video.playlist.playlistId,
+				index: playlistIndex + 1,
+			})
+		});
+	};
+
+	let autoplayNext = () => {
+		if (video.playlist && video.playlist.videos[playlistIndex + 2]) {
+			plNext();
+			return;
+		}
+
+		let r = video.recommended[0];
+		navigate({
+			search: createQuery(r.type == "compactVideoRenderer"
+				? { v: r.id }
+				: { v: r.firstVideoId || (r.videos && r.videos[0]?.id), list: r.id })
+		});
 	};
 
 	useHotkeys([
@@ -118,6 +138,7 @@ export default function WatchPage() {
 				playlistIndex,
 				plPrev,
 				plNext,
+				autoplayNext,
 			}}>
 				<Grid columns={3} my="md">
 					<Grid.Col sm={3} md={2}>

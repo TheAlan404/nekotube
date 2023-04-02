@@ -42,7 +42,7 @@ const Tabs = ({
         ),
         recommended: () => (
             <Box w="100%" style={{ overflowX: "hidden" }}>
-                <RecommendedList />
+                <RecommendedList withAutoplay />
             </Box>
         ),
         settings: () => (
@@ -85,12 +85,12 @@ const Tabs = ({
         return <></>;
     };
 
-    let allTabs = ["playlist", "comments", "chapters", "recommended"];
+    let allTabs = ["playlist", "comments", "chapters", "recommended", "settings"];
 
     return (
         <>
             <Accordion variant='separated' chevronPosition="left" multiple={!isMobile} defaultValue={!isMobile && allTabs} mb={tabs.length && "md"}>
-                {tabs.map((tab, i) => <Transition mounted transition="scale-y">
+                {tabs.map((tab, i) => <Transition mounted transition="scale-y" key={tab}>
                     {(styles) => <Accordion.Item value={tab} style={styles}>
                         <Box px="sm" sx={{ display: 'flex', alignItems: 'center' }}>
                             <Accordion.Control py="sm">

@@ -1,4 +1,4 @@
-import { ActionIcon, Box, Group, Stack, Text, Title, Tooltip, Transition } from '@mantine/core'
+import { ActionIcon, Box, Group, Stack, Switch, Text, Title, Tooltip, Transition } from '@mantine/core'
 import { IconLayout, IconList, IconMessage, IconPlaylist } from '@tabler/icons-react';
 import React, { useContext } from 'react'
 import { SettingsContext } from '../../contexts/SettingsContext';
@@ -45,6 +45,7 @@ function TabButtons() {
 
 const WatchPageRightside = ({ isLoading }) => {
     let [{ }, set, tabs, tabsFn] = useContext(UIContext);
+    let [{ autoplay }] = useContext(SettingsContext);
     let isMobile = useIsMobile();
 
     return (
@@ -54,6 +55,13 @@ const WatchPageRightside = ({ isLoading }) => {
             {!isMobile && <>
                 <Group position='apart' mb="md">
                     <Title order={4}>Recommended</Title>
+                    <Switch
+                        checked={!!autoplay}
+                        onChange={(event) => set({
+                            autoplay: event.currentTarget.checked,
+                        })}
+                        label="Autoplay"
+                        />
                     <Text sx={(theme) => ({
                         color: theme.fn.dimmed(),
                         cursor: "pointer",

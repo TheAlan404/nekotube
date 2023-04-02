@@ -7,7 +7,7 @@ export const SettingsContext = createContext([
         stretch: true,
         pos: "bottom",
     },
-    () => {},
+    () => {}
 ]);
 
 SettingsContext.displayName = "LTRSettingsProvider";

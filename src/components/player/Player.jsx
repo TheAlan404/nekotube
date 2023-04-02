@@ -18,7 +18,7 @@ const filterUsableVideo = f => f.mimeType.startsWith("video/mp4") || f.mimeType.
 export default function Player() {
     let location = useLocation();
     let video = useContext(VideoContext);
-    let [{ useProxy, saveProgress }] = useContext(SettingsContext);
+    let [{ useProxy, saveProgress, autoplay }] = useContext(SettingsContext);
     let [{ jumpTo, currentChapter, hasChapters, infoPopup }, set] = useContext(UIContext);
 
     let [formats, handlers] = useListState([]);
@@ -30,6 +30,8 @@ export default function Player() {
     const [volume, setVolume] = useState(0.7);
     const [muted, setMuted] = useState(false);
     const [paused, { toggle: togglePause, close: play, open: pause }] = useDisclosure(true);
+    
+    let [ended, setEnded] = useState(false);
 
     const {
         ref: fullscreenRef,
@@ -61,6 +63,7 @@ export default function Player() {
         handlers.setState(list);
         setFormatIndex(0);
         setErrored(false);
+        setEnded(false);
     }, [video.formats]);
 
     useEffect(() => {
@@ -113,18 +116,23 @@ export default function Player() {
         return () => window.removeEventListener("beforeunload", onUnload);
     }, []);
 
+    
+    useEffect(() => {
+        if(saveProgress && !ref.current?.ended) localStorage.setItem("ltr-progress-" + video.id, progress);
+    }, [location]);
+
+    useEffect(() => {
+        if(ref.current && ended) localStorage.removeItem("ltr-progress-" + video.id);
+    }, [ref, ended]);
+    
     useEffect(() => {
         if(jumpTo === undefined) return;
         seekTo(jumpTo, true);
     }, [jumpTo]);
 
     useEffect(() => {
-        if(saveProgress && !ref.current?.ended) localStorage.setItem("ltr-progress-" + video.id, progress);
-    }, [location]);
-
-    useEffect(() => {
-        if(ref.current) ref.current.onended = () => localStorage.removeItem("ltr-progress-" + video.id);
-    }, [ref]);
+        
+    }, [ended]);
 
     // -- player states --
 
@@ -268,6 +276,8 @@ export default function Player() {
                 setVolume,
                 muted,
                 setMuted,
+
+                ended,
             }}>
                 <Box ref={fullscreenRef}>
                     <AspectRatio ratio={16 / 9} mx="auto">
@@ -290,6 +300,8 @@ export default function Player() {
                                 });
                                 setErrored(true);
                             }}
+                            onEnded={() => setEnded(true)}
+                            onPlaying={() => setEnded(false)}
                             volume={volume}
                             muted={muted} />}
                         <PlayerLayout />

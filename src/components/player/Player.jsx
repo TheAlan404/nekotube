@@ -10,6 +10,7 @@ import { UIContext } from '../../contexts/UIContext';
 import { VideoContext } from '../../contexts/VideoContext';
 import APIController from '../../lib/APIController';
 import { cap, toTimestamp } from '../../lib/utils';
+import ChapterPopup from './ChapterPopup';
 import PlayerLayout from './PlayerLayout';
 
 const filterUsableVideo = f => f.mimeType.startsWith("video/mp4") || f.mimeType.startsWith("video/webm");
@@ -17,8 +18,8 @@ const filterUsableVideo = f => f.mimeType.startsWith("video/mp4") || f.mimeType.
 export default function Player() {
     let location = useLocation();
     let video = useContext(VideoContext);
-    let [{ useProxy }] = useContext(SettingsContext);
-    let [{ jumpTo, currentChapter, hasChapters }, set] = useContext(UIContext);
+    let [{ useProxy, saveProgress }] = useContext(SettingsContext);
+    let [{ jumpTo, currentChapter, hasChapters, infoPopup }, set] = useContext(UIContext);
 
     let [formats, handlers] = useListState([]);
     let [formatIndex, setFormatIndex] = useState(0);
@@ -99,7 +100,7 @@ export default function Player() {
 
     useEffect(() => {
         const onUnload = () => {
-            if(!ref.current?.ended) {
+            if(saveProgress && !ref.current?.ended) {
                 localStorage.setItem("ltr-progress-" + video.id, progress);
                 showNotification({
                     message: "Saved your progress! See you later",
@@ -114,11 +115,11 @@ export default function Player() {
 
     useEffect(() => {
         if(jumpTo === undefined) return;
-        seekTo(jumpTo);
+        seekTo(jumpTo, true);
     }, [jumpTo]);
 
     useEffect(() => {
-        if(!ref.current?.ended) localStorage.setItem("ltr-progress-" + video.id, progress);
+        if(saveProgress && !ref.current?.ended) localStorage.setItem("ltr-progress-" + video.id, progress);
     }, [location]);
 
     useEffect(() => {
@@ -182,19 +183,62 @@ export default function Player() {
 
     // hotkeys etc
 
+    const runWithPopup = (fn, popup) => {
+        set({ infoPopup: popup });
+        fn();
+    };
+
     useHotkeys([
-        ["space", togglePause],
-        ["k", togglePause],
+        ["space", () => runWithPopup(togglePause, paused ? "Play" : "Paused")],
+        ["k", () => runWithPopup(togglePause, paused ? "Play" : "Paused")],
         ["f", toggleFullscreen],
-        ["m", () => setMuted(m => !m)],
+        ["m", () => runWithPopup(() => setMuted(m => !m), muted ? "Unmuted" : "Muted")],
         ["ArrowUp", () => setVolume(v => cap(v + 0.1))],
         ["ArrowDown", () => setVolume(v => cap(v - 0.1))],
         ["ArrowLeft", () => seekTo(cap(progress - 5, duration, 0))],
         ["ArrowRight", () => seekTo(cap(progress + 5, duration, 0))],
+
+        ...(hasChapters ? [
+            ["shift + ArrowRight", () => chapNext()],
+            ["shift + ArrowLeft", () => chapPrev()],
+        ] : []),
     ]);
 
-    const seekTo = (pos) => {
-        ref.current?.fastSeek(pos);
+    let chapNext = () => {
+        let list = [
+            video.chapters,
+            video.descChapters,
+        ].find(x => x.length);
+        if(!list) return;
+
+        let chp = list[currentChapter.i + 1];
+        if(!chp) return;
+
+        seekTo(chp.time, true);
+    };
+
+    let chapPrev = () => {
+        let list = [
+            video.chapters,
+            video.descChapters,
+        ].find(x => x.length);
+        if(!list) return;
+
+        if((progress - currentChapter.time) > 5) {
+            seekTo(currentChapter.time, true);
+            return;
+        };
+
+        let chp = list[currentChapter.i - 1];
+        if(!chp) return;
+
+        seekTo(chp.time, true);
+    };
+
+    const seekTo = (pos, isPercise = false) => {
+        if(isPercise) {
+            if (ref.current) ref.current.currentTime = pos;
+        } else ref.current?.fastSeek(pos);
     };
 
     // -- title --

@@ -24,12 +24,6 @@ root.render(
                     defaultProps: {
                         color: "gray",
                     },
-
-                    variants: {
-                        player: (theme) => ({
-                            
-                        }),
-                    },
                 },
             },
         }}>

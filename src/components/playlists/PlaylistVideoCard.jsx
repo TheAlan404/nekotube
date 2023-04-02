@@ -5,8 +5,8 @@ import { Link } from 'react-router-dom';
 import { VideoContext } from '../../contexts/VideoContext';
 import { createQuery } from '../../lib/utils';
 import TextWithTooltip from '../util/TextWithTooltip';
-import { Channel } from './common';
-import HorizontalVideoCard from './HorizontalVideoCard'
+import { Channel } from '../cards/common';
+import HorizontalVideoCard from '../cards/HorizontalVideoCard'
 
 const PlaylistVideoCard = (props) => {
     let { playlistIndex, playlist } = useContext(VideoContext);

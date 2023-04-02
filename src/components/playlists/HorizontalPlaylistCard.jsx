@@ -3,7 +3,7 @@ import React from 'react'
 import { Link } from 'react-router-dom';
 import { createQuery } from '../../lib/utils';
 import TextWithTooltip from '../util/TextWithTooltip';
-import { Channel } from './common';
+import { Channel } from '../cards/common';
 
 function HorizontalPlaylistCard(props) {
 	return (<Paper p={props.size ? 0 : "sm"} shadow="md" withBorder

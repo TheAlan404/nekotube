@@ -3,13 +3,14 @@ import { useMediaQuery } from '@mantine/hooks';
 import { useMantineTheme } from '@mantine/styles';
 import React from 'react'
 import { Link } from 'react-router-dom';
-import { createQuery } from '../../lib/utils';
-import Comment from '../comments/Comment';
-import ControllableList from '../ControllableList';
-import HorizontalPlaylistCard from './HorizontalPlaylistCard';
-import HorizontalVideoCard from './HorizontalVideoCard';
-import PlaylistVideoCard from './PlaylistVideoCard';
-import VideoCard from './VideoCard';
+import { createQuery } from '../lib/utils';
+import Comment from './comments/Comment';
+import ControllableList from './ControllableList';
+import HorizontalPlaylistCard from './playlists/HorizontalPlaylistCard';
+import HorizontalVideoCard from './cards/HorizontalVideoCard';
+import PlaylistVideoCard from './playlists/PlaylistVideoCard';
+import VideoCard from './cards/VideoCard';
+import useIsMobile from '../hooks/useIsMobile';
 
 const Renderers = {
 	videoRenderer: ({ useGrid, item, i }) => (<>
@@ -52,19 +53,18 @@ const ListRenderer = ({
 	list,
 	useGrid,
 }) => {
-	let theme = useMantineTheme();
-	let isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.md})`);
+	let isMobile = useIsMobile();
 
 	if (!list) return <></>;
 
-	let Wrapper = isMobile ? Grid : Stack;
+	let Wrapper = (useGrid && isMobile) ? Grid : Stack;
 
 	return (
 		<>
 			<ControllableList>
-				<Wrapper spacing="md">
+				<Wrapper spacing="md" w="100%" h="100%">
 					{list.map((item, i) => (Renderers[item.type] || Renderers._)({
-						useGrid: (useGrid === undefined ? isMobile : useGrid),
+						useGrid: (useGrid && isMobile),
 						item,
 						i,
 					}))}

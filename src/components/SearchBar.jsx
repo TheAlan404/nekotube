@@ -8,7 +8,7 @@ import { useKeyboardSfx, useSoundEffect } from '../hooks/useSoundEffect';
 import APIController from '../lib/APIController';
 import { chunkifySearchSuggestions, createQuery } from '../lib/utils';
 import { getMeta, isChannelID, isPlaylistID, isUrl, isVideoID, VideoIDRegex } from './util/regexes';
-import HorizontalVideoCard from './videos/HorizontalVideoCard';
+import HorizontalVideoCard from './cards/HorizontalVideoCard';
 
 function SearchBar() {
     let theme = useMantineTheme();
@@ -174,6 +174,7 @@ function SearchBar() {
                         </Stack>}
                         {suggestions.map((s, i) =>
                             <Box
+                                key={i}
                                 sx={(theme) => ({
                                     backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[0],
                                     cursor: 'pointer',

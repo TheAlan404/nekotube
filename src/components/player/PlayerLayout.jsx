@@ -1,23 +1,41 @@
 import { Box, Flex, Overlay, Progress, Stack, Transition } from '@mantine/core';
 import { useHover } from '@mantine/hooks';
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import { PlayerContext } from '../../contexts/PlayerContext';
 import { SettingsContext } from '../../contexts/SettingsContext';
 import { UIContext } from '../../contexts/UIContext';
+import useFadingState from '../../hooks/useFadingState';
+import useIsMobile from '../../hooks/useIsMobile';
 import PlayerControls from './PlayerControls';
+import PlayerPopup from './PlayerPopup';
 import PlayerProgressBar from './PlayerProgressBar';
 
 const PlayerLayout = () => {
     const ctx = useContext(PlayerContext);
-    const pref = useContext(SettingsContext);
+    const [pref] = useContext(SettingsContext);
     const [{ hoveredTime }] = useContext(UIContext);
     const { ref, hovered } = useHover();
+    const [isTouching, setIsTouching] = useState();
+    const [mobileShouldOverlay, { start: onClickOverlay }] = useFadingState(3000);
+    const isMobile = useIsMobile();
+
+    let showOverlay = (ctx.paused || hovered || pref.keepControls || (hoveredTime > 0) || mobileShouldOverlay);
+
+    let popup = <PlayerPopup />;
 
     return (
         <Box
-            ref={ref}>
+            ref={ref}
+            onClick={isMobile && !showOverlay ? onClickOverlay : undefined}
+            onTouchStart={() => setIsTouching(true)}
+            onTouchEnd={() => setIsTouching(false)}
+            style={isMobile && !showOverlay ? { cursor: "pointer" } : {}}
+            >
+            {!showOverlay && <Flex justify="start" align="end" w="100%" h="100%" p="md">
+                {popup}
+            </Flex>}
             <Transition
-                mounted={(ctx.paused || hovered || pref.keepControls || (hoveredTime > 0))}
+                mounted={showOverlay}
                 transition="fade"
                 duration={200}>
                 {(styles) => <Overlay
@@ -37,6 +55,7 @@ const PlayerLayout = () => {
                         ctx.togglePause();
                     }}>
                         <Stack justify="end" w={"100%"} spacing={0}>
+                            {popup}
                             <PlayerProgressBar />
                             <PlayerControls />
                         </Stack>
@@ -44,7 +63,7 @@ const PlayerLayout = () => {
                 </Overlay>}
             </Transition>
         </Box>
-    )
+    );
 }
 
 export default PlayerLayout

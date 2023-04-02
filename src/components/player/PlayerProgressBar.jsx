@@ -133,7 +133,7 @@ const Thumb = memo(({ progress, disabled, color }) => {
     </Box>);
 });
 
-const BarHover = memo(({
+const BarHover = ({
     active,
     pos,
     name,
@@ -141,6 +141,30 @@ const BarHover = memo(({
     altVariant,
 }) => {
     return (
+        <Box style={{
+            left: `${pos}%`,
+        }} sx={(theme) => ({
+            position: "absolute",
+            bottom: "100%",
+            boxSizing: "border-box",
+        })}>
+            <Tooltip opened={active} label={(
+                <Text align='center'>
+                    {name && <Text inherit>{name}</Text>}
+                    <Text inherit>{ts}</Text>
+                </Text>
+            )} withArrow arrowSize={10} offset={-10} styles={{
+                tooltip: {
+                    opacity: 0.7,
+                },
+            }} positionDependencies={[ pos ]}>
+                <Box sx={(theme) => ({
+                    position: "relative",
+                })}></Box>
+            </Tooltip>
+        </Box>
+    );
+    /* return (
         <Box style={{
             left: `${pos}%`,
         }} sx={(theme) => ({
@@ -166,7 +190,7 @@ const BarHover = memo(({
                 </Box>
             }
         </Box>
-    );
-});
+    ); */
+};
 
 export default PlayerProgressBar

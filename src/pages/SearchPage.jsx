@@ -2,7 +2,7 @@ import { Anchor, Box, Grid, Group, Loader, LoadingOverlay, Stack, Text, useManti
 import { useDocumentTitle } from '@mantine/hooks';
 import React, { useEffect, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import ListRenderer from '../components/videos/ListRenderer';
+import ListRenderer from '../components/ListRenderer';
 import APIController from '../lib/APIController';
 import { createQuery, getQuery } from '../lib/utils';
 
@@ -53,7 +53,7 @@ function SearchPage(props) {
 				</Text>
 			</>}
 			<Box mt="md">
-				<ListRenderer list={results} />
+				<ListRenderer useGrid list={results} />
 			</Box>
 		</Box>
 	);

@@ -9,9 +9,10 @@ import { UIContext } from '../../contexts/UIContext'
 import { VideoContext } from '../../contexts/VideoContext'
 import { toTimestamp } from '../../lib/utils'
 import PopupTooltip from '../util/PopupTooltip'
-import HorizontalPlaylistCard from '../videos/HorizontalPlaylistCard'
-import HorizontalVideoCard from '../videos/HorizontalVideoCard'
-import PlaylistVideoCard from '../videos/PlaylistVideoCard'
+import HorizontalPlaylistCard from '../playlists/HorizontalPlaylistCard'
+import HorizontalVideoCard from '../cards/HorizontalVideoCard'
+import PlaylistVideoCard from '../playlists/PlaylistVideoCard'
+import useIsMobile from '../../hooks/useIsMobile'
 
 const PlayerControls = (props) => {
     const ctx = useContext(PlayerContext);
@@ -108,7 +109,11 @@ const PlayerControls = (props) => {
 function VolumeController({ }) {
     const ctx = useContext(PlayerContext);
     const pref = useContext(SettingsContext);
-    const { ref, hovered } = useHover();
+    const { ref, hovered: mouseHovered } = useHover();
+
+    const [mobileHovered, setMobileHovered] = useState(false);
+    const isMobile = useIsMobile();
+    let hovered = mouseHovered || mobileHovered;
 
     let [beforeChange, setBeforeChange] = useState(ctx.volume);
 
@@ -162,8 +167,12 @@ function VolumeController({ }) {
         <Group ref={ref}>
             <Tooltip label={ctx.muted || (ctx.volume <= 0) ? "Unmute (m)" : "Mute (m)"}>
                 <ActionIcon onClick={() => {
-                    ctx.setMuted(!ctx.muted);
-                    if (ctx.volume <= 0) ctx.setVolume(0.1);
+                    if(isMobile && !mobileHovered) {
+                        setMobileHovered(true);
+                    } else {
+                        ctx.setMuted(!ctx.muted);
+                        if (ctx.volume <= 0) ctx.setVolume(0.1);
+                    }
                 }}>
                     {
                         (ctx.muted || ctx.volume <= 0)

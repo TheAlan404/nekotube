@@ -1,19 +1,22 @@
 import { ActionIcon, Avatar, Box, Button, Center, Grid, Group, Popover, Stack, Text, Title, Tooltip, Transition } from '@mantine/core';
-import { useDocumentTitle, useWindowScroll } from '@mantine/hooks';
+import { useDocumentTitle, useHotkeys, useWindowScroll } from '@mantine/hooks';
 import { IconBrandYoutube, IconChevronDown, IconChevronRight, IconThumbDown, IconThumbUp } from '@tabler/icons';
 import React, { useContext, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import CommentsList from '../components/comments/CommentsList';
 import Player from '../components/player/Player';
 import Tabs from '../components/Tabs';
-import HorizontalVideoCard from '../components/videos/HorizontalVideoCard';
-import ListRenderer from '../components/videos/ListRenderer';
+import HorizontalVideoCard from '../components/cards/HorizontalVideoCard';
+import ListRenderer from '../components/ListRenderer';
 import RecommendedList from '../components/videos/RecommendedList';
 import VideoInfo from '../components/videos/VideoInfo';
+import WatchPageComments from '../components/watch/WatchPageComments';
+import WatchPageRightside from '../components/watch/WatchPageRightside';
 import { UIContext } from '../contexts/UIContext';
 import { VideoContext } from '../contexts/VideoContext';
 import APIController from '../lib/APIController';
 import { createQuery, getQuery, parseChapters } from '../lib/utils';
+import { SettingsContext } from '../contexts/SettingsContext';
 
 export default function WatchPage() {
 	let location = useLocation();
@@ -21,6 +24,7 @@ export default function WatchPage() {
 	const [scroll, scrollTo] = useWindowScroll();
 
 	let [{ jumpTo }, set, tabs, tabsFn] = useContext(UIContext);
+	let [{ noScrollOnTimestamp, noScrollOnNav }] = useContext(SettingsContext);
 
 	let [isLoading, setLoading] = useState(true);
 	let [video, setVideo] = useState({});
@@ -52,11 +56,12 @@ export default function WatchPage() {
 
 		setChaptersOverride([]);
 		setComments([]);
-		scrollTo({ y: 0 });
+		if (!noScrollOnNav) scrollTo({ y: 0 });
 	}, [location]);
 
 	useEffect(() => {
-		if (!jumpTo) return;
+		if (noScrollOnTimestamp) return;
+		if (isNaN(jumpTo)) return;
 		scrollTo({ y: 0 });
 	}, [jumpTo]);
 
@@ -85,6 +90,13 @@ export default function WatchPage() {
 			index: playlistIndex + 1,
 		}) });
 	};
+
+	useHotkeys([
+		...(video.playlist ? [
+			["shift + ArrowUp", plPrev],
+			["shift + ArrowDown", plNext],
+		] : []),
+	]);
 
 	return (
 		<>
@@ -115,67 +127,11 @@ export default function WatchPage() {
 								...video,
 								description: video.description || player.details?.shortDescription,
 							})} />
-							<Stack spacing={"md"}>
-								<Group position='apart'>
-									<Group>
-										<Title order={4}>Comments</Title>
-										<Text c="dimmed">{video.commentCount} comments</Text>
-									</Group>
-									<Center inline sx={(theme) => ({
-										cursor: "pointer",
-										color: theme.fn.dimmed(),
-										'&:hover': {
-											color: "white",
-										},
-									})} onClick={() => tabs.includes("comments") ? tabsFn.filter(x => x != "comments") : tabsFn.prepend("comments")}>
-										<Transition mounted={tabs.includes("comments")} transition="slide-right">
-											{(styles) => <Center inline style={styles}>
-												<Text>Close tab and view here</Text>
-												<IconChevronDown />
-											</Center>}
-										</Transition>
-										<Transition mounted={!tabs.includes("comments")} transition="slide-left">
-											{(styles) => <Center inline style={styles}>
-												<Text>Open as a tab</Text>
-												<IconChevronRight />
-											</Center>}
-										</Transition>
-									</Center>
-								</Group>
-								<Transition mounted={!tabs.includes("comments")} transition={"pop"}>
-									{(styles) => <Box style={styles}>
-										<CommentsList />
-									</Box>}
-								</Transition>
-							</Stack>
+							<WatchPageComments />
 						</Stack>
 					</Grid.Col>
 					<Grid.Col sm={3} md={1}>
-						<Stack>
-							<Tabs />
-							<Group position='apart'>
-								<Title order={4}>Recommended</Title>
-								<Text sx={(theme) => ({
-									color: theme.fn.dimmed(),
-									cursor: "pointer",
-									'&:hover': {
-										color: "white",
-									},
-								})} onClick={() => {
-									tabs.includes("recommended") ? tabsFn.filter(x => x != "recommended") : tabsFn.prepend("recommended")
-								}}>{tabs.includes("recommended") ? "Close tab" : "Open tab"}</Text>
-							</Group>
-							<Transition mounted={!isLoading} transition={"slide-left"}>
-								{(styles) =>
-									<Box style={{
-										...styles,
-										overflowX: "hidden"
-									}} w="100%">
-										{!tabs.includes("recommended") && <RecommendedList />}
-									</Box>
-								}
-							</Transition>
-						</Stack>
+						<WatchPageRightside isLoading={isLoading} />
 					</Grid.Col>
 				</Grid>
 			</VideoContext.Provider>

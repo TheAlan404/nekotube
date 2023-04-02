@@ -3,8 +3,8 @@ import { useDisclosure } from '@mantine/hooks';
 import { IconBrandYoutube } from '@tabler/icons';
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import APIController from '../lib/APIController';
-import { createQuery, getQueryLoc } from '../lib/utils';
+import APIController from '../../lib/APIController';
+import { createQuery, getQueryLoc } from '../../lib/utils';
 
 const prettify = {
 	yt: "YouTube",

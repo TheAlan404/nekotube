@@ -1,6 +1,6 @@
 # lighttube-react
 
-Alternative frontend for [lighttube](https://github.com/kuylar/lighttube) written using React and [Mantine](https://mantine.dev/) with love <3 and deez.
+Alternative frontend for [lighttube](https://github.com/kuylar/lighttube) written using React, [Mantine](https://mantine.dev/), love <3 and deez.
 
 LightTubeReact is fully client-side and uses lighttube's API.
 
@@ -46,6 +46,20 @@ because i got lazy
 ![mobile recommended tab](screenshots/mobile_recommended.png)
 ![mobile comments](screenshots/mobile_comments.png)
 ![mobile options](screenshots/mobile_settings.png)
+
+## Building
+
+Run the dev server via:
+
+```sh
+npm start
+```
+
+Build the project to the `/build` folder via:
+
+```sh
+npm run build
+```
 
 ## TODO
 

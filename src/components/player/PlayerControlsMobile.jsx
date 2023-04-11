@@ -13,7 +13,6 @@ import HorizontalPlaylistCard from '../playlists/HorizontalPlaylistCard'
 import HorizontalVideoCard from '../cards/HorizontalVideoCard'
 import PlaylistVideoCard from '../playlists/PlaylistVideoCard'
 import useIsMobile from '../../hooks/useIsMobile'
-import { TabsContext } from '../../contexts/TabsContext'
 
 const mobileSize = "xs";
 
@@ -21,8 +20,7 @@ const PlayerControls = (props) => {
     const isMobile = useIsMobile();
     const ctx = useContext(PlayerContext);
     const { playlist, playlistIndex, plNext, plPrev } = useContext(VideoContext);
-    const [{ currentChapter, hasChapters }, set] = useContext(UIContext);
-    const [tabs, tabsFn] = useContext(TabsContext);
+    const [{ currentChapter, hasChapters }, set, tabs, tabsFn] = useContext(UIContext);
 
     let prev = playlist && playlist.videos[playlistIndex - 1];
     let next = playlist && playlist.videos[Number(playlistIndex) + 1];
@@ -31,7 +29,9 @@ const PlayerControls = (props) => {
         <>
             <Tooltip.Group>
                 <Group m="xs" position='apart'>
-                    <Group>
+                    <Group style={{
+                        overflowX: "hidden",
+                    }} noWrap>
                         {
                             playlist &&
                             <Tooltip offset={20} label={<Box>
@@ -99,7 +99,7 @@ const PlayerControls = (props) => {
                     </Group>
                     <Group>
                         <Tooltip label="Options (o)">
-                            <ActionIcon onClick={() => ctx.fullscreen ? (1) : tabsFn.toggle("options")} size={isMobile && mobileSize}>
+                            <ActionIcon onClick={() => tabsFn.toggle("settings")} size={isMobile && mobileSize}>
                                 <IconSettings />
                             </ActionIcon>
                         </Tooltip>

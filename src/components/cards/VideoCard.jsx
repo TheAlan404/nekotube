@@ -3,7 +3,7 @@ import React from 'react'
 import { Link } from 'react-router-dom';
 import { createQuery } from '../../lib/utils';
 import TextWithTooltip from '../util/TextWithTooltip';
-import { Channel, MiniInfo } from './common';
+import { Channel, MiniInfo, Thumbnail } from './common';
 
 function VideoCard(props) {
 	return (<Paper p="sm" shadow="md" withBorder
@@ -15,11 +15,11 @@ function VideoCard(props) {
 					theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[1],
 			},
 		})} component={Link} to={"/watch?" + createQuery({ v: props.id })}>
-		<AspectRatio ratio={16 / 9}
+		<Thumbnail
+			{...props}
 			w={"100%"}
-			h={"auto"}>
-			<Image src={props.thumbnails[props.thumbnails.length - 1]?.url} />
-		</AspectRatio>
+			h={"auto"}
+			/>
 		<Stack spacing="xs">
 			<TextWithTooltip fz="lg" fw={500} lineClamp={2}>{props.title}</TextWithTooltip>
 			<MiniInfo {...props} />

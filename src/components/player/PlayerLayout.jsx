@@ -1,4 +1,4 @@
-import { Box, Button, Center, Flex, Overlay, Progress, Stack, Text, Transition } from '@mantine/core';
+import { Box, Button, Center, Flex, Group, Overlay, Progress, Stack, Text, Transition } from '@mantine/core';
 import { useHover, useTimeout } from '@mantine/hooks';
 import React, { useContext, useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -55,7 +55,10 @@ const PlayerLayout = () => {
         <Box
             ref={ref}
             onClick={isMobile && !showOverlay ? onClickOverlay : undefined}
-            style={isMobile && !showOverlay ? { cursor: "pointer" } : {}}
+            style={{
+                ...(isMobile && !showOverlay ? { cursor: "pointer" } : {}),
+                WebkitTapHighlightColor: "transparent",
+            }}
         >
             {!showOverlay && <Flex justify="start" align="end" w="100%" h="100%" p="md">
                 {popup}
@@ -75,23 +78,43 @@ const PlayerLayout = () => {
                             || (e.type == "PointerEvent" && e.pointerType === "touch")) return;
                         ctx.togglePause();
                     }}>
-                        {showAutoplayPopup && <Flex w="100%" h="100%">
-                            <Center w="100%" h="100%">
-                                <Stack align="center" justify="center">
+                        {showAutoplayPopup && (
+                            isMobile ? <Flex w="100%" h="100%">
+                                <Center w="100%" h="100%">
+                                    <Stack align="center" justify="center">
+                                        <Text>Autoplay?</Text>
+                                        {/* i got lazy */}
+                                        <ListRenderer list={[recommended[0]]} />
+                                        <Text>Will autoplay in</Text>
+                                        <Text span fw="bold" size="lg">{remTime}</Text>
+                                        <Button onClick={() => {
+                                            setAutoplayCancelled(true);
+                                            stopCountdown();
+                                        }}>
+                                            Cancel
+                                        </Button>
+                                    </Stack>
+                                </Center>
+                            </Flex> : <>
+                                <Stack spacing={0}>
                                     <Text>Autoplay?</Text>
                                     {/* i got lazy */}
-                                    <ListRenderer list={[recommended[0]]} />
-                                    <Text>Will autoplay in</Text>
-                                    <Text span fw="bold" size="lg">{remTime}</Text>
-                                    <Button onClick={() => {
-                                        setAutoplayCancelled(true);
-                                        stopCountdown();
-                                    }}>
-                                        Cancel
-                                    </Button>
+                                    <ListRenderer useGrid={false} list={[recommended[0]]} />
+                                    <Group position="apart">
+                                        <Text>
+                                            <Text span>Will autoplay in</Text>
+                                            <Text span fw="bold" size="lg">{remTime}</Text>
+                                        </Text>
+                                        <Button onClick={() => {
+                                            setAutoplayCancelled(true);
+                                            stopCountdown();
+                                        }}>
+                                            Cancel
+                                        </Button>
+                                    </Group>
                                 </Stack>
-                            </Center>
-                        </Flex>}
+                            </>
+                        )}
                         {!showAutoplayPopup && <Stack justify="end" w={"100%"} spacing={0}>
                             {popup}
                             <PlayerProgressBar />

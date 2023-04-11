@@ -1,4 +1,4 @@
-import { Avatar, Group, Text, Tooltip } from "@mantine/core";
+import { AspectRatio, Avatar, Group, Image, Text, Tooltip } from "@mantine/core";
 import { IconCheck } from "@tabler/icons-react";
 import TextWithTooltip from "../util/TextWithTooltip";
 
@@ -19,10 +19,25 @@ export function Channel(props) {
 }
 
 export function MiniInfo(props) {
-    if(!props.viewCount && !props.published && !props.dateText) return <></>;
+    if (!props.viewCount && !props.published && !props.dateText) return <></>;
     return (
         <TextWithTooltip inherit c="dimmed" fz="sm" lineClamp={props.size && 1}>
-                {props.viewCount} - {props.published || props.dateText}
+            {props.viewCount} - {props.published || props.dateText}
         </TextWithTooltip>
+    );
+}
+
+export function Thumbnail(props) {
+    return (
+        // 16   x
+        // -- = --
+        // 9    4
+        // 64 = 9x
+        <AspectRatio ratio={16 / 9}
+            w={props.w || (16 / 1.5) + "em"}
+            h={props.h || (9 / 1.5) + "em"}>
+            <Image src={(props.thumbnails && props.thumbnails[props.thumbnails.length - 1]?.url)
+                || ("https://img.youtube.com/vi/" + props.id + "/hqdefault.jpg")} />
+        </AspectRatio>
     );
 }

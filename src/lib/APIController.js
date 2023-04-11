@@ -52,8 +52,8 @@ class APIController {
     constructor() {
         this.instance = {
             type: "lighttube",
-            name: "lighttube-nightly",
-            host: "https://lighttube-nightly.kuylar.dev",
+            name: "tube.kuylar.dev",
+            host: "https://tube.kuylar.dev",
             features: ["LT_V2", "LT_API", "LT_ACCOUNTS", "LT_PROXY"],
             extra: {},
         };

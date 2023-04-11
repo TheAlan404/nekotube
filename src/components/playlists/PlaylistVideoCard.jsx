@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { VideoContext } from '../../contexts/VideoContext';
 import { createQuery } from '../../lib/utils';
 import TextWithTooltip from '../util/TextWithTooltip';
-import { Channel } from '../cards/common';
+import { Channel, Thumbnail } from '../cards/common';
 import HorizontalVideoCard from '../cards/HorizontalVideoCard'
 
 const PlaylistVideoCard = (props) => {
@@ -36,12 +36,7 @@ const PlaylistVideoCard = (props) => {
                     </Flex>
                 </Grid.Col>
                 <Grid.Col span="content">
-                    <AspectRatio ratio={16 / 9}
-                        w={(16 / 2) + "em"}
-                        h={(9 / 2) + "em"}>
-                        <Image src={(props.thumbnails && props.thumbnails[props.thumbnails.length - 1]?.url)
-                            || ("https://img.youtube.com/vi/" + props.id + "/hqdefault.jpg")} />
-                    </AspectRatio>
+                    <Thumbnail {...props} />
                 </Grid.Col>
                 <Grid.Col span="auto">
                     <Stack spacing={0}>

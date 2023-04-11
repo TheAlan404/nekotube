@@ -17,13 +17,17 @@ import { VideoContext } from '../contexts/VideoContext';
 import APIController from '../lib/APIController';
 import { createQuery, getQuery, parseChapters } from '../lib/utils';
 import { SettingsContext } from '../contexts/SettingsContext';
+import { TabsContext } from '../contexts/TabsContext';
+import SingleTabs from '../components/tabs/SingleTabs';
+import WatchPageLayout from '../components/watch/WatchPageLayout';
 
 export default function WatchPage() {
 	let location = useLocation();
 	let navigate = useNavigate();
 	const [scroll, scrollTo] = useWindowScroll();
 
-	let [{ jumpTo }, set, tabs, tabsFn] = useContext(UIContext);
+	let [{ jumpTo }, set] = useContext(UIContext);
+	let [tabs, tabsFn] = useContext(TabsContext);
 	let [{ noScrollOnTimestamp, noScrollOnNav }] = useContext(SettingsContext);
 
 	let [isLoading, setLoading] = useState(true);
@@ -121,6 +125,7 @@ export default function WatchPage() {
 	return (
 		<>
 			<VideoContext.Provider value={{
+				isLoading,
 				descChapters: parseChapters(video.description || player.details?.shortDescription || ""),
 				chapters: chaptersOverride,
 				setChapters: (c) => {
@@ -140,21 +145,7 @@ export default function WatchPage() {
 				plNext,
 				autoplayNext,
 			}}>
-				<Grid columns={3} my="md">
-					<Grid.Col sm={3} md={2}>
-						<Stack>
-							<Player {...player} playlistTodo />
-							<VideoInfo {...({
-								...video,
-								description: video.description || player.details?.shortDescription,
-							})} />
-							<WatchPageComments />
-						</Stack>
-					</Grid.Col>
-					<Grid.Col sm={3} md={1}>
-						<WatchPageRightside isLoading={isLoading} />
-					</Grid.Col>
-				</Grid>
+				<WatchPageLayout isLoading={isLoading} />
 			</VideoContext.Provider>
 		</>
 	);

@@ -2,13 +2,13 @@ import { Box, Center, Group, Kbd, Stack, Text, Title, Transition } from '@mantin
 import { useHotkeys } from '@mantine/hooks';
 import { IconChevronDown, IconChevronRight } from '@tabler/icons';
 import React, { useContext, useEffect, useRef, useState } from 'react'
-import { UIContext } from '../../contexts/UIContext';
 import { VideoContext } from '../../contexts/VideoContext'
 import useIsMobile from '../../hooks/useIsMobile';
 import CommentsList from '../comments/CommentsList';
+import { TabsContext } from '../../contexts/TabsContext';
 
 const WatchPageComments = () => {
-    let [{}, set, tabs, tabsFn] = useContext(UIContext);
+    let [tabs, tabsFn] = useContext(TabsContext);
     let { commentCount } = useContext(VideoContext);
     let isMobile = useIsMobile();
 

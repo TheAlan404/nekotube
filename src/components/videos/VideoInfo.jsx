@@ -8,7 +8,7 @@ import useIsMobile from '../../hooks/useIsMobile';
 import AlternativesButton from '../util/AlternativesButton';
 import DescriptionRenderer from './DescriptionRenderer';
 
-export default function VideoInfo() {
+export default function VideoInfo({ noToggle }) {
     let video = useContext(VideoContext);
     let isMobile = useIsMobile();
 
@@ -23,7 +23,7 @@ export default function VideoInfo() {
                 <Stack spacing="sm">
                     <Group position='apart' noWrap>
                         <Title order={3}>{video.title}</Title>
-                        {isMobile && <ActionIcon onClick={() => toggle()}>
+                        {isMobile && !noToggle && <ActionIcon onClick={() => toggle()}>
                             <IconChevronDown />
                         </ActionIcon>}
                     </Group>

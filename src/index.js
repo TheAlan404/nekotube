@@ -11,6 +11,8 @@ import SearchPage from './pages/SearchPage';
 import { SettingsContext } from './contexts/SettingsContext';
 import { useListState, useSetState } from '@mantine/hooks';
 import { UIContext } from './contexts/UIContext';
+import { TabsContext } from './contexts/TabsContext';
+import ChannelPage from './pages/ChannelPage';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -45,23 +47,30 @@ function LightTubeReact() {
         <UIContext.Provider value={[
             uiContext,
             setUIContext,
-            tabs,
-            {
-                ...tabHandlers,
-                open: (x) => !tabs.includes(x) && tabHandlers.prepend(x),
-                close: (x) => tabs.includes(x) && tabHandlers.filter(y => y != x),
-                toggle: (x) => tabs.includes(x) ? tabHandlers.filter(y => y != x) : tabHandlers.prepend(x),
-            },
         ]}>
-            <BrowserRouter>
-                <Routes>
-                    <Route path="/" element={<App />}>
-                        <Route index element={<HomePage />} />
-                        <Route path="results" element={<SearchPage />} />
-                        <Route path="watch" element={<WatchPage />} />
-                    </Route>
-                </Routes>
-            </BrowserRouter>
+            <TabsContext.Provider value={[
+                tabs,
+                {
+                    ...tabHandlers,
+                    open: (x) => !tabs.includes(x) && tabHandlers.prepend(x),
+                    close: (x) => tabs.includes(x) && tabHandlers.filter(y => y != x),
+                    toggle: (x) => tabs.includes(x) ? tabHandlers.filter(y => y != x) : tabHandlers.prepend(x),
+                    openOnly: (x) => tabHandlers.setState([x]),
+                },
+            ]}>
+                <BrowserRouter>
+                    <Routes>
+                        <Route path="/" element={<App />}>
+                            <Route index element={<HomePage />} />
+                            <Route path="results" element={<SearchPage />} />
+                            <Route path="watch" element={<WatchPage />} />
+                            <Route path="c/:id" element={<ChannelPage />} />
+                            <Route path="channel/:id" element={<ChannelPage />} />
+                            <Route path="@:id" element={<ChannelPage />} />
+                        </Route>
+                    </Routes>
+                </BrowserRouter>
+            </TabsContext.Provider>
         </UIContext.Provider>
     </SettingsContext.Provider>);
 }

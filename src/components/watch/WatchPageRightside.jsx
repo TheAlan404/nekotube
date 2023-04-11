@@ -7,10 +7,11 @@ import { VideoContext } from '../../contexts/VideoContext';
 import useIsMobile from '../../hooks/useIsMobile';
 import Tabs from '../Tabs'
 import RecommendedList from '../videos/RecommendedList';
+import { TabsContext } from '../../contexts/TabsContext';
 
 
 function TabButtons() {
-    let [{ }, set, tabs, tabsFn] = useContext(UIContext);
+    let [tabs, tabsFn] = useContext(TabsContext);
     let { playlist, chapters, descChapters } = useContext(VideoContext);
     let [{ ux_tabButtons }] = useContext(SettingsContext);
 
@@ -44,12 +45,13 @@ function TabButtons() {
 
 
 const WatchPageRightside = ({ isLoading }) => {
-    let [{ }, set, tabs, tabsFn] = useContext(UIContext);
+    let [{ }, set] = useContext(UIContext); // what??
+    let [tabs, tabsFn] = useContext(TabsContext);
     let [{ autoplay }] = useContext(SettingsContext);
     let isMobile = useIsMobile();
 
     return (
-        <Stack spacing={0}>
+        <Stack spacing={0} w="100%">
             <TabButtons />
             <Tabs />
             {!isMobile && <>

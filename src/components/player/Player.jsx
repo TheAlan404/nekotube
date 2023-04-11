@@ -10,8 +10,8 @@ import { UIContext } from '../../contexts/UIContext';
 import { VideoContext } from '../../contexts/VideoContext';
 import APIController from '../../lib/APIController';
 import { cap, toTimestamp } from '../../lib/utils';
-import ChapterPopup from './ChapterPopup';
 import PlayerLayout from './PlayerLayout';
+import useIsMobile from '../../hooks/useIsMobile';
 
 const filterUsableVideo = f => f.mimeType.startsWith("video/mp4") || f.mimeType.startsWith("video/webm");
 

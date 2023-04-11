@@ -3,7 +3,7 @@ import React from 'react'
 import { Link } from 'react-router-dom';
 import { createQuery } from '../../lib/utils';
 import TextWithTooltip from '../util/TextWithTooltip';
-import { Channel } from '../cards/common';
+import { Channel, Thumbnail } from '../cards/common';
 
 function HorizontalPlaylistCard(props) {
 	return (<Paper p={props.size ? 0 : "sm"} shadow="md" withBorder
@@ -17,12 +17,7 @@ function HorizontalPlaylistCard(props) {
 		})} component={Link} to={"/watch?" + createQuery({ v: props.firstVideoId || (props.videos && props.videos[0]?.id), list: props.id })}>
 		<Grid gutter={props.size}>
 			<Grid.Col span="content">
-				<AspectRatio ratio={16 / 9}
-					w={(16/1.5) + "em"}
-					h={(9/1.5) + "em"}>
-					<Image src={(props.thumbnails && props.thumbnails[props.thumbnails.length-1]?.url)
-                        || ("https://img.youtube.com/vi/" + props.firstVideoId + "/hqdefault.jpg")} />
-				</AspectRatio>
+				<Thumbnail {...props} />
 			</Grid.Col>
 			<Grid.Col span="auto">
 				<Stack spacing={0}>

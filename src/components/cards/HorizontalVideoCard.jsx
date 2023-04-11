@@ -3,7 +3,7 @@ import React from 'react'
 import { Link } from 'react-router-dom';
 import { createQuery } from '../../lib/utils';
 import TextWithTooltip from '../util/TextWithTooltip';
-import { Channel, MiniInfo } from './common';
+import { Channel, MiniInfo, Thumbnail } from './common';
 
 function HorizontalVideoCard(props) {
 	return (<Paper p={props.size ? 0 : "sm"} shadow="md" withBorder
@@ -15,14 +15,9 @@ function HorizontalVideoCard(props) {
                     theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[1],
             },
 		})} component={Link} to={"/watch?" + createQuery({ v: props.id })}>
-		<Grid gutter={props.size}>
+		<Grid gutter={props.size} style={{ flexWrap: "nowrap", }}>
 			<Grid.Col span="content">
-				<AspectRatio ratio={16 / 9}
-					w={(16/1.5) + "em"}
-					h={(9/1.5) + "em"}>
-					<Image src={(props.thumbnails && props.thumbnails[props.thumbnails.length-1]?.url)
-						|| ("https://img.youtube.com/vi/" + props.id + "/hqdefault.jpg")} />
-				</AspectRatio>
+				<Thumbnail {...props} />
 			</Grid.Col>
 			<Grid.Col span="auto">
 				<Stack spacing={0}>

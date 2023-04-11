@@ -42,6 +42,8 @@ const fixup = (s) => s.trim().startsWith("-") ? s.trim().replace("-", "").trim()
 
 export function parseChapters(text = "") {
     text = text.replace(/\n/g, "<br>");
+    text = text.replace(/&lt;/g, "<");
+    text = text.replace(/&gt;/g, ">");
     text = text.replace(/(<a href\=\")(.+)(\">)(.+)(<\/a>)/g, (match, p1, uri, p3, content, p5) => {
         return content;
     });

@@ -15,6 +15,8 @@ export default function useFormatter() {
 
     return (s) => {
         s = s.replace(/\n/g, "<br>");
+        s = s.replace(/&lt;/g, "<");
+        s = s.replace(/&gt;/g, ">");
         s = s.replace(/(<a href\=\")(.+)(\">)(.+)(<\/a>)/g, (match, p1, uri, p3, content, p5) => {
             return content;
         });

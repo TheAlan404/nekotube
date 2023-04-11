@@ -20,6 +20,7 @@
     "uifx": "^2.0.7"
   },
   "scripts": {
+    "serve": "react-scripts start",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
@@ -42,5 +43,11 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "engines": {
+    "node": "14.x"
+  },
+  "glitch": {
+    "projectType": "generated_static"
   }
 }

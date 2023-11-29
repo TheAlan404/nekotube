@@ -2,6 +2,7 @@
   "name": "lighttube-react",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://thealan404.github.io/lighttube-react",
   "dependencies": {
     "@emotion/react": "^11.10.6",
     "@mantine/core": "^6.0.2",

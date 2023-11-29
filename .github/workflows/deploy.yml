@@ -29,6 +29,8 @@ jobs:
             ${{ runner.os }}-node-
 
       - run: npm run build
+        env:
+          CI: false
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3

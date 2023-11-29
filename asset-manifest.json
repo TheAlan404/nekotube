@@ -1,8 +1,8 @@
 {
   "files": {
-    "main.js": "/static/js/main.14550dd9.js",
-    "index.html": "/index.html",
-    "main.14550dd9.js.map": "/static/js/main.14550dd9.js.map"
+    "main.js": "/lighttube-react/static/js/main.14550dd9.js",
+    "index.html": "/lighttube-react/index.html",
+    "main.14550dd9.js.map": "/lighttube-react/static/js/main.14550dd9.js.map"
   },
   "entrypoints": [
     "static/js/main.14550dd9.js"

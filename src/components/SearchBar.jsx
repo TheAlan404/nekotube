@@ -118,11 +118,11 @@ function SearchBar() {
                 close();
 
                 let { video, channel, playlist } = getMeta(query);
-                if (video) navigate("/watch?" + createQuery({ v: video }));
-                else if (channel) navigate("/channel/" + channel);
-                else if (playlist) navigate("/playlist?" + createQuery({ list: playlist }));
+                if (video) navigate("/lighttube-react/watch?" + createQuery({ v: video }));
+                else if (channel) navigate("/lighttube-react/channel/" + channel);
+                else if (playlist) navigate("/lighttube-react/playlist?" + createQuery({ list: playlist }));
 
-                else navigate("/results?" + createQuery({ query }));
+                else navigate("/lighttube-react/results?" + createQuery({ query }));
                 break;
             }
 
@@ -189,7 +189,7 @@ function SearchBar() {
                                         theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[1],
                                 } : {}}
                                 onClick={() => {
-                                    navigate("/results?" + (new URLSearchParams({ query: s }).toString()));
+                                    navigate("/lighttube-react/results?" + (new URLSearchParams({ query: s }).toString()));
                                     setQuery(s);
                                 }}
                                 p={isMobile ? "sm" : 0}>

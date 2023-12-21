@@ -11,8 +11,8 @@ const PlayerProgressBar = () => {
     let ctx = useContext(PlayerContext);
     let [{ hoveredTime }] = useContext(UIContext);
     let {
-        descChapters,
-        chapters,
+        descChapters = [],
+        chapters = [],
     } = useContext(VideoContext);
     const { hovered, ref: containerRef } = useHover();
 
@@ -27,7 +27,7 @@ const PlayerProgressBar = () => {
     let playOnScrubEnd = false;
     let [isSucrubbing, setScrubbing] = useState(false);
 
-    let { ref: useMoveRef, active: isMoving } = useMove(({ x }) => {
+    let { ref: useMoveRef, active: isMoving } = useMove(({ x = 0 }) => {
         setSeekOverride(true);
         setSeekTarget(x * ctx.duration);
         ctx.seekTo(x * ctx.duration);
@@ -63,8 +63,8 @@ const PlayerProgressBar = () => {
                         ts={toTimestamp(hoverTime)}
                         altVariant={hoveredTime > 0}
                         name={([
-                            chapters,
-                            descChapters,
+                            chapters || [],
+                            descChapters || [],
                         ].find(x => x.length) || [{ time: 0, name: "" }])
                             .findLast(x => x.time <= hoverTime)?.name || ""}
                     />
@@ -83,8 +83,8 @@ const PlayerProgressBar = () => {
                         // TODO optimize, too heavy ops
                         segments={calcChapterSegments({
                             chapters: [
-                                chapters,
-                                descChapters,
+                                chapters || [],
+                                descChapters || [],
                             ].find(x => x.length),
                             progress: prog,
                             duration: ctx.duration,

@@ -60,7 +60,7 @@ function LightTubeReact() {
             ]}>
                 <BrowserRouter>
                     <Routes>
-                        <Route path="/" element={<App />}>
+                        <Route path="/lighttube-react/" element={<App />}>
                             <Route index element={<HomePage />} />
                             <Route path="results" element={<SearchPage />} />
                             <Route path="watch" element={<WatchPage />} />

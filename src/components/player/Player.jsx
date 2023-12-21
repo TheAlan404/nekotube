@@ -50,7 +50,7 @@ export default function Player() {
         if(useProxy && APIController.canUseProxy()) {
             for(let item in list) {
                 if(!item.itag) continue;
-                if(list.some(x => x.proxy && x.itag == item.itag)) continue;
+                if(list.some(x => x && x.proxy && x.itag == item.itag)) continue;
 
                 list.push({
                     proxy: true,
@@ -173,8 +173,8 @@ export default function Player() {
 
     useEffect(() => {
         let list = ([
-            video.chapters,
-            video.descChapters,
+            video.chapters || [],
+            video.descChapters || [],
         ].find(x => x.length));
         if(!list) {
             if(currentChapter || hasChapters) set({ currentChapter: null, hasChapters: false });
@@ -214,8 +214,8 @@ export default function Player() {
 
     let chapNext = () => {
         let list = [
-            video.chapters,
-            video.descChapters,
+            video.chapters || [],
+            video.descChapters || [],
         ].find(x => x.length);
         if(!list) return;
 
@@ -227,8 +227,8 @@ export default function Player() {
 
     let chapPrev = () => {
         let list = [
-            video.chapters,
-            video.descChapters,
+            video.chapters || [],
+            video.descChapters || [],
         ].find(x => x.length);
         if(!list) return;
 

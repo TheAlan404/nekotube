@@ -20,7 +20,7 @@ const PlaylistVideoCard = (props) => {
                     backgroundColor:
                         theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[1],
                 },
-            })} component={Link} to={"/watch?" + createQuery({ v: props.id, list: playlist.playlistId, index: props.index })}>
+            })} component={Link} to={"/lighttube-react/watch?" + createQuery({ v: props.id, list: playlist.playlistId, index: props.index })}>
             <Grid gutter={props.size} align="center">
                 <Grid.Col span="content">
                     <Flex w="2em" h="2em" align="center" justify="center" sx={(theme) => ({

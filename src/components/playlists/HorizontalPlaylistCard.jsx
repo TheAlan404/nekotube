@@ -14,7 +14,7 @@ function HorizontalPlaylistCard(props) {
                 backgroundColor:
                     theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[1],
             },
-		})} component={Link} to={"/watch?" + createQuery({ v: props.firstVideoId || (props.videos && props.videos[0]?.id), list: props.id })}>
+		})} component={Link} to={"/lighttube-react/watch?" + createQuery({ v: props.firstVideoId || (props.videos && props.videos[0]?.id), list: props.id })}>
 		<Grid gutter={props.size}>
 			<Grid.Col span="content">
 				<Thumbnail {...props} />

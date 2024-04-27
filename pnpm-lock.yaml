@@ -14,6 +14,9 @@ dependencies:
   '@mantine/notifications':
     specifier: ^7.8.1
     version: 7.8.1(@mantine/core@7.8.1)(@mantine/hooks@7.8.1)(react-dom@18.2.0)(react@18.2.0)
+  '@tabler/icons-react':
+    specifier: ^3.2.0
+    version: 3.2.0(react@18.2.0)
   react:
     specifier: ^18.2.0
     version: 18.2.0
@@ -732,6 +735,19 @@ packages:
     requiresBuild: true
     dev: true
     optional: true
+
+  /@tabler/icons-react@3.2.0(react@18.2.0):
+    resolution: {integrity: sha512-b1mZT1XpZrzvbM+eFe1YbYbxkzgJ18tM4knZKqXh0gnHDZ6XVLIH3TzJZ3HZ7PTkUqZLZ7XcGae3qQVGburlBw==}
+    peerDependencies:
+      react: '>= 16'
+    dependencies:
+      '@tabler/icons': 3.2.0
+      react: 18.2.0
+    dev: false
+
+  /@tabler/icons@3.2.0:
+    resolution: {integrity: sha512-h8GQ2rtxgiSjltrVz4vcopAxTPSpUSUi5nBfJ09H3Bk4fJk6wZ/dVUjzhv/BHfDwGTkAxZBiYe/Q/T95cPeg5Q==}
+    dev: false
 
   /@types/babel__core@7.20.5:
     resolution: {integrity: sha512-qoQprZvz5wQFJwMDqeseRXWv3rqMvhgpbXFfVyWhbx9X47POIA6i/+dXefEmZKoAgOaTdaIgNSMqMIU61yRyzA==}

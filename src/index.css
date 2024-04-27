@@ -1,0 +1,32 @@
+.progressbar-outer, .progressbar-inner {
+    height: 100%;
+}
+
+.progressbar-outer {
+    overflow: hidden;
+    opacity: 0.7;
+    background-color: var(--mantine-color-dark-9);
+}
+
+.progressbar-outer:hover {
+    height: 150%;
+}
+
+.progressbar-inner {
+    background-color: var(--mantine-color-violet-filled);
+}
+
+.progressbar-inner[data-playing="true"] {
+    border-top-right-radius: var(--mantine-radius-md);
+    border-bottom-right-radius: var(--mantine-radius-md);
+}
+
+.progressbar-outer:first-of-type {
+    border-top-left-radius: var(--mantine-radius-md);
+    border-bottom-left-radius: var(--mantine-radius-md);
+}
+
+.progressbar-outer:last-of-type {
+    border-top-right-radius: var(--mantine-radius-md);
+    border-bottom-right-radius: var(--mantine-radius-md);
+}

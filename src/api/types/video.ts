@@ -9,21 +9,28 @@ export interface VideoInfo {
     id: string;
     title: string;
     description: string;
+    chapters: Chapter[];
     published: Date;
     channel: Channel;
     keywords: string[];
     likeCount?: number;
     viewCount?: number;
+    formats: VideoFormat[];
 };
 
 export interface VideoFormat {
     itag: string;
+    url: string;
+    mimeType: string;
     bitrate: number;
     fps: number;
     width: number;
     height: number;
-    mimeType: string;
-    url: string;
+};
+
+export interface Chapter {
+    time: number;
+    label: string;
 };
 
 export interface Caption {

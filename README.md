@@ -1,76 +1,30 @@
-# lighttube-react
+# React + TypeScript + Vite
 
-Alternative frontend for [lighttube](https://github.com/kuylar/lighttube) written using React, [Mantine](https://mantine.dev/), love <3 and deez.
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-LightTubeReact is fully client-side and uses lighttube's API.
+Currently, two official plugins are available:
 
-## Features
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-### Standart stuff
+## Expanding the ESLint configuration
 
-- Search
-- Video playback
-- Playlists (on `/watch` only for now)
-- Chapters
+If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
 
-### Keyboard Shortcuts
+- Configure the top-level `parserOptions` property like this:
 
-TODO: show inside ltr
-
-Standard Youtube player shortcuts plus:
-
-- `shift + S`: Focus on search bar
-- `shift + (up / down)`: play previous / next playlist track
-- `shift + (left / right)`: seek to previous / next chapter
-
-### Screenshots
-
-because i got lazy
-
-![Chapters Tab](screenshots/chapters_tab.png)
-![You can select a comment to use chapters for](screenshots/comment_chapters.png)
-![Comments as a tab](screenshots/comments_tab.png)
-![page below](screenshots/page_below.png)
-![progress bar with hover](screenshots/progressbar_hover.png)
-![recommended, as a tab](screenshots/recommended_tab.png)
-![saves progress](screenshots/resuming.png)
-![search bar](screenshots/searchbar.png)
-![search bar showing autocomplete](screenshots/searchbar_autocomplete.png)
-![search bar quick play](screenshots/searchbar_url.png)
-![volume slider you can use with your fingers and mouse scroll](screenshots/volume.png)
-
-![mobile home page](screenshots/mobile_mainpage.png)
-![mobile search bar autocompletes](screenshots/mobile_searchbar.png)
-![mobile search page](screenshots/mobile_searchresults.png)
-![mobile watch page](screenshots/mobile_watch.png)
-![mobile recommended tab](screenshots/mobile_recommended.png)
-![mobile comments](screenshots/mobile_comments.png)
-![mobile options](screenshots/mobile_settings.png)
-
-## Building
-
-Run the dev server via:
-
-```sh
-npm start
+```js
+export default {
+  // other rules...
+  parserOptions: {
+    ecmaVersion: 'latest',
+    sourceType: 'module',
+    project: ['./tsconfig.json', './tsconfig.node.json'],
+    tsconfigRootDir: __dirname,
+  },
+}
 ```
 
-Build the project to the `/build` folder via:
-
-```sh
-npm run build
-```
-
-## TODO
-
-- manual player format selection + auto format changer
-- reel shelf renderers
-- /playlist
-- /channel
-- Better Shorts/Reels
-- Sponsorblock
-- Custom Theming
-- Custom Player Layouts
-  - [like this](https://media.discordapp.net/attachments/931433557547700294/1084900495396700290/image.png?width=728&height=418)
-  - [or this](https://media.discordapp.net/attachments/931433557547700294/1084899625720348722/image.png?width=713&height=418)
-  - etc (those were failed attempts but they were cool)
+- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
+- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
+- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list

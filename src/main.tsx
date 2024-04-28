@@ -7,6 +7,7 @@ import '@mantine/core/styles.css';
 import '@mantine/notifications/styles.css';
 import { APIControllerProvider } from "./api/context/APIController.tsx"
 import { VideoPlayerProvider } from "./api/context/VideoPlayerProvider.tsx"
+import { PreferencesProvider } from "./api/pref/Preferences.tsx"
 
 const theme = createTheme({
     colors: {
@@ -39,9 +40,11 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 	<React.StrictMode>
 		<MantineProvider theme={theme} defaultColorScheme="dark">
 			<APIControllerProvider>
-				<VideoPlayerProvider>
-					<App />
-				</VideoPlayerProvider>
+				<PreferencesProvider>
+                    <VideoPlayerProvider>
+                        <App />
+                    </VideoPlayerProvider>
+                </PreferencesProvider>
 			</APIControllerProvider>
 		</MantineProvider>
 	</React.StrictMode>,

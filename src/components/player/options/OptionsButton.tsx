@@ -1,4 +1,4 @@
-import { ActionIcon, Drawer, Popover, Tooltip } from "@mantine/core";
+import { ActionIcon, Drawer, Popover, ScrollArea, Tooltip } from "@mantine/core";
 import { IconSettings } from "@tabler/icons-react";
 import { OptionsMenu } from "./OptionsMenu";
 import { useDisclosure, useHotkeys } from "@mantine/hooks";
@@ -29,6 +29,7 @@ export const OptionsButton = () => {
                 onClose={() => { closeSfx(); close(); }}
                 position="right"
                 title="Options"
+                scrollAreaComponent={ScrollArea.Autosize}
             >
                 <OptionsMenu />
             </Drawer>

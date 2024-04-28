@@ -12,6 +12,7 @@ export const FormatSelect = () => {
 
     return (
         <Select
+            w="100%"
             label={"Format"}
             value={activeFormat.itag}
             onChange={(v) => setFormat(availableFormats[Number(v)]!)}

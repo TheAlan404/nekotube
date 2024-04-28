@@ -1,5 +1,6 @@
 import UIFx from "uifx";
 import { randArr } from "../utils/math";
+import { usePreference } from "../api/pref/Preferences";
 
 export const createUIFX = (id: string, volume = 1) => new UIFx("/assets/sfx/" + id, {
     throttleMs: 50,
@@ -22,9 +23,11 @@ export const UISfxLibrary = {
 
 export type SfxName = keyof typeof UISfxLibrary;
 export const useSoundEffect = (ids: SfxName[]) => {
+    let uiSoundEffects = usePreference("uiSoundEffects");
     let sfx = ids.map(id => UISfxLibrary[id]);
 
     return (volume?: number) => {
+        if(!uiSoundEffects) return;
         randArr(sfx).play(volume);
     };
 };

@@ -1,4 +1,4 @@
-import { ActionIcon, Grid, Group, SegmentedControl, Select, Stack, Text, TextInput, Tooltip } from "@mantine/core";
+import { ActionIcon, Fieldset, Grid, Group, Paper, SegmentedControl, Select, Stack, Text, TextInput, Tooltip } from "@mantine/core";
 import { useContext, useEffect, useState } from "react";
 import { APIContext } from "../../../api/context/APIController";
 import { IconReload } from "@tabler/icons-react";
@@ -25,7 +25,7 @@ export const InstanceSelect = () => {
     };
 
     return (
-        <Stack>
+        <Stack w="100%">
             <Grid align="end">
                 <Grid.Col span="auto">
                     <Select
@@ -64,32 +64,34 @@ export const InstanceSelect = () => {
                 </Grid.Col>
             </Grid>
             {customInstance && (
-                <Stack>
-                    <Group justify="space-between">
-                        <Text>
-                            Instance Type
-                        </Text>
-                        <SegmentedControl
-                            data={[{ value: "lighttube", label: "LightTube" }]}
-                            value={currentInstance.type}
-                            onChange={(type: Instance["type"]) => setInstanceReal({
+                <Paper>
+                    <Stack gap="xs">
+                        <Group justify="space-between">
+                            <Text>
+                                Instance Type
+                            </Text>
+                            <SegmentedControl
+                                data={[{ value: "lighttube", label: "LightTube" }]}
+                                value={currentInstance.type}
+                                onChange={(type: Instance["type"]) => setInstanceReal({
+                                    ...currentInstance,
+                                    name: "Custom",
+                                    type,
+                                })}
+                            />
+                        </Group>
+                        <TextInput
+                            label="URL"
+                            description="URL of the instance without trailing /"
+                            value={currentInstance.url}
+                            onChange={(e) => setInstanceReal({
                                 ...currentInstance,
                                 name: "Custom",
-                                type,
+                                url: e.currentTarget.value,
                             })}
                         />
-                    </Group>
-                    <TextInput
-                        label="URL"
-                        description="URL of the instance without trailing /"
-                        value={currentInstance.url}
-                        onChange={(e) => setInstanceReal({
-                            ...currentInstance,
-                            name: "Custom",
-                            url: e.currentTarget.value,
-                        })}
-                    />
-                </Stack>
+                    </Stack>
+                </Paper>
             )}
         </Stack>
     );

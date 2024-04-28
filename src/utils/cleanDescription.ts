@@ -1,4 +1,4 @@
-export const cleanDescription = (text: string) => {
+export const cleanDescription = (text = "") => {
     text = text.replaceAll("\n", "<br>");
     text = text.replaceAll("&lt;", "<");
     text = text.replaceAll("&gt;", ">");

@@ -118,6 +118,8 @@ export class InvidiousAPIProvider implements APIProvider {
     getVideoInfo = async (id: string) => {
         let v: InvidiousVideo = await this.request(`videos/${id}`);
 
+        console.log(v);
+
         return {
             id,
             title: v.title,

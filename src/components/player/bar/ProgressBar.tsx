@@ -1,13 +1,14 @@
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { VideoPlayerContext } from "../../../api/context/VideoPlayerContext";
 import { useVideoEventListener } from "../../../hooks/useVideoEventListener";
 import { Group } from "@mantine/core";
 import { calculateSegments, Segment } from "./segments";
-import { useMove } from "@mantine/hooks";
+import { mergeRefs, useHover, useMergedRef, useMove } from "@mantine/hooks";
 import { getBuffered } from "../../../utils/getBuffered";
 
 export const ProgressBar = () => {
     const { videoElement, activeChapters, seekTo, playState } = useContext(VideoPlayerContext);
+    const { ref: hoverRef, hovered } = useHover();
     const [segments, setSegments] = useState<Segment[]>([
         {
             position: {
@@ -22,14 +23,18 @@ export const ProgressBar = () => {
 
     let [playOnScrubEnd, setPlayOnScrubEnd] = useState(false);
     let [seekTarget, setSeekTarget] = useState(0);
-    const { ref, active: isScrubbing } = useMove(({ x = 0 }) => {
+    let seekTargetRef = useRef(0);
+    const { ref: moveRef, active: isScrubbing } = useMove(({ x = 0 }) => {
+        seekTo(x * videoElement.duration);
         setSeekTarget(x * videoElement.duration);
+        seekTargetRef.current = x * videoElement.duration;
     }, {
         onScrubStart: () => {
             setPlayOnScrubEnd(playState == "playing");
+            videoElement.pause();
         },
         onScrubEnd: () => {
-            seekTo(seekTarget);
+            seekTo(seekTargetRef.current);
             if(playOnScrubEnd) videoElement.play();
         },
     });
@@ -53,6 +58,8 @@ export const ProgressBar = () => {
             progress,
         }));
     }, [activeChapters, isScrubbing ? seekTarget : 0]);
+
+    const ref = useMergedRef(moveRef, hoverRef);
 
     return (
         <Group align="center" w="100%">
@@ -84,6 +91,15 @@ export const ProgressBar = () => {
                         ))}
                     </div>
                 ))}
+
+                {(false && hovered) && (
+                    <div
+                        className="progressbar-thumb"
+                        style={{
+                            left: `calc(${(progress / videoElement.duration) * 100}% - 2px)`,
+                        }}
+                    />
+                )}
             </Group>
         </Group>
     );

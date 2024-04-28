@@ -8,6 +8,14 @@
     background-color: var(--mantine-color-dark-9);
 }
 
+.progressbar-thumb {
+    position: absolute;
+    height: 1em;
+    width: 1em;
+    border-radius: 1em;
+    background-color: var(--mantine-color-violet-filled);
+}
+
 .progressbar-outer:hover {
     height: 150%;
 }

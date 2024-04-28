@@ -36,7 +36,7 @@ export const fetchInvidiousPublicInstances = async () => {
 
     return li
         .filter(([_, i]) => i.type == "https")
-        //.filter(([_, i]) => i.cors && i.api)
+        .filter(([_, i]) => i.cors && i.api)
         .map(([name, i]) => ({
             type: "invidious",
             url: i.uri,

@@ -1,4 +1,4 @@
-.progressbar-outer, .progressbar-inner {
+.progressbar-outer, .progressbar-inner, .progressbar-buffer {
     height: 100%;
 }
 
@@ -15,6 +15,13 @@
 .progressbar-inner {
     background-color: var(--mantine-color-violet-filled);
 }
+
+.progressbar-buffer {
+    background-color: var(--mantine-color-yellow-filled);
+    opacity: 0.7;
+}
+
+/* -- rounded corners -- */
 
 .progressbar-inner[data-playing="true"] {
     border-top-right-radius: var(--mantine-radius-md);

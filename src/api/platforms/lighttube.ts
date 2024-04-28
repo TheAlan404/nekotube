@@ -1,6 +1,7 @@
 import { LTInstance } from "../types/instances";
 import { APIProvider } from "../types/api"
 import { SearchSuggestions, VideoInfo } from "../types/video";
+import { parseChapters } from "../../utils/parseChapters";
 
 interface LTResult<T> {
     status: string;
@@ -117,13 +118,19 @@ export class LTAPIProvider implements APIProvider {
                 id: ltVideo.channel.id,
                 title: ltVideo.channel.id,
             },
+            chapters: parseChapters(ltVideo.description),
             description: ltVideo.description,
             keywords: ltPlayer.details.keywords,
             published: new Date(ltPlayer.details.publishDate),
 
             formats: [
                 ...ltPlayer.formats,
-                ...ltPlayer.adaptiveFormats,
+                //...ltPlayer.adaptiveFormats,
+                ...ltPlayer.formats.map(f => ({
+                    ...f,
+                    itag: f.itag+`-proxy`,
+                    url: `${this.instance.url}/proxy/media/${id}/${f.itag}`,
+                })),
             ],
         };
     };

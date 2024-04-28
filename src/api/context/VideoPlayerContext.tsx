@@ -1,7 +1,7 @@
 import { createContext } from "react";
-import { Chapter, VideoInfo } from "../types/video";
+import { Chapter, VideoFormat, VideoInfo } from "../types/video";
 
-export type PlayState = "loading" | "playing" | "paused";
+export type PlayState = "loading" | "playing" | "paused" | "error";
 
 export interface ActiveChapterList {
     type: "video" | "comment" | "user";
@@ -11,14 +11,20 @@ export interface ActiveChapterList {
 export interface VideoPlayerAPI {
     videoElement: HTMLVideoElement;
 
-    videoID: string | null;
-    setVideoID: (id: string | null) => void;
+    videoID?: string;
+    setVideoID: (id?: string) => void;
+    fetchVideoInfo: () => void;
 
-    videoInfo: VideoInfo | null;
+    videoInfo?: VideoInfo;
     activeChapters: ActiveChapterList;
     setActiveChapters: (source: ActiveChapterList["type"], chapters?: Chapter[]) => void;
 
+    activeFormat?: VideoFormat;
+    availableFormats: VideoFormat[];
+    setFormat: (fmt: VideoFormat) => void;
+
     playState: PlayState;
+    errorMessage?: string;
     togglePlay: () => void;
     volume: number;
     muted: boolean;

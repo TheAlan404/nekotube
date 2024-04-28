@@ -1,10 +1,16 @@
 import { clamp } from "@mantine/hooks";
 import { Chapter } from "../../../api/types/video";
+import { Buffered } from "../../../utils/getBuffered";
 
-export interface Segment {
+export interface Position {
     start: number;
     end: number;
-    value: number;
+};
+
+export interface Segment {
+    position: Position;
+    progress: number;
+    buffered: Position[];
     label: string;
 };
 
@@ -12,16 +18,45 @@ export const calculateSegments = ({
     chapters,
     progress,
     duration,
+    buffered,
 }: {
     chapters: Chapter[];
     progress: number;
     duration: number;
+    buffered: Buffered[];
 }): Segment[] => {
+    // |  =======      ===      |
+    // |      |.....|      |    |
+    const getBufferedPositions = (startTime: number, endTime: number): Position[] => {
+        let pos: Position[] = [];
+
+        for(let buf of buffered) {
+            if(endTime < buf.start) continue;
+            if(startTime > buf.end) continue;
+
+            // 0-aligned
+            let bufferStart = buf.start - startTime;
+            let bufferEnd = Math.min(buf.end, endTime) - startTime;
+
+            let segmentDuration = endTime - startTime;
+
+            pos.push({
+                start: (bufferStart / segmentDuration) * 100,
+                end: (bufferEnd / segmentDuration) * 100,
+            });
+        }
+
+        return pos;
+    };
+
     if(!chapters.length) return [{
-        start: 0,
-        end: 100,
+        position: {
+            start: 0,
+            end: 100,
+        },
         label: "",
-        value: (progress / duration) * 100,
+        progress: (progress / duration) * 100,
+        buffered: getBufferedPositions(0, duration),
     }];
 
     let segments: Segment[] = [];
@@ -34,9 +69,12 @@ export const calculateSegments = ({
         let endPer = (endTime / duration) - startPer;
 
         segments.push({
-            start: startPer * 100,
-            end: endPer * 100,
-            value: clamp(0, (progress - startTime) / (endTime - startTime), 1) * 100,
+            position: {
+                start: startPer * 100,
+                end: endPer * 100,
+            },
+            progress: clamp(0, (progress - startTime) / (endTime - startTime), 1) * 100,
+            buffered: getBufferedPositions(startTime, endTime),
             label: "",
         });
     }
@@ -52,9 +90,12 @@ export const calculateSegments = ({
         let endPer = (endTime / duration) - startPer;
 
         segments.push({
-            start: startPer * 100,
-            end: endPer * 100,
-            value: clamp(0, (progress - startTime) / (endTime - startTime), 1) * 100,
+            position: {
+                start: startPer * 100,
+                end: endPer * 100,
+            },
+            progress: clamp(0, (progress - startTime) / (endTime - startTime), 1) * 100,
+            buffered: getBufferedPositions(startTime, endTime),
             label: currentChapter.label,
         });
     };

@@ -1,22 +1,33 @@
-import { useContext, useEffect, useRef } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { VideoPlayerContext } from "../../api/context/VideoPlayerContext"
-import { Box, Group, Stack, Title, Transition } from "@mantine/core";
+import { Box, Button, Group, Loader, Stack, Text, Title, Transition } from "@mantine/core";
 import { PlayPauseButton } from "./controls/PlayPauseButton";
 import { PlayerTimestamp } from "./controls/PlayerTimestamp";
 import { VolumeControls } from "./controls/VolumeControls";
 import { ProgressBar } from "./bar/ProgressBar";
-import { useDocumentTitle, useHotkeys, useHover } from "@mantine/hooks";
+import { useDocumentTitle, useFullscreen, useHotkeys, useHover, useMergedRef } from "@mantine/hooks";
+import { IconAlertTriangle, IconReload } from "@tabler/icons-react";
+import { FullscreenButton } from "./controls/FullscreenButton";
+import { OptionsButton } from "./options/OptionsButton";
+import { useSoundEffect } from "../../hooks/useSoundEffect";
 
 export const VideoPlayer = () => {
-    const { videoElement, setVideoID, videoInfo, seekTo, togglePlay, playState, muted } = useContext(VideoPlayerContext);
+    const { videoElement, setVideoID, videoInfo, seekTo, togglePlay, playState, muted, errorMessage, fetchVideoInfo } = useContext(VideoPlayerContext);
     const containerRef = useRef<HTMLDivElement>(null);
+    const { ref: fullscreenRef, fullscreen, toggle: toggleFullscreen } = useFullscreen();
     const { ref: hoverRef, hovered } = useHover();
+
+    const errorSfx = useSoundEffect(["error"]);
+    useEffect(() => {
+        if(playState == "error") errorSfx();
+    }, [playState]);
 
     useEffect(() => {
         containerRef.current?.appendChild(videoElement);
 
+        setVideoID("UnIhRpIT7nc");
         //setVideoID("FtutLA63Cp8");
-        setVideoID("4Bz0pYhAoFg");
+        //setVideoID("4Bz0pYhAoFg");
     }, [videoElement, containerRef.current]);
 
     useHotkeys([
@@ -28,10 +39,17 @@ export const VideoPlayer = () => {
         ["Space", () => togglePlay()],
     ]);
 
-    useDocumentTitle((playState == "paused" ? "⏸︎ " : (muted ? "🔇 " : "")) + videoInfo.title + " - NekoTube");
+    useDocumentTitle(videoInfo ? (
+        (playState == "paused" ? "⏸︎ " : (muted ? "🔇 " : "")) + videoInfo.title + " - NekoTube"
+    ) : "NekoTube");
+
+    const mergedRef = useMergedRef(
+        hoverRef,
+        fullscreenRef,
+    );
 
     return (
-        <Box w="100%" h="100%" className="videoPlayer" style={{ position: "relative" }} ref={hoverRef}>
+        <Box w="100%" h="100%" className="videoPlayer" style={{ position: "relative" }} ref={mergedRef}>
             <Box
                 bg="dark.9"
                 style={{
@@ -61,9 +79,48 @@ export const VideoPlayer = () => {
                             }}
                             onClick={(e) => e.stopPropagation()}
                         >
-                            <Title order={4}>
-                                {videoInfo?.title || "Loading..."}
-                            </Title>
+                            <Group align="center">
+                                {playState == "loading" && (
+                                    <Loader size="sm" />
+                                )}
+                                {playState == "error" && (
+                                    <IconAlertTriangle />
+                                )}
+                                <Title order={4}>
+                                    {playState == "error" ? (
+                                        "Error"
+                                    ) : (
+                                        videoInfo?.title || "Loading..."
+                                    )}
+                                </Title>
+                            </Group>
+                        </Stack>
+                        <Stack w="100%" align="center">
+                            {playState == "loading" && (
+                                <Box p="md" bg="dark" style={{ opacity: 0.9, borderRadius: "var(--mantine-radius-md)" }}>
+                                    <Loader />
+                                </Box>
+                            )}
+                            {playState == "error" && (
+                                <Stack w="100%" py="md" align="center" bg="dark">
+                                    <Stack align="center">
+                                        <IconAlertTriangle />
+                                        <Stack gap={0} align="center">
+                                            <Text fw="bolder" c="yellow">Error</Text>
+                                            <Text>{errorMessage}</Text>
+                                        </Stack>
+                                        <Button
+                                            variant="light"
+                                            color="violet"
+                                            size="compact-sm"
+                                            leftSection={<IconReload />}
+                                            onClick={() => fetchVideoInfo()}
+                                        >
+                                            Retry
+                                        </Button>
+                                    </Stack>
+                                </Stack>
+                            )}
                         </Stack>
                         <Stack
                             gap="xs"
@@ -82,7 +139,15 @@ export const VideoPlayer = () => {
                                     <VolumeControls />
                                     <PlayerTimestamp />
                                 </Group>
-                                meow
+                                <Group>
+                                    <OptionsButton />
+                                    <FullscreenButton
+                                        {...{
+                                            fullscreen,
+                                            toggleFullscreen,
+                                        }}
+                                    />
+                                </Group>
                             </Group>
                         </Stack>
                     </Stack>

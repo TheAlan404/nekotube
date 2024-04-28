@@ -11,8 +11,6 @@ export const parseChapters = (description: string): Chapter[] => {
     let lines = text.split(/<br>+/g);
     let chapters: Chapter[] = [];
 
-    console.log(text)
-
     for(let line of lines) {
         let matches = line.match(TimestampRegex);
         if(!matches) continue;

@@ -1,6 +1,6 @@
-import { ActionIcon, Group, Slider, Stack, Transition } from "@mantine/core";
-import { useHover } from "@mantine/hooks";
-import { useContext } from "react";
+import { ActionIcon, Group, Slider, Stack, Tooltip, Transition } from "@mantine/core";
+import { useHotkeys, useHover } from "@mantine/hooks";
+import { useContext, useState } from "react";
 import { VideoPlayerContext } from "../../../api/context/VideoPlayerContext";
 import { IconVolume, IconVolume2, IconVolumeOff } from "@tabler/icons-react";
 
@@ -11,27 +11,34 @@ export const VolumeControls = () => {
         setMuted,
         setVolume,
     } = useContext(VideoPlayerContext);
+    const [isChanging, setIsChanging] = useState(false);
     const { hovered, ref } = useHover();
+
+    useHotkeys([
+        ["m", () => setMuted(!muted)],
+    ]);
     
     return (
         <Group ref={ref} wrap="nowrap">
-            <ActionIcon
-                variant="light"
-                color="violet"
-                onClick={() => setMuted(!muted)}
-            >
-                {muted ? (
-                    <IconVolumeOff />
-                ) : (
-                    volume < 0.5 ? (
-                        <IconVolume2 />
+            <Tooltip label={muted ? "Unmute (m)" : "Mute (m)"}>
+                <ActionIcon
+                    variant="light"
+                    color="violet"
+                    onClick={() => setMuted(!muted)}
+                >
+                    {muted ? (
+                        <IconVolumeOff />
                     ) : (
-                        <IconVolume />
-                    )
-                )}
-            </ActionIcon>
+                        volume < 0.5 ? (
+                            <IconVolume2 />
+                        ) : (
+                            <IconVolume />
+                        )
+                    )}
+                </ActionIcon>
+            </Tooltip>
             <Transition
-                mounted={hovered}
+                mounted={isChanging || hovered}
                 transition={{
                     in: { width: "100%" },
                     out: { width: "0%" },
@@ -47,7 +54,11 @@ export const VolumeControls = () => {
                             max={1}
                             step={0.03}
                             value={volume}
-                            onChange={(v) => setVolume(v)}
+                            onChange={(v) => {
+                                setIsChanging(true);
+                                setVolume(v);
+                            }}
+                            onChangeEnd={() => setIsChanging(false)}
                             color="violet"
                         />
                     </Group>

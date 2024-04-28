@@ -1,7 +1,7 @@
 import { useContext, useEffect, useMemo, useState } from "react";
 import { ActiveChapterList, PlayState, VideoPlayerContext } from "./VideoPlayerContext";
 import { APIContext } from "./APIController";
-import { VideoInfo } from "../types/video";
+import { VideoFormat, VideoInfo } from "../types/video";
 import { useVideoEventListener } from "../../hooks/useVideoEventListener";
 import { parseChapters } from "../../utils/parseChapters";
 import { clamp } from "@mantine/hooks";
@@ -23,7 +23,10 @@ export const VideoPlayerProvider = ({
         type: "video",
         chapters: [],
     });
+    const [activeFormat, setActiveFormat] = useState<VideoFormat | null>(null);
+    const [availableFormats, setAvailableFormats] = useState<VideoFormat[]>([]);
     const [playState, setPlayState] = useState<PlayState>("loading");
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [volume, setVolume] = useState(1);
     const [muted, setMuted] = useState(false);
 
@@ -42,57 +45,62 @@ export const VideoPlayerProvider = ({
         videoElement.volume = volume;
     }, [volume]);
 
-    useEffect(() => {
-        if(playState == "playing" && videoElement.paused) {
-            videoElement.play()
-                .catch((e) => {
-                    if(e instanceof DOMException && e.code == 20) {
-                        videoElement.load();
-                    }
-
-                    setPlayState("paused");
-                })
-        } else if(playState == "paused" && !videoElement.paused) {
-            videoElement.pause();
-        }
-    }, [playState]);
-
-    useEffect(() => {
-        (async () => {
-            if(!videoID) return setVideoInfo(null);
+    const fetchVideoInfo = async () => {
+        setPlayState("loading");
+        setAvailableFormats([]);
+        setActiveFormat(null);
+        setVideoInfo(null);
+        if(!videoID) return;
+        
+        try {
             let info = await api.getVideoInfo(videoID);
-            console.log("VideoInfo", info);
             setVideoInfo(info);
 
             let chapters = parseChapters(info.description);
-            console.log("Chapters", chapters);
             setActiveChapters({
                 type: "video",
                 chapters,
             });
-        })()
+        } catch(e) {
+            console.log(e);
+            setErrorMessage(e.toString() || "Unknown Error");
+            setPlayState("error");
+        }
+    };
+
+    useEffect(() => {
+        fetchVideoInfo();
     }, [currentInstance, videoID]);
 
     useEffect(() => {
         if(!videoInfo) return;
-        let fmt = videoInfo.formats.find(f => f.url);
-        videoElement.src = fmt.url;
+
+        setAvailableFormats(videoInfo.formats);
+        setActiveFormat(videoInfo.formats[0]);
     }, [videoInfo]);
 
-    useVideoEventListener(videoElement, "timeupdate", () => {
-
-    });
+    useEffect(() => {
+        videoElement.src = activeFormat?.url || "";
+    }, [activeFormat]);
 
     useVideoEventListener(videoElement, "error", (e) => {
-
+        console.log(e);
     });
 
     useVideoEventListener(videoElement, "ended", () => {
         setPlayState("paused");
     });
 
-    useVideoEventListener(videoElement, "canplay", () => {
+    useVideoEventListener(videoElement, "loadeddata", () => {
+        videoElement.play()
+    });
+
+    useVideoEventListener(videoElement, "pause", () => {
         setPlayState("paused");
+    });
+
+    useVideoEventListener(videoElement, "play", () => {
+        setPlayState("playing");
     });
 
     return (
@@ -102,6 +110,13 @@ export const VideoPlayerProvider = ({
             videoID,
             setVideoID: (id) => setVideoID(id),
             videoInfo,
+            fetchVideoInfo,
+
+            activeFormat,
+            availableFormats,
+            setFormat: (fmt) => {
+                setActiveFormat(fmt);
+            },
 
             activeChapters,
             setActiveChapters: (source, chapters = []) => {
@@ -119,8 +134,21 @@ export const VideoPlayerProvider = ({
             },
 
             playState,
+            errorMessage,
             togglePlay() {
-                setPlayState(s => s == "paused" ? "playing" : (s == "playing" ? "paused" : s));
+                if(playState == "loading") return;
+                if(playState == "playing" && !videoElement.paused) {
+                    videoElement.pause();
+                } else if(playState == "paused" && videoElement.paused) {
+                    videoElement.play()
+                        .catch((e) => {
+                            if(e instanceof DOMException && e.code == 20) {
+                                videoElement.load();
+                            }
+        
+                            setPlayState("paused");
+                        })
+                }
             },
             volume,
             setVolume,

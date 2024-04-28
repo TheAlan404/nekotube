@@ -2,6 +2,8 @@ import { createContext, useEffect, useMemo, useState } from "react";
 import { Instance } from "../types/instances";
 import { APIProvider } from "../types/api";
 import { LTAPIProvider } from "../platforms/lighttube";
+import { fetchInvidiousPublicInstances, fetchLightTubePublicInstances } from "../platforms/public";
+import { InvidiousAPIProvider } from "../platforms/invidious";
 
 export interface APIController {
     currentInstance: Instance;
@@ -50,15 +52,9 @@ export const APIControllerProvider = ({ children }: React.PropsWithChildren) => 
 
     const refreshAvailableInstances = async () => {
         setIsRefreshing(true);
-        const res = await fetch(LT_PUBLIC_INSTANCES);
-        const list: { host: string; api: boolean }[] = await res.json();
-        
         setAvailableInstances([
-            ...list.filter(i => i.api).map(i => ({
-                type: "lighttube",
-                name: i.host.replace("https://", ""),
-                url: i.host,
-            } as Instance)),
+            ...await fetchLightTubePublicInstances(),
+            ...await fetchInvidiousPublicInstances(),
             ...CUSTOM_INSTANCES,
         ]);
         setIsRefreshing(false);
@@ -71,6 +67,8 @@ export const APIControllerProvider = ({ children }: React.PropsWithChildren) => 
     const api = useMemo(() => {
         if(currentInstance.type == "lighttube") {
             return new LTAPIProvider(currentInstance);
+        } else if (currentInstance.type == "invidious") {
+            return new InvidiousAPIProvider(currentInstance);
         } else {
             throw new Error("uhhh");
         }

@@ -11,6 +11,8 @@ import { FullscreenButton } from "./controls/FullscreenButton";
 import { OptionsButton } from "./options/OptionsButton";
 import { useSoundEffect } from "../../hooks/useSoundEffect";
 
+const CORS_ERROR_MESSAGE = "TypeError: NetworkError when attempting to fetch resource.";
+
 export const VideoPlayer = () => {
     const { videoElement, setVideoID, videoInfo, seekTo, togglePlay, playState, muted, errorMessage, fetchVideoInfo } = useContext(VideoPlayerContext);
     const containerRef = useRef<HTMLDivElement>(null);
@@ -108,6 +110,9 @@ export const VideoPlayer = () => {
                                         <Stack gap={0} align="center">
                                             <Text fw="bolder" c="yellow">Error</Text>
                                             <Text>{errorMessage}</Text>
+                                            {errorMessage == CORS_ERROR_MESSAGE && (
+                                                <Text c="dimmed">This is most likely a CORS issue</Text>
+                                            )}
                                         </Stack>
                                         <Button
                                             variant="light"

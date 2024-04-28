@@ -4,4 +4,10 @@ export interface LTInstance {
     url: string;
 };
 
-export type Instance = LTInstance;
+export interface InvidiousInstance {
+    type: "invidious";
+    name: string;
+    url: string;
+};
+
+export type Instance = LTInstance | InvidiousInstance;

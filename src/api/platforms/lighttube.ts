@@ -124,9 +124,9 @@ export class LTAPIProvider implements APIProvider {
             published: new Date(ltPlayer.details.publishDate),
 
             formats: [
-                //...ltPlayer.formats,
-                ...ltPlayer.adaptiveFormats,
-                ...ltPlayer.adaptiveFormats.map(f => ({
+                ...ltPlayer.formats,
+                //...ltPlayer.adaptiveFormats,
+                ...ltPlayer.formats.map(f => ({
                     ...f,
                     itag: f.itag+`-proxy`,
                     url: `${this.instance.url}/proxy/media/${id}/${f.itag}`,

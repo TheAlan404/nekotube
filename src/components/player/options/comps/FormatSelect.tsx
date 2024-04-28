@@ -1,6 +1,6 @@
 import { Group, Select, Stack } from "@mantine/core";
 import { useContext } from "react";
-import { VideoPlayerContext } from "../../../api/context/VideoPlayerContext";
+import { VideoPlayerContext } from "../../../../api/context/VideoPlayerContext";
 import { IconCheck } from "@tabler/icons-react";
 
 export const FormatSelect = () => {

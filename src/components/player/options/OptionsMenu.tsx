@@ -1,15 +1,18 @@
-import { ActionIcon, Divider, Group, Select, Space, Stack } from "@mantine/core";
+import { ActionIcon, Divider, Group, Select, Space, Stack, Text } from "@mantine/core";
 import { useContext } from "react";
 import { VideoPlayerContext } from "../../../api/context/VideoPlayerContext";
 import { IconCheck, IconReload } from "@tabler/icons-react";
 import { APIContext } from "../../../api/context/APIController";
-import { InstanceSelect } from "./InstanceSelect";
-import { FormatSelect } from "./FormatSelect";
-import { VideoID } from "./VideoID";
-import { PreferencesList } from "./PreferencesList";
+import { InstanceSelect } from "./comps/InstanceSelect";
+import { FormatSelect } from "./comps/FormatSelect";
+import { VideoID } from "./comps/VideoID";
+import { PreferencesList } from "./comps/PreferencesList";
+import { PlaybackSpeed } from "./comps/PlaybackSpeed";
 
 export const OptionsMenu = () => {
-    const { availableFormats } = useContext(VideoPlayerContext);
+    const { availableFormats, playState } = useContext(VideoPlayerContext);
+
+    const loaded = playState !== "error" && playState !== "loading";
 
     return (
         <Stack align="center" w="100%" p="sm">
@@ -18,7 +21,11 @@ export const OptionsMenu = () => {
             <Divider w="90%" label="Instance" />
             <InstanceSelect />
             <Divider w="90%" label="Video" />
-            {!!availableFormats.length && <FormatSelect />}
+            {!loaded && (
+                <Text>Video not loaded</Text>
+            )}
+            {loaded && <FormatSelect />}
+            {loaded && <PlaybackSpeed />}
             <Divider w="90%" label="Preferences" />
             <PreferencesList />
             <Space h="20vh" />

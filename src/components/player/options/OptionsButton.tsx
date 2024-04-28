@@ -26,6 +26,7 @@ export const OptionsButton = () => {
         <>
             <Drawer
                 opened={opened}
+                size="md"
                 onClose={() => { closeSfx(); close(); }}
                 position="right"
                 title="Options"

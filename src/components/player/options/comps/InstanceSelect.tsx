@@ -1,8 +1,8 @@
 import { ActionIcon, Fieldset, Grid, Group, Paper, SegmentedControl, Select, Stack, Text, TextInput, Tooltip } from "@mantine/core";
 import { useContext, useEffect, useState } from "react";
-import { APIContext } from "../../../api/context/APIController";
+import { APIContext } from "../../../../api/context/APIController";
 import { IconReload } from "@tabler/icons-react";
-import { Instance } from "../../../api/types/instances";
+import { Instance } from "../../../../api/types/instances";
 
 export const InstanceSelect = () => {
     const {
@@ -42,6 +42,14 @@ export const InstanceSelect = () => {
                                 ]
                             },
                             {
+                                group: "Invidious",
+                                items: [
+                                    ...availableInstances
+                                        .filter(i => i.type == "invidious")
+                                        .map(i => i.url),
+                                ]
+                            },
+                            {
                                 group: "Custom",
                                 items: [
                                     "custom"
@@ -71,7 +79,10 @@ export const InstanceSelect = () => {
                                 Instance Type
                             </Text>
                             <SegmentedControl
-                                data={[{ value: "lighttube", label: "LightTube" }]}
+                                data={[
+                                    { value: "lighttube", label: "LightTube" },
+                                    { value: "invidious", label: "Invidious" },
+                                ]}
                                 value={currentInstance.type}
                                 onChange={(type: Instance["type"]) => setInstanceReal({
                                     ...currentInstance,

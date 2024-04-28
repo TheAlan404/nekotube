@@ -1,36 +1,63 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { VideoPlayerContext } from "../../api/context/VideoPlayerContext"
-import { Box, Button, Group, Loader, Stack, Text, Title, Transition } from "@mantine/core";
+import { Box, Button, Drawer, Group, Loader, ScrollArea, Stack, Text, Title, Transition } from "@mantine/core";
 import { PlayPauseButton } from "./controls/PlayPauseButton";
 import { PlayerTimestamp } from "./controls/PlayerTimestamp";
 import { VolumeControls } from "./controls/VolumeControls";
 import { ProgressBar } from "./bar/ProgressBar";
-import { useDocumentTitle, useFullscreen, useHotkeys, useHover, useMergedRef } from "@mantine/hooks";
+import { useDisclosure, useDocumentTitle, useFullscreen, useHotkeys, useHover, useMergedRef } from "@mantine/hooks";
 import { IconAlertTriangle, IconReload } from "@tabler/icons-react";
 import { FullscreenButton } from "./controls/FullscreenButton";
 import { OptionsButton } from "./options/OptionsButton";
 import { useSoundEffect } from "../../hooks/useSoundEffect";
+import { usePreference } from "../../api/pref/Preferences";
+import { OptionsMenu } from "./options/OptionsMenu";
 
 const CORS_ERROR_MESSAGE = "TypeError: NetworkError when attempting to fetch resource.";
 
 export const VideoPlayer = () => {
-    const { videoElement, setVideoID, videoInfo, seekTo, togglePlay, playState, muted, errorMessage, fetchVideoInfo } = useContext(VideoPlayerContext);
+    const { videoElement, setVideoID, videoInfo, seekTo, togglePlay, playState, muted, setMuted, errorMessage, fetchVideoInfo } = useContext(VideoPlayerContext);
     const containerRef = useRef<HTMLDivElement>(null);
     const { ref: fullscreenRef, fullscreen, toggle: toggleFullscreen } = useFullscreen();
+    const keepControlsShown = usePreference("keepControlsShown");
     const { ref: hoverRef, hovered } = useHover();
+
+    // -- options --
+
+    const [optionsOpened, { open: openOptions, close: closeOptions }] = useDisclosure(false);
+    const openOptionsSfx = useSoundEffect(["openSettings"]);
+    const closeOptionsSfx = useSoundEffect(["closeSettings"]);
+
+    useHotkeys([
+        ["o", () => {
+            if(optionsOpened) {
+                closeOptionsSfx();
+                closeOptions();
+            } else {
+                openOptionsSfx();
+                openOptions();
+            }
+        }]
+    ]);
+
+    // -- error --
 
     const errorSfx = useSoundEffect(["error"]);
     useEffect(() => {
         if(playState == "error") errorSfx();
     }, [playState]);
 
+    // -- binding --
+
     useEffect(() => {
         containerRef.current?.appendChild(videoElement);
 
-        setVideoID("UnIhRpIT7nc");
-        //setVideoID("FtutLA63Cp8");
+        //setVideoID("UnIhRpIT7nc");
+        setVideoID("FtutLA63Cp8");
         //setVideoID("4Bz0pYhAoFg");
     }, [videoElement, containerRef.current]);
+
+    // -- hotkeys --
 
     useHotkeys([
         ["ArrowLeft", () => seekTo(videoElement.currentTime - 5)],
@@ -39,6 +66,7 @@ export const VideoPlayer = () => {
         ["L", () => seekTo(videoElement.currentTime + 10)],
         ["K", () => togglePlay()],
         ["Space", () => togglePlay()],
+        ["m", () => setMuted(!muted)],
     ]);
 
     useDocumentTitle(videoInfo ? (
@@ -62,8 +90,18 @@ export const VideoPlayer = () => {
                 }}
                 ref={containerRef}
             />
+            <Drawer
+                opened={optionsOpened}
+                size="md"
+                onClose={() => { closeOptionsSfx(); closeOptions(); }}
+                position="right"
+                title="Options"
+                scrollAreaComponent={ScrollArea.Autosize}
+            >
+                <OptionsMenu />
+            </Drawer>
             <Transition
-                mounted={true}
+                mounted={keepControlsShown || hovered || (playState == "error")}
             >
                 {(styles) => (
                     <Stack
@@ -145,7 +183,10 @@ export const VideoPlayer = () => {
                                     <PlayerTimestamp />
                                 </Group>
                                 <Group>
-                                    <OptionsButton />
+                                    <OptionsButton open={() => {
+                                        openOptionsSfx();
+                                        openOptions();
+                                    }} />
                                     <FullscreenButton
                                         {...{
                                             fullscreen,

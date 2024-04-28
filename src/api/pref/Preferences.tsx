@@ -3,10 +3,14 @@ import { createContext, useContext } from "react";
 
 export interface Preferences {
     uiSoundEffects: boolean;
+    keepControlsShown: boolean;
+    keepVolumeShown: boolean;
 };
 
 export const DefaultPreferences: Preferences = {
     uiSoundEffects: true,
+    keepControlsShown: false,
+    keepVolumeShown: false,
 };
 
 export interface PreferencesAPI {

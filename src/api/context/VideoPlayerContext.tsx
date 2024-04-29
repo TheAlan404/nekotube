@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import { Chapter, VideoFormat, VideoInfo } from "../types/video";
+import { Chapter, VideoFormat, VideoData } from "../types/video";
 
 export type PlayState = "loading" | "playing" | "paused" | "error";
 
@@ -15,7 +15,7 @@ export interface VideoPlayerAPI {
     setVideoID: (id?: string) => void;
     fetchVideoInfo: () => void;
 
-    videoInfo?: VideoInfo;
+    videoInfo?: VideoData;
     activeChapters: ActiveChapterList;
     setActiveChapters: (source: ActiveChapterList["type"], chapters?: Chapter[]) => void;
 

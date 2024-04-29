@@ -1,7 +1,7 @@
 import { useContext, useEffect, useMemo, useState } from "react";
 import { ActiveChapterList, PlayState, VideoPlayerContext } from "./VideoPlayerContext";
 import { APIContext } from "./APIController";
-import { VideoFormat, VideoInfo } from "../types/video";
+import { VideoFormat, VideoData } from "../types/video";
 import { useVideoEventListener } from "../../hooks/useVideoEventListener";
 import { parseChapters } from "../../utils/parseChapters";
 import { clamp } from "@mantine/hooks";
@@ -18,7 +18,7 @@ export const VideoPlayerProvider = ({
     const { api, currentInstance } = useContext(APIContext);
 
     const [videoID, setVideoID] = useState<string | null>(null);
-    const [videoInfo, setVideoInfo] = useState<VideoInfo | null>(null);
+    const [videoInfo, setVideoInfo] = useState<VideoData | null>(null);
     const [activeChapters, setActiveChapters] = useState<ActiveChapterList>({
         type: "video",
         chapters: [],

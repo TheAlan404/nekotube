@@ -5,9 +5,13 @@ import { MantineProvider, createTheme } from "@mantine/core"
 import './index.css'
 import '@mantine/core/styles.css';
 import '@mantine/notifications/styles.css';
+import '@mantine/nprogress/styles.css';
 import { APIControllerProvider } from "./api/context/APIController.tsx"
 import { VideoPlayerProvider } from "./api/context/VideoPlayerProvider.tsx"
 import { PreferencesProvider } from "./api/pref/Preferences.tsx"
+import { NavigationProgress } from "@mantine/nprogress"
+import { NekoTubeRouter } from "./site/NekoTubeRouter.tsx"
+import { OptionsProvider } from "./components/options/OptionsContext.tsx"
 
 const theme = createTheme({
     colors: {
@@ -37,15 +41,18 @@ const theme = createTheme({
 });
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-	<React.StrictMode>
-		<MantineProvider theme={theme} defaultColorScheme="dark">
-			<APIControllerProvider>
-				<PreferencesProvider>
+    <React.StrictMode>
+        <MantineProvider theme={theme} defaultColorScheme="dark">
+            <NavigationProgress color="violet" />
+            <APIControllerProvider>
+                <PreferencesProvider>
                     <VideoPlayerProvider>
-                        <App />
+                        <OptionsProvider>
+                            <NekoTubeRouter />
+                        </OptionsProvider>
                     </VideoPlayerProvider>
                 </PreferencesProvider>
-			</APIControllerProvider>
-		</MantineProvider>
-	</React.StrictMode>,
+            </APIControllerProvider>
+        </MantineProvider>
+    </React.StrictMode>,
 )

@@ -5,7 +5,7 @@ export interface Channel {
     title: string;
 };
 
-export interface VideoInfo {
+export interface VideoData {
     id: string;
     title: string;
     description: string;
@@ -39,4 +39,24 @@ export interface Caption {
     label: string;
     url: string;
     isAutomatic?: boolean;
+};
+
+export interface Thumbnail {
+    url: string;
+    width: number;
+    height: number;
+};
+
+export type SearchResult = ({ type: "video" } & VideoInfo);
+
+export interface VideoInfo {
+    id: string;
+    title: string;
+    shortDescription: string;
+    thumbnails: Thumbnail[];
+    channel: Channel;
+};
+
+export interface PlaylistInfo {
+
 };

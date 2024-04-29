@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { PreferencesContext } from "../../../../api/pref/Preferences";
+import { PreferencesContext } from "../../../api/pref/Preferences";
 import { Checkbox, Stack } from "@mantine/core";
 
 export const PreferencesList = () => {

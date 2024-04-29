@@ -1,72 +1,15 @@
-import { LTInstance } from "../types/instances";
-import { APIProvider } from "../types/api"
-import { SearchSuggestions, VideoInfo } from "../types/video";
-import { parseChapters } from "../../utils/parseChapters";
+import { LTInstance } from "../../types/instances";
+import { APIProvider } from "../../types/api"
+import { SearchSuggestions, Thumbnail, VideoData, VideoInfo } from "../../types/video";
+import { parseChapters } from "../../../utils/parseChapters";
+import { LTVideoResponse } from "./base";
+import { LTPlayerResponse, LTSearchResponse } from "./responses";
 
 interface LTResult<T> {
     status: string;
     error?: string;
     data: T;
 };
-
-interface LTChannel {
-    id: string;
-    title: string;
-    avatar?: string;
-    subscribers?: string;
-    badges: any[];
-}
-
-interface LTVideoResponse {
-    id: string;
-    title: string;
-    description: string;
-    dateText: string;
-    viewCount: string;
-    likeCount: string;
-    channel: LTChannel;
-    commentsContinuation: string;
-    commentCount: string;
-    recommended: any[];
-}
-
-interface LTPlayerDetails {
-    id: string;
-    title: string;
-    author: LTChannel;
-    keywords: string[];
-    shortDescription: string;
-    category?: string;
-    publishDate: string;
-    uploadDate: string;
-    length: string;
-    isLive: boolean;
-    allowRatings: boolean;
-    isFamilySafe: boolean;
-    thumbnails: { width: number; height: number; url: string }[];
-}
-
-interface LTFormat {
-    itag: string;
-    bitrate: number;
-    fps: number;
-    width: number;
-    height: number;
-    mimeType: string;
-    url: string;
-    quality: string;
-    qualityLabel: string;
-    audioQuality: string;
-    audioSampleRate: number;
-    audioChannels: number;
-    audioTrack?: string;
-};
-
-interface LTPlayerResponse {
-    details: LTPlayerDetails;
-    formats: LTFormat[];
-    adaptiveFormats: LTFormat[];
-}
 
 export class LTAPIProvider implements APIProvider {
     instance: LTInstance;
@@ -102,12 +45,32 @@ export class LTAPIProvider implements APIProvider {
         return json.data;
     }
 
-    searchSuggestions = async (query: string) => {
-        let res: { autocomplete: SearchSuggestions } = await this.request("searchSuggestions", { query: { query } });
+    searchSuggestions = async (query: string, signal?: AbortSignal) => {
+        let res: { autocomplete: SearchSuggestions } = await this.request("searchSuggestions", { query: { query }, signal });
         return res.autocomplete;
     };
 
-    async getVideoInfo(id: string): Promise<VideoInfo> {
+    async search(query: string) {
+        let res: LTSearchResponse = await this.request("search", { query: { query } });
+
+        return {
+            key: res.continuationKey,
+            results: res.searchResults.filter(x => x.type == "videoRenderer")
+                .map(v => ({
+                    type: "video",
+                    id: v.id,
+                    title: v.title,
+                    shortDescription: v.description,
+                    thumbnails: v.thumbnails,
+                    channel: {
+                        id: v.channel.id,
+                        title: v.channel.id,
+                    },
+                } as VideoInfo & { type: "video" })),
+        };
+    }
+
+    async getVideoInfo(id: string): Promise<VideoData> {
         let ltVideo: LTVideoResponse = await this.request("video", { query: { id } });
         let ltPlayer: LTPlayerResponse = await this.request("player", { query: { id } });
 

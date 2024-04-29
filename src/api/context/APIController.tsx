@@ -1,9 +1,9 @@
 import { createContext, useEffect, useMemo, useState } from "react";
 import { Instance } from "../types/instances";
 import { APIProvider } from "../types/api";
-import { LTAPIProvider } from "../platforms/lighttube";
+import { LTAPIProvider } from "../platforms/lt/lighttube";
 import { fetchInvidiousPublicInstances, fetchLightTubePublicInstances } from "../platforms/public";
-import { InvidiousAPIProvider } from "../platforms/invidious";
+import { InvidiousAPIProvider } from "../platforms/invid/invidious";
 
 export interface APIController {
     currentInstance: Instance;

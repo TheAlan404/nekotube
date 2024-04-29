@@ -8,12 +8,10 @@ import { ProgressBar } from "./bar/ProgressBar";
 import { useDisclosure, useDocumentTitle, useFullscreen, useHotkeys, useHover, useMergedRef } from "@mantine/hooks";
 import { IconAlertTriangle, IconReload } from "@tabler/icons-react";
 import { FullscreenButton } from "./controls/FullscreenButton";
-import { OptionsButton } from "./options/OptionsButton";
+import { OptionsButton } from "../options/OptionsButton";
 import { useSoundEffect } from "../../hooks/useSoundEffect";
 import { usePreference } from "../../api/pref/Preferences";
-import { OptionsMenu } from "./options/OptionsMenu";
-
-const CORS_ERROR_MESSAGE = "TypeError: NetworkError when attempting to fetch resource.";
+import { ErrorMessage } from "../ui/ErrorMessage";
 
 export const VideoPlayer = () => {
     const { videoElement, setVideoID, videoInfo, seekTo, togglePlay, playState, muted, setMuted, errorMessage, fetchVideoInfo } = useContext(VideoPlayerContext);
@@ -22,39 +20,13 @@ export const VideoPlayer = () => {
     const keepControlsShown = usePreference("keepControlsShown");
     const { ref: hoverRef, hovered } = useHover();
 
-    // -- options --
-
-    const [optionsOpened, { open: openOptions, close: closeOptions }] = useDisclosure(false);
-    const openOptionsSfx = useSoundEffect(["openSettings"]);
-    const closeOptionsSfx = useSoundEffect(["closeSettings"]);
-
-    useHotkeys([
-        ["o", () => {
-            if(optionsOpened) {
-                closeOptionsSfx();
-                closeOptions();
-            } else {
-                openOptionsSfx();
-                openOptions();
-            }
-        }]
-    ]);
-
-    // -- error --
-
-    const errorSfx = useSoundEffect(["error"]);
-    useEffect(() => {
-        if(playState == "error") errorSfx();
-    }, [playState]);
-
     // -- binding --
 
     useEffect(() => {
         containerRef.current?.appendChild(videoElement);
-
-        //setVideoID("UnIhRpIT7nc");
-        setVideoID("FtutLA63Cp8");
-        //setVideoID("4Bz0pYhAoFg");
+        return () => {
+            videoElement.pause();
+        };
     }, [videoElement, containerRef.current]);
 
     // -- hotkeys --
@@ -90,16 +62,6 @@ export const VideoPlayer = () => {
                 }}
                 ref={containerRef}
             />
-            <Drawer
-                opened={optionsOpened}
-                size="md"
-                onClose={() => { closeOptionsSfx(); closeOptions(); }}
-                position="right"
-                title="Options"
-                scrollAreaComponent={ScrollArea.Autosize}
-            >
-                <OptionsMenu />
-            </Drawer>
             <Transition
                 mounted={keepControlsShown || hovered || (playState == "error")}
             >
@@ -142,27 +104,10 @@ export const VideoPlayer = () => {
                                 </Box>
                             )}
                             {playState == "error" && (
-                                <Stack w="100%" py="md" align="center" bg="dark">
-                                    <Stack align="center">
-                                        <IconAlertTriangle />
-                                        <Stack gap={0} align="center">
-                                            <Text fw="bolder" c="yellow">Error</Text>
-                                            <Text>{errorMessage}</Text>
-                                            {errorMessage == CORS_ERROR_MESSAGE && (
-                                                <Text c="dimmed">This is most likely a CORS issue</Text>
-                                            )}
-                                        </Stack>
-                                        <Button
-                                            variant="light"
-                                            color="violet"
-                                            size="compact-sm"
-                                            leftSection={<IconReload />}
-                                            onClick={() => fetchVideoInfo()}
-                                        >
-                                            Retry
-                                        </Button>
-                                    </Stack>
-                                </Stack>
+                                <ErrorMessage
+                                    errorMessage={errorMessage || "Unknown error"}
+                                    retry={fetchVideoInfo}
+                                />
                             )}
                         </Stack>
                         <Stack
@@ -183,10 +128,7 @@ export const VideoPlayer = () => {
                                     <PlayerTimestamp />
                                 </Group>
                                 <Group>
-                                    <OptionsButton open={() => {
-                                        openOptionsSfx();
-                                        openOptions();
-                                    }} />
+                                    <OptionsButton />
                                     <FullscreenButton
                                         {...{
                                             fullscreen,

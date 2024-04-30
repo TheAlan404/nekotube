@@ -4,6 +4,7 @@ import { APIProvider } from "../types/api";
 import { LTAPIProvider } from "../platforms/lt/lighttube";
 import { fetchInvidiousPublicInstances, fetchLightTubePublicInstances } from "../platforms/public";
 import { InvidiousAPIProvider } from "../platforms/invid/invidious";
+import { useLocalStorage } from "@mantine/hooks";
 
 export interface APIController {
     currentInstance: Instance;
@@ -42,8 +43,14 @@ const DEFAULT_INSTANCE: Instance = {
 const LT_PUBLIC_INSTANCES = "https://raw.githubusercontent.com/kuylar/lighttube/master/public_instances.json";
 
 export const APIControllerProvider = ({ children }: React.PropsWithChildren) => {
-    const [currentInstance, setCurrentInstance] = useState<Instance>(DEFAULT_INSTANCE);
-    const [customInstance, setCustomInstance] = useState(false);
+    const [currentInstance, setCurrentInstance] = useLocalStorage<Instance>({
+        key: "nekotube:instance",
+        defaultValue: DEFAULT_INSTANCE,
+    });
+    const [customInstance, setCustomInstance] = useLocalStorage({
+        key: "nekotube:isCustomInstance",
+        defaultValue: false,
+    });
     const [isRefreshing, setIsRefreshing] = useState(true);
     const [availableInstances, setAvailableInstances] = useState<Instance[]>([
         DEFAULT_INSTANCE,

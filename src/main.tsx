@@ -41,18 +41,16 @@ const theme = createTheme({
 });
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-    <React.StrictMode>
-        <MantineProvider theme={theme} defaultColorScheme="dark">
-            <NavigationProgress color="violet" />
-            <APIControllerProvider>
-                <PreferencesProvider>
-                    <VideoPlayerProvider>
-                        <OptionsProvider>
-                            <NekoTubeRouter />
-                        </OptionsProvider>
-                    </VideoPlayerProvider>
-                </PreferencesProvider>
-            </APIControllerProvider>
-        </MantineProvider>
-    </React.StrictMode>,
+    <MantineProvider theme={theme} defaultColorScheme="dark">
+        <NavigationProgress color="violet" />
+        <APIControllerProvider>
+            <PreferencesProvider>
+                <VideoPlayerProvider>
+                    <OptionsProvider>
+                        <NekoTubeRouter />
+                    </OptionsProvider>
+                </VideoPlayerProvider>
+            </PreferencesProvider>
+        </APIControllerProvider>
+    </MantineProvider>,
 )

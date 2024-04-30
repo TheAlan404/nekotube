@@ -1,7 +1,8 @@
 import { parseChapters } from "../../../utils/parseChapters";
 import { APIProvider } from "../../types/api";
 import { InvidiousInstance } from "../../types/instances";
-import { SearchSuggestions, VideoFormat, VideoData } from "../../types/video";
+import { SearchSuggestions, VideoData } from "../../types/video";
+import { VideoFormat } from "../../types/format";
 import { InvidiousSearchResult, InvidiousVideo, InvidiousVideoData } from "./types";
 
 export class InvidiousAPIProvider implements APIProvider {
@@ -70,13 +71,24 @@ export class InvidiousAPIProvider implements APIProvider {
             published: new Date(v.published),
 
             formats: [
-                ...v.formatStreams.map(f => ({
+                ...v.formatStreams.map((f, i) => ({
+                    type: "basic",
+                    id: `basic-${i}`,
                     itag: f.itag,
                     url: f.url,
                     mimeType: f.type,
                     fps: f.fps,
                     width: Number(f.size.split("x")[0]),
                     height: Number(f.size.split("x")[1]),
+                    bitrate: Number(f.bitrate),
+                } as VideoFormat)),
+                ...v.adaptiveFormats.map((f, i) => ({
+                    type: "adaptive",
+                    id: `adaptive-${i}`,
+                    itag: f.itag,
+                    url: f.url,
+                    mimeType: f.type,
+                    fps: f.fps,
                     bitrate: Number(f.bitrate),
                 } as VideoFormat)),
             ],

@@ -8,7 +8,7 @@ export const PlayPauseButton = () => {
 
     return (
         <Tooltip
-            disabled={playState == "loading"}
+            disabled={playState == "loading" || playState == "error"}
             label={playState == "playing" ? "Pause (k)" : "Play (k)"}
         >
             <ActionIcon

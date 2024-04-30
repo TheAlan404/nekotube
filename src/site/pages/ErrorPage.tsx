@@ -8,7 +8,7 @@ export const ErrorPage = () => {
     return (
         <Stack>
             <ErrorMessage
-                errorMessage={error.toString()}
+                error={error}
             />
         </Stack>
     )

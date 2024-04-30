@@ -14,7 +14,7 @@ import { usePreference } from "../../api/pref/Preferences";
 import { ErrorMessage } from "../ui/ErrorMessage";
 
 export const VideoPlayer = () => {
-    const { videoElement, setVideoID, videoInfo, seekTo, togglePlay, playState, muted, setMuted, errorMessage, fetchVideoInfo } = useContext(VideoPlayerContext);
+    const { videoElement, setVideoID, videoInfo, seekTo, togglePlay, playState, muted, setMuted, error, fetchVideoInfo } = useContext(VideoPlayerContext);
     const containerRef = useRef<HTMLDivElement>(null);
     const { ref: fullscreenRef, fullscreen, toggle: toggleFullscreen } = useFullscreen();
     const keepControlsShown = usePreference("keepControlsShown");
@@ -50,6 +50,8 @@ export const VideoPlayer = () => {
         fullscreenRef,
     );
 
+    const shouldShowControls = playState !== "error";
+
     return (
         <Box w="100%" h="100%" className="videoPlayer" style={{ position: "relative" }} ref={mergedRef}>
             <Box
@@ -70,7 +72,7 @@ export const VideoPlayer = () => {
                         w="100%"
                         h="100%"
                         justify="space-between"
-                        style={styles} 
+                        style={styles}
                         className="clickListener"
                         onClick={(e) => e.currentTarget.classList.contains("clickListener") && togglePlay()}
                     >
@@ -81,20 +83,30 @@ export const VideoPlayer = () => {
                             }}
                             onClick={(e) => e.stopPropagation()}
                         >
-                            <Group align="center">
+                            <Group align="center" px="sm">
                                 {playState == "loading" && (
                                     <Loader size="sm" />
                                 )}
                                 {playState == "error" && (
                                     <IconAlertTriangle />
                                 )}
-                                <Title order={4}>
-                                    {playState == "error" ? (
-                                        "Error"
-                                    ) : (
-                                        videoInfo?.title || "Loading..."
-                                    )}
-                                </Title>
+                                <Stack gap={0}>
+                                    <Title order={4}>
+                                        {!videoInfo ? (
+                                            playState == "error" ? "Error" : "Loading..."
+                                        ) : (
+                                            videoInfo?.title || "Loading..."
+                                        )}
+                                    </Title>
+                                    <Text c="dimmed">
+                                        {playState == "error" && (
+                                            videoInfo ? "playback error" : "error while fetching details"
+                                        )}
+                                        {playState == "loading" && (
+                                            videoInfo ? "starting playback..." : "fetching video info..."
+                                        )}
+                                    </Text>
+                                </Stack>
                             </Group>
                         </Stack>
                         <Stack w="100%" align="center">
@@ -104,10 +116,12 @@ export const VideoPlayer = () => {
                                 </Box>
                             )}
                             {playState == "error" && (
-                                <ErrorMessage
-                                    errorMessage={errorMessage || "Unknown error"}
-                                    retry={fetchVideoInfo}
-                                />
+                                <Stack w="100%" bg="dark" py="md">
+                                    <ErrorMessage
+                                        error={error}
+                                        retry={fetchVideoInfo}
+                                    />
+                                </Stack>
                             )}
                         </Stack>
                         <Stack
@@ -120,7 +134,7 @@ export const VideoPlayer = () => {
                             onClick={(e) => e.stopPropagation()}
                         >
                             <ProgressBar />
-        
+
                             <Group justify="space-between">
                                 <Group>
                                     <PlayPauseButton />

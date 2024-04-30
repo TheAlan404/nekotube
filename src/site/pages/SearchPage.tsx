@@ -11,17 +11,17 @@ export const SearchPage = () => {
     const [searchParams] = useSearchParams();
     const [loading, setLoading] = useState(true);
     const [results, setResults] = useState<SearchResult[]>([]);
-    const [errorMessage, setErrorMessage] = useState<string | null>(null);
+    const [error, setError] = useState<any | null>(null);
 
     const q = searchParams.get("q");
     const fetchResults = async () => {
         setLoading(true);
-        setErrorMessage(null);
+        setError(null);
         try {
             let { key, results } = await api.search(q);
             setResults(results);
         } catch (e) {
-            setErrorMessage(e.toString());
+            setError(e);
             console.log(e);
             setResults([]);
         } finally {
@@ -37,7 +37,7 @@ export const SearchPage = () => {
         <Stack w="100%" align="center">
             {loading && <Loader />}
             <ErrorMessage
-                errorMessage={errorMessage}
+                error={error}
                 retry={fetchResults}
             />
             <Text>

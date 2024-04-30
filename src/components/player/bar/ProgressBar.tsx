@@ -25,15 +25,18 @@ export const ProgressBar = () => {
     let [seekTarget, setSeekTarget] = useState(0);
     let seekTargetRef = useRef(0);
     const { ref: moveRef, active: isScrubbing } = useMove(({ x = 0 }) => {
+        if(playState == "error" || playState == "loading") return;
         seekTo(x * videoElement.duration);
         setSeekTarget(x * videoElement.duration);
         seekTargetRef.current = x * videoElement.duration;
     }, {
         onScrubStart: () => {
+            if(playState == "error" || playState == "loading") return;
             setPlayOnScrubEnd(playState == "playing");
             videoElement.pause();
         },
         onScrubEnd: () => {
+            if(playState == "error" || playState == "loading") return;
             seekTo(seekTargetRef.current);
             if(playOnScrubEnd) videoElement.play();
         },

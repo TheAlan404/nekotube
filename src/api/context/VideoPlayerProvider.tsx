@@ -1,14 +1,16 @@
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { ActiveChapterList, PlayState, VideoPlayerContext } from "./VideoPlayerContext";
 import { APIContext } from "./APIController";
-import { VideoFormat, VideoData } from "../types/video";
-import { useVideoEventListener } from "../../hooks/useVideoEventListener";
+import { VideoData } from "../types/video";
+import { VideoFormat } from "../types/format";
+import { useElementEventListener, useVideoEventListener } from "../../hooks/useVideoEventListener";
 import { parseChapters } from "../../utils/parseChapters";
 import { clamp } from "@mantine/hooks";
 
 export const VideoPlayerProvider = ({
     children
 }: React.PropsWithChildren) => {
+    //const sourceElement = useRef<HTMLSourceElement>(null);
     const videoElement = useMemo(() => {
         let el = document.createElement("video");
         el.style.width = "100%";
@@ -26,7 +28,7 @@ export const VideoPlayerProvider = ({
     const [activeFormat, setActiveFormat] = useState<VideoFormat | null>(null);
     const [availableFormats, setAvailableFormats] = useState<VideoFormat[]>([]);
     const [playState, setPlayState] = useState<PlayState>("loading");
-    const [errorMessage, setErrorMessage] = useState<string | null>(null);
+    const [error, setError] = useState<any | null>(null);
     const [volume, setVolume] = useState(1);
     const [muted, setMuted] = useState(false);
 
@@ -63,7 +65,7 @@ export const VideoPlayerProvider = ({
             });
         } catch(e) {
             console.log(e);
-            setErrorMessage(e.toString() || "Unknown Error");
+            setError(e);
             setPlayState("error");
         }
     };
@@ -80,12 +82,10 @@ export const VideoPlayerProvider = ({
     }, [videoInfo]);
 
     useEffect(() => {
-        videoElement.src = activeFormat?.url || "";
+        if(!activeFormat) return;
+        console.log("Setting URL to", activeFormat.url);
+        videoElement.src = activeFormat.url;
     }, [activeFormat]);
-
-    useVideoEventListener(videoElement, "error", (e) => {
-        console.log(e);
-    });
 
     useVideoEventListener(videoElement, "ended", () => {
         setPlayState("paused");
@@ -93,6 +93,14 @@ export const VideoPlayerProvider = ({
 
     useVideoEventListener(videoElement, "loadeddata", () => {
         videoElement.play()
+    });
+
+    useVideoEventListener(videoElement, "error", (e) => {
+        if(!videoElement.src) return;
+        setPlayState("error");
+        console.log(e.error);
+        console.log(videoElement.error);
+        setError(e.error || new Error(videoElement.error.message));
     });
 
     useVideoEventListener(videoElement, "pause", () => {
@@ -114,8 +122,8 @@ export const VideoPlayerProvider = ({
 
             activeFormat,
             availableFormats,
-            setFormat: (fmt) => {
-                setActiveFormat(fmt);
+            setFormat: (id: string) => {
+                setActiveFormat(availableFormats.find(f => f.id == id)!);
             },
 
             activeChapters,
@@ -134,7 +142,7 @@ export const VideoPlayerProvider = ({
             },
 
             playState,
-            errorMessage,
+            error,
             togglePlay() {
                 if(playState == "loading") return;
                 if(playState == "playing" && !videoElement.paused) {

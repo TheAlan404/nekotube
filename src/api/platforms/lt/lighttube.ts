@@ -4,6 +4,7 @@ import { SearchSuggestions, Thumbnail, VideoData, VideoInfo } from "../../types/
 import { parseChapters } from "../../../utils/parseChapters";
 import { LTVideoResponse } from "./base";
 import { LTPlayerResponse, LTSearchResponse } from "./responses";
+import { VideoFormat } from "../../types/format";
 
 interface LTResult<T> {
     status: string;
@@ -87,13 +88,29 @@ export class LTAPIProvider implements APIProvider {
             published: new Date(ltPlayer.details.publishDate),
 
             formats: [
-                ...ltPlayer.formats,
-                //...ltPlayer.adaptiveFormats,
-                ...ltPlayer.formats.map(f => ({
+                ...ltPlayer.formats.map((f, i) => ({
                     ...f,
-                    itag: f.itag+`-proxy`,
+                    type: "basic",
+                    id: `basic-${i}`,
+                } as VideoFormat)),
+                ...ltPlayer.adaptiveFormats.map((f, i) => ({
+                    ...f,
+                    type: "adaptive",
+                    id: `adaptive-${i}`,
+                } as VideoFormat)),
+
+                ...ltPlayer.formats.map((f, i) => ({
+                    ...f,
+                    type: "basic",
+                    id: `proxy-basic-${i}`,
                     url: `${this.instance.url}/proxy/media/${id}/${f.itag}`,
-                })),
+                } as VideoFormat)),
+                ...ltPlayer.adaptiveFormats.map((f, i) => ({
+                    ...f,
+                    type: "adaptive",
+                    id: `proxy-adaptive-${i}`,
+                    url: `${this.instance.url}/proxy/media/${id}/${f.itag}`,
+                } as VideoFormat)),
             ],
         };
     };

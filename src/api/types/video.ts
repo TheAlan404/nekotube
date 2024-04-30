@@ -1,3 +1,5 @@
+import { VideoFormat } from "./format";
+
 export type SearchSuggestions = string[];
 
 export interface Channel {
@@ -18,15 +20,7 @@ export interface VideoData {
     formats: VideoFormat[];
 };
 
-export interface VideoFormat {
-    itag: string;
-    url: string;
-    mimeType: string;
-    bitrate: number;
-    fps: number;
-    width: number;
-    height: number;
-};
+;
 
 export interface Chapter {
     time: number;

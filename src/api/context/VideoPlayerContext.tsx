@@ -1,5 +1,6 @@
 import { createContext } from "react";
-import { Chapter, VideoFormat, VideoData } from "../types/video";
+import { Chapter, VideoData } from "../types/video";
+import { VideoFormat } from "../types/format";
 
 export type PlayState = "loading" | "playing" | "paused" | "error";
 
@@ -21,10 +22,10 @@ export interface VideoPlayerAPI {
 
     activeFormat?: VideoFormat;
     availableFormats: VideoFormat[];
-    setFormat: (fmt: VideoFormat) => void;
+    setFormat: (id: string) => void;
 
     playState: PlayState;
-    errorMessage?: string;
+    error?: any;
     togglePlay: () => void;
     volume: number;
     muted: boolean;

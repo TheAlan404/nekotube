@@ -3,7 +3,7 @@ import { ActiveChapterList, PlayState, VideoPlayerContext } from "./VideoPlayerC
 import { APIContext } from "./APIController";
 import { VideoData } from "../types/video";
 import { VideoFormat } from "../types/format";
-import { useElementEventListener, useVideoEventListener } from "../../hooks/useVideoEventListener";
+import { useVideoEventListener } from "../../hooks/useVideoEventListener";
 import { parseChapters } from "../../utils/parseChapters";
 import { clamp } from "@mantine/hooks";
 

@@ -1,109 +1,38 @@
-import { ActionIcon, Fieldset, Grid, Group, Paper, SegmentedControl, Select, Stack, Text, TextInput, Tooltip } from "@mantine/core";
+import { ActionIcon, Button, Fieldset, Grid, Group, InputBase, Paper, SegmentedControl, Select, Stack, Text, TextInput, Tooltip, UnstyledButton } from "@mantine/core";
 import { useContext, useEffect, useState } from "react";
 import { APIContext } from "../../../api/context/APIController";
-import { IconReload } from "@tabler/icons-react";
+import { IconArrowRight, IconReload } from "@tabler/icons-react";
 import { Instance } from "../../../api/types/instances";
+import { OptionsContext } from "../OptionsContext";
+import { InstanceCard } from "../../cards/InstanceCard";
 
 export const InstanceSelect = () => {
+    const { setView } = useContext(OptionsContext);
     const {
-        availableInstances,
         currentInstance,
-        setInstance: setInstanceReal,
-        isRefreshing,
-        refreshAvailableInstances,
         customInstance,
-        setCustomInstance,
     } = useContext(APIContext);
-
-    const setInstance = (value: "custom" | string) => {
-        if(value == "custom") {
-            setCustomInstance(true);
-        } else {
-            setCustomInstance(false);
-            setInstanceReal(availableInstances.find(i => i.url == value));
-        }
-    };
 
     return (
         <Stack w="100%">
-            <Grid align="end">
-                <Grid.Col span="auto">
-                    <Select
-                        label="Instance"
-                        value={customInstance ? "custom" : currentInstance.url}
-                        disabled={isRefreshing}
-                        data={[
-                            {
-                                group: "Lighttube",
-                                items: [
-                                    ...availableInstances
-                                        .filter(i => i.type == "lighttube")
-                                        .map(i => i.url),
-                                ]
-                            },
-                            {
-                                group: "Invidious",
-                                items: [
-                                    ...availableInstances
-                                        .filter(i => i.type == "invidious")
-                                        .map(i => i.url),
-                                ]
-                            },
-                            {
-                                group: "Custom",
-                                items: [
-                                    "custom"
-                                ]
-                            }
-                        ]}
-                        onChange={(v) => setInstance(v)}
-                    />
-                </Grid.Col>
-                <Grid.Col span="content">
-                    <Tooltip label="Refresh public instances">
-                        <ActionIcon
-                            variant="light"
-                            color="violet"
-                            onClick={() => refreshAvailableInstances()}
-                        >
-                            <IconReload />
-                        </ActionIcon>
-                    </Tooltip>
-                </Grid.Col>
-            </Grid>
-            {customInstance && (
-                <Paper>
-                    <Stack gap="xs">
-                        <Group justify="space-between">
-                            <Text>
-                                Instance Type
-                            </Text>
-                            <SegmentedControl
-                                data={[
-                                    { value: "lighttube", label: "LightTube" },
-                                    { value: "invidious", label: "Invidious" },
-                                ]}
-                                value={currentInstance.type}
-                                onChange={(type: Instance["type"]) => setInstanceReal({
-                                    ...currentInstance,
-                                    name: "Custom",
-                                    type,
-                                })}
-                            />
-                        </Group>
-                        <TextInput
-                            label="URL"
-                            description="URL of the instance without trailing /"
-                            value={currentInstance.url}
-                            onChange={(e) => setInstanceReal({
-                                ...currentInstance,
-                                name: "Custom",
-                                url: e.currentTarget.value,
-                            })}
+            <UnstyledButton
+                className="hoverable"
+                variant="subtle"
+                color="violet"
+                onClick={() => setView("instanceSelect")}
+            >
+                <Grid align="center" m="sm">
+                    <Grid.Col span="auto">
+                        <InstanceCard
+                            instance={currentInstance}
+                            isCustom={customInstance}
                         />
-                    </Stack>
-                </Paper>
-            )}
+                    </Grid.Col>
+                    <Grid.Col span="content">
+                        <IconArrowRight />
+                    </Grid.Col>
+                </Grid>
+            </UnstyledButton>
         </Stack>
     );
 }

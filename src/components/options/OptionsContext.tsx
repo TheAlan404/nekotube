@@ -1,14 +1,18 @@
 import { useDisclosure, useHotkeys } from "@mantine/hooks";
-import { createContext } from "react";
+import { createContext, useState } from "react";
 import { useSoundEffect } from "../../hooks/useSoundEffect";
 import { Drawer, ScrollArea } from "@mantine/core";
-import { OptionsMenu } from "./OptionsMenu";
+import { OptionsRouter } from "./OptionsRouter";
+
+export type OptionsView = "main" | "instanceSelect";
 
 export interface OptionsContextAPI {
     opened: boolean;
     open: () => void;
     close: () => void;
     toggle: () => void;
+    view: OptionsView;
+    setView: (view: OptionsView) => void;
 };
 
 export const OptionsContext = createContext<OptionsContextAPI>({
@@ -16,10 +20,13 @@ export const OptionsContext = createContext<OptionsContextAPI>({
     open: () => {},
     close: () => {},
     toggle: () => {},
+    view: "main",
+    setView: () => {},
 });
 
 export const OptionsProvider = ({ children }: React.PropsWithChildren) => {
     const [opened, handlers] = useDisclosure(false);
+    const [view, setView] = useState<OptionsView>("main");
     const openOptionsSfx = useSoundEffect(["openSettings"]);
     const closeOptionsSfx = useSoundEffect(["closeSettings"]);
 
@@ -58,6 +65,8 @@ export const OptionsProvider = ({ children }: React.PropsWithChildren) => {
                 open,
                 close,
                 toggle,
+                view,
+                setView,
             }}
         >
             <Drawer
@@ -68,7 +77,7 @@ export const OptionsProvider = ({ children }: React.PropsWithChildren) => {
                 title="Options"
                 scrollAreaComponent={ScrollArea.Autosize}
             >
-                <OptionsMenu />
+                <OptionsRouter />
             </Drawer>
             {children}
         </OptionsContext.Provider>

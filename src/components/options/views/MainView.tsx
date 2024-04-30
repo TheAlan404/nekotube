@@ -1,12 +1,12 @@
+import { useContext, useState } from "react";
+import { VideoPlayerContext } from "../../../api/context/VideoPlayerContext";
 import { Divider, Space, Stack, Text } from "@mantine/core";
-import { useContext } from "react";
-import { VideoPlayerContext } from "../../api/context/VideoPlayerContext";
-import { InstanceSelect } from "./comps/InstanceSelect";
-import { FormatSelect } from "./comps/FormatSelect";
-import { PreferencesList } from "./comps/PreferencesList";
-import { PlaybackSpeed } from "./comps/PlaybackSpeed";
+import { InstanceSelect } from "../comps/InstanceSelect";
+import { FormatSelect } from "../comps/FormatSelect";
+import { PlaybackSpeed } from "../comps/PlaybackSpeed";
+import { PreferencesList } from "../comps/PreferencesList";
 
-export const OptionsMenu = () => {
+export const OptionsMainView = () => {
     const { playState } = useContext(VideoPlayerContext);
 
     const loaded = playState !== "error" && playState !== "loading";

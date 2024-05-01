@@ -3,6 +3,7 @@ import { Instance } from "../../api/types/instances";
 import { IconCheck, IconStar, IconStarFilled, IconWorldCheck, IconWorldX } from "@tabler/icons-react";
 import { useContext } from "react";
 import { APIContext } from "../../api/context/APIController";
+import { getFlagEmoji } from "../../utils/flagEmoji";
 
 export const InstanceCard = ({
     instance,
@@ -49,8 +50,8 @@ export const InstanceCard = ({
                                 {instance.url}
                             </Text>
                             <Group>
-                                <Text fs="xs" c="dimmed">
-                                    {instance.region}
+                                <Text fs="xs">
+                                    {instance.region && getFlagEmoji(instance.region)}
                                 </Text>
                                 {!instance.supportsProxy && (
                                     <Tooltip label="Instance doesn't support proxying" withArrow>

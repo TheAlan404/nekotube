@@ -6,6 +6,7 @@ import { VideoFormat } from "../types/format";
 import { useVideoEventListener } from "../../hooks/useVideoEventListener";
 import { parseChapters } from "../../utils/parseChapters";
 import { clamp } from "@mantine/hooks";
+import { SponsorBlockAPI } from "../platforms/sponsorblock/sponsorblock";
 
 export const VideoPlayerProvider = ({
     children
@@ -57,6 +58,8 @@ export const VideoPlayerProvider = ({
             type: "video",
         });
         if(!videoID) return;
+
+        //new SponsorBlockAPI().fetchSegments(videoID).then(console.log);
         
         try {
             let info = await api.getVideoInfo(videoID);

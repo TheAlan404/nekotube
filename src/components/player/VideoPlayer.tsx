@@ -1,23 +1,15 @@
 import { useContext, useEffect, useRef } from "react";
 import { VideoPlayerContext } from "../../api/context/VideoPlayerContext"
-import { Box, Group, Loader, Stack, Text, Title, Transition } from "@mantine/core";
-import { PlayPauseButton } from "./controls/PlayPauseButton";
-import { PlayerTimestamp } from "./controls/PlayerTimestamp";
-import { VolumeControls } from "./controls/VolumeControls";
-import { ProgressBar } from "./bar/ProgressBar";
-import { useDocumentTitle, useFullscreen, useHotkeys, useHover, useMergedRef } from "@mantine/hooks";
-import { IconAlertTriangle } from "@tabler/icons-react";
-import { FullscreenButton } from "./controls/FullscreenButton";
-import { OptionsButton } from "../options/links/OptionsButton";
+import { Box, Stack, Transition } from "@mantine/core";
+import { useHotkeys, useHover, useMergedRef } from "@mantine/hooks";
 import { usePreference } from "../../api/pref/Preferences";
-import { ErrorMessage } from "../ui/ErrorMessage";
-import { FormatsButton } from "../options/links/FormatsButton";
-import { ToggleSidebarButton } from "../tabs/links/ToggleSidebarButton";
+import { LayoutTop } from "./layout/LayoutTop";
+import { LayoutMiddle } from "./layout/LayoutMiddle";
+import { LayoutBottom } from "./layout/LayoutBottom";
 
 export const VideoPlayer = () => {
     const { videoElement, seekToChapterOffset, videoInfo, seekTo, togglePlay, playState, muted, setMuted, error, fetchVideoInfo } = useContext(VideoPlayerContext);
     const containerRef = useRef<HTMLDivElement>(null);
-    const { ref: fullscreenRef, fullscreen, toggle: toggleFullscreen } = useFullscreen();
     const keepControlsShown = usePreference("keepControlsShown");
     const { ref: hoverRef, hovered } = useHover();
 
@@ -45,8 +37,7 @@ export const VideoPlayer = () => {
     ]);
 
     const mergedRef = useMergedRef(
-        hoverRef,
-        fullscreenRef,
+        hoverRef
     );
 
     const shouldShowControls = keepControlsShown || hovered || (playState == "error");
@@ -74,86 +65,14 @@ export const VideoPlayer = () => {
                         justify="space-between"
                         style={{
                             ...styles,
-                            background: "linear-gradient(to bottom, #000000FF, #00000000 5em), linear-gradient(to top, #000000FF 0%, #00000000 5em)",
+                            background: "linear-gradient(to bottom, #000000FF, #00000000 3em), linear-gradient(to top, #000000FF 0%, #00000000 5em)",
                         }}
                         className="clickListener"
                         onClick={(e) => e.currentTarget.classList.contains("clickListener") && togglePlay()}
                     >
-                        <Stack
-                            p="xs"
-                            onClick={(e) => e.stopPropagation()}
-                        >
-                            <Group align="center" px="sm">
-                                {playState == "loading" && (
-                                    <Loader size="sm" />
-                                )}
-                                {playState == "error" && (
-                                    <IconAlertTriangle />
-                                )}
-                                <Stack gap={0}>
-                                    <Title order={4}>
-                                        {!videoInfo ? (
-                                            playState == "error" ? "Error" : "Loading..."
-                                        ) : (
-                                            videoInfo?.title || "Loading..."
-                                        )}
-                                    </Title>
-                                    <Text c="dimmed">
-                                        {playState == "error" && (
-                                            videoInfo ? "playback error" : "error while fetching details"
-                                        )}
-                                        {playState == "loading" && (
-                                            videoInfo ? "starting playback..." : "fetching video info..."
-                                        )}
-                                    </Text>
-                                </Stack>
-                            </Group>
-                        </Stack>
-                        <Stack w="100%" align="center">
-                            {playState == "loading" && (
-                                <Box p="md" bg="dark" style={{ opacity: 0.9, borderRadius: "var(--mantine-radius-md)" }}>
-                                    <Loader />
-                                </Box>
-                            )}
-                            {playState == "error" && (
-                                <Stack w="100%" bg="dark" py="md">
-                                    <ErrorMessage
-                                        error={error}
-                                        retry={videoInfo ? (() => {
-                                            videoElement.load();
-                                            videoElement.play();
-                                        }) : fetchVideoInfo}
-                                    />
-                                </Stack>
-                            )}
-                        </Stack>
-                        <Stack
-                            gap="xs"
-                            p="xs"
-                            w="100%"
-                            onClick={(e) => e.stopPropagation()}
-                        >
-                            <ProgressBar />
-
-                            <Group justify="space-between">
-                                <Group>
-                                    <PlayPauseButton />
-                                    <VolumeControls />
-                                    <PlayerTimestamp />
-                                </Group>
-                                <Group>
-                                    <FormatsButton />
-                                    <OptionsButton />
-                                    <ToggleSidebarButton />
-                                    <FullscreenButton
-                                        {...{
-                                            fullscreen,
-                                            toggleFullscreen,
-                                        }}
-                                    />
-                                </Group>
-                            </Group>
-                        </Stack>
+                        <LayoutTop />
+                        <LayoutMiddle />
+                        <LayoutBottom />
                     </Stack>
                 )}
             </Transition>

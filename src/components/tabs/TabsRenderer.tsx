@@ -5,7 +5,8 @@ import { TabType } from "./TabTypes";
 import { RecommendedTab } from "./comps/RecommendedTab";
 import { CommentsTab } from "./comps/CommentsTab";
 import { VideoInfoTab } from "./comps/VideoInfoTab";
-import { IconBrandYoutube, IconLayoutList, IconMessage } from "@tabler/icons-react";
+import { IconBrandYoutube, IconLayoutList, IconList, IconMessage } from "@tabler/icons-react";
+import { ChaptersTab } from "./comps/ChaptersTab";
 
 export const TabsRenderer = () => {
     const { currentTab, setCurrentTab } = useContext(TabsContext);
@@ -37,6 +38,9 @@ export const TabsRenderer = () => {
                 <Tabs.Panel value="comments">
                     <CommentsTab />
                 </Tabs.Panel>
+                <Tabs.Panel value="chapters">
+                    <ChaptersTab />
+                </Tabs.Panel>
 
                 <Tabs.List grow>
                     <Tabs.Tab value="videoInfo">
@@ -47,6 +51,9 @@ export const TabsRenderer = () => {
                     </Tabs.Tab>
                     <Tabs.Tab value="comments">
                         <IconMessage />
+                    </Tabs.Tab>
+                    <Tabs.Tab value="chapters">
+                        <IconList />
                     </Tabs.Tab>
                 </Tabs.List>
             </Tabs>

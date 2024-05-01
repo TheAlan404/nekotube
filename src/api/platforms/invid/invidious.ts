@@ -1,9 +1,9 @@
 import { parseChapters } from "../../../utils/parseChapters";
 import { APIProvider } from "../../types/api";
 import { InvidiousInstance } from "../../types/instances";
-import { SearchSuggestions, VideoData } from "../../types/video";
+import { Renderer, SearchSuggestions, Thumbnail, VideoData } from "../../types/video";
 import { VideoFormat } from "../../types/format";
-import { InvidiousSearchResult, InvidiousVideo, InvidiousVideoData } from "./types";
+import { InvidiousRenderer, InvidiousVideo, InvidiousVideoData } from "./types";
 
 export class InvidiousAPIProvider implements APIProvider {
     instance: InvidiousInstance;
@@ -33,6 +33,24 @@ export class InvidiousAPIProvider implements APIProvider {
         return await res.json() as T;
     }
 
+    convertRenderer = (d: InvidiousRenderer): Renderer => {
+        if(d.type == "video") {
+            return {
+                type: "video",
+                id: d.videoId,
+                title: d.title,
+                description: d.descriptionHtml,
+                thumbnails: d.videoThumbnails as Thumbnail[],
+                channel: {
+                    id: d.authorId,
+                    title: d.author,
+                },
+            } as Renderer;
+        } else {
+            return null;
+        }
+    };
+
     searchSuggestions = async (query: string, signal?: AbortSignal) => {
         let data: { suggestions: string[] } = await this.request("search/suggestions", {
             query: { q: query },
@@ -43,11 +61,23 @@ export class InvidiousAPIProvider implements APIProvider {
     };
 
     async search(q: string) {
-        let data: InvidiousSearchResult[] = await this.request("search", { query: { q } });
+        let data: InvidiousRenderer[] = await this.request("search", { query: { q } });
+
+        console.log(data);
 
         return {
             key: null,
-            results: [],
+            results: data.filter(x => x.type == "video").map(result => ({
+                type: "video",
+                id: result.videoId,
+                title: result.title,
+                description: result.descriptionHtml,
+                thumbnails: result.videoThumbnails,
+                channel: {
+                    id: result.authorId,
+                    title: result.author,
+                },
+            } as Renderer)),
         };
     }
 
@@ -75,6 +105,10 @@ export class InvidiousAPIProvider implements APIProvider {
             likeCount: v.likeCount,
             viewCount: v.viewCount,
             published: new Date(v.published),
+            thumbnails: v.videoThumbnails as Thumbnail[],
+            recommended: v.recommendedVideos
+                .filter(x => x.type == "video")
+                .map(this.convertRenderer),
 
             formats: [
                 ...v.formatStreams.map((f, i) => ({

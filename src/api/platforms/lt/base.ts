@@ -1,4 +1,5 @@
 import { Thumbnail } from "../../types/video";
+import { LTRenderer } from "./renderers";
 
 export interface LTChannel {
     id: string;
@@ -18,7 +19,7 @@ export interface LTVideoResponse {
     channel: LTChannel;
     commentsContinuation: string;
     commentCount: string;
-    recommended: any[];
+    recommended: LTRenderer[];
 }
 
 export interface LTPlayerDetails {

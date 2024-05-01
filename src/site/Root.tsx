@@ -2,14 +2,16 @@ import { AppShell, Box, Button, Group } from "@mantine/core";
 import { nprogress } from "@mantine/nprogress";
 import { IconBrandYoutube, IconCat } from "@tabler/icons-react";
 import { useContext, useEffect } from "react";
-import { Link, Outlet, useNavigation, useSearchParams } from "react-router-dom";
+import { Link, Outlet, useLocation, useNavigation, useSearchParams } from "react-router-dom";
 import { OptionsButton } from "../components/options/links/OptionsButton";
 import { SearchBar } from "../components/search/SearchBar";
 import { VideoPlayerContext } from "../api/context/VideoPlayerContext";
+import { useDocumentTitle } from "@mantine/hooks";
 
 export const Root = () => {
-    const { setVideoID } = useContext(VideoPlayerContext);
+    const { setVideoID, videoInfo, muted, playState } = useContext(VideoPlayerContext);
     const [searchParams] = useSearchParams();
+    const location = useLocation();
     const { state } = useNavigation();
 
     useEffect(() => {
@@ -24,6 +26,14 @@ export const Root = () => {
     useEffect(() => {
         setVideoID(v);
     }, [v]);
+
+    useDocumentTitle({
+        "/": "Home - NekoTube",
+        "/search": `🔎 ${searchParams.get("q")} - NekoTube`,
+        "/watch": videoInfo ? (
+            `${(playState == "paused" ? "⏸︎ " : (muted ? "🔇 " : "")) + videoInfo.title} - NekoTube`
+        ) : "Loading... - NekoTube",
+    }[location?.pathname] || "NekoTube");
 
     return (
         <AppShell

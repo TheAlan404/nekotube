@@ -7,7 +7,6 @@ import { FormatCard } from "../../cards/FormatCard";
 import { VideoFormatType } from "../../../api/types/format";
 
 export const OptionsFormatView = () => {
-    const { setView } = useContext(OptionsContext);
     const {
         availableFormats,
         activeFormat,
@@ -59,7 +58,7 @@ export const OptionsFormatView = () => {
                 {options.map((format, i) => (
                     <FormatCard
                         format={format}
-                        isSelected={activeFormat.id == format.id}
+                        isSelected={activeFormat?.id == format.id}
                         onClick={() => setFormat(format.id)}
                         key={i}
                     />

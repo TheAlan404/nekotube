@@ -1,10 +1,11 @@
 import { LTInstance } from "../../types/instances";
 import { APIProvider } from "../../types/api"
-import { SearchSuggestions, Thumbnail, VideoData, VideoInfo } from "../../types/video";
+import { Renderer, SearchSuggestions, Thumbnail, VideoData, VideoInfo } from "../../types/video";
 import { parseChapters } from "../../../utils/parseChapters";
 import { LTVideoResponse } from "./base";
 import { LTPlayerResponse, LTSearchResponse } from "./responses";
 import { VideoFormat } from "../../types/format";
+import { LTRenderer } from "./renderers";
 
 interface LTResult<T> {
     status: string;
@@ -46,6 +47,24 @@ export class LTAPIProvider implements APIProvider {
         return json.data;
     }
 
+    convertRenderer = (d: LTRenderer): Renderer | null => {
+        if(d.type == "videoRenderer") {
+            return {
+                type: "video",
+                id: d.id,
+                title: d.title,
+                channel: {
+                    id: d.channel.id,
+                    title: d.channel.title,
+                },
+                description: d.description,
+                thumbnails: d.thumbnails,
+            } as Renderer;
+        } else {
+            return null;
+        }
+    };
+
     searchSuggestions = async (query: string, signal?: AbortSignal) => {
         let res: { autocomplete: SearchSuggestions } = await this.request("searchSuggestions", { query: { query }, signal });
         return res.autocomplete;
@@ -61,7 +80,7 @@ export class LTAPIProvider implements APIProvider {
                     type: "video",
                     id: v.id,
                     title: v.title,
-                    shortDescription: v.description,
+                    description: v.description,
                     thumbnails: v.thumbnails,
                     channel: {
                         id: v.channel.id,
@@ -86,6 +105,10 @@ export class LTAPIProvider implements APIProvider {
             description: ltVideo.description,
             keywords: ltPlayer.details.keywords,
             published: new Date(ltPlayer.details.publishDate),
+            thumbnails: ltPlayer.details.thumbnails,
+            recommended: ltVideo.recommended
+                .filter(x => x.type == "videoRenderer")
+                .map(this.convertRenderer),
 
             formats: [
                 ...ltPlayer.formats.map((f, i) => ({

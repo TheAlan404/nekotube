@@ -72,6 +72,7 @@ export const OptionsProvider = ({ children }: React.PropsWithChildren) => {
             <Drawer
                 opened={opened}
                 keepMounted
+                withinPortal={false}
                 size="md"
                 onClose={() => close()}
                 position="right"

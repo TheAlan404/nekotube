@@ -7,20 +7,24 @@ export interface Channel {
     title: string;
 };
 
-export interface VideoData {
+export interface VideoInfo {
     id: string;
     title: string;
     description: string;
+    thumbnails: Thumbnail[];
+    channel: Channel;
+};
+
+export interface VideoData extends VideoInfo {
     chapters: Chapter[];
     published: Date;
-    channel: Channel;
     keywords: string[];
     likeCount?: number;
     viewCount?: number;
     formats: VideoFormat[];
-};
 
-;
+    recommended: Renderer[];
+};
 
 export interface Chapter {
     time: number;
@@ -41,16 +45,8 @@ export interface Thumbnail {
     height: number;
 };
 
-export type SearchResult = ({ type: "video" } & VideoInfo);
-
-export interface VideoInfo {
-    id: string;
-    title: string;
-    shortDescription: string;
-    thumbnails: Thumbnail[];
-    channel: Channel;
-};
-
 export interface PlaylistInfo {
-
+    
 };
+
+export type Renderer = ({ type: "video" } & VideoInfo);

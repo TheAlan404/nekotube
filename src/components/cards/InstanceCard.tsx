@@ -1,6 +1,6 @@
 import { ActionIcon, Checkbox, CheckIcon, Code, Grid, Group, Paper, Stack, Text, Tooltip } from "@mantine/core";
 import { Instance } from "../../api/types/instances";
-import { IconCheck, IconStar, IconStarFilled } from "@tabler/icons-react";
+import { IconCheck, IconStar, IconStarFilled, IconWorldCheck, IconWorldX } from "@tabler/icons-react";
 import { useContext } from "react";
 import { APIContext } from "../../api/context/APIController";
 
@@ -52,10 +52,14 @@ export const InstanceCard = ({
                                 <Text fs="xs" c="dimmed">
                                     {instance.region}
                                 </Text>
+                                {!instance.supportsProxy && (
+                                    <Tooltip label="Instance doesn't support proxying" withArrow>
+                                        <IconWorldX color="var(--mantine-color-yellow-filled)" />
+                                    </Tooltip>
+                                )}
                                 {withControls && (
                                     <Tooltip
                                         label={fav ? "Remove from favourites" : "Add to favourites"}
-                                        position="left"
                                         withArrow
                                     >
                                         <ActionIcon

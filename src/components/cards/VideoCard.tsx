@@ -29,7 +29,7 @@ export const HorizontalVideoCard = ({
                             {video.title}
                         </Title>
                         <Text>
-                            {video.shortDescription}
+                            {video.description}
                         </Text>
                     </Stack>
                 </Grid.Col>

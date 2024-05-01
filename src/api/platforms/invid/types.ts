@@ -53,7 +53,7 @@ export interface InvidiousVideoData extends InvidiousVideo {
     adaptiveFormats: InvidiousAdaptiveFormat[];
     formatStreams: InvidiousFormat[];
     captions: any[];
-    recommendedVideos: any[];
+    recommendedVideos: InvidiousRenderer[];
 };
 
 export interface InvidiousAdaptiveFormat {
@@ -122,4 +122,4 @@ export interface InvidiousPlaylistEntry {
     videoThumbnails: InvidiousThumbnail[];
 };
 
-export type InvidiousSearchResult = InvidiousVideo | InvidiousPlaylist | InvidiousChannel;
+export type InvidiousRenderer = InvidiousVideo | InvidiousPlaylist | InvidiousChannel;

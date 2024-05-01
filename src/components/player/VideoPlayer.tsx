@@ -11,6 +11,7 @@ import { FullscreenButton } from "./controls/FullscreenButton";
 import { OptionsButton } from "../options/links/OptionsButton";
 import { usePreference } from "../../api/pref/Preferences";
 import { ErrorMessage } from "../ui/ErrorMessage";
+import { FormatsButton } from "../options/links/FormatsButton";
 
 export const VideoPlayer = () => {
     const { videoElement, seekToChapterOffset, videoInfo, seekTo, togglePlay, playState, muted, setMuted, error, fetchVideoInfo } = useContext(VideoPlayerContext);
@@ -41,10 +42,6 @@ export const VideoPlayer = () => {
         ["Space", () => togglePlay()],
         ["m", () => setMuted(!muted)],
     ]);
-
-    useDocumentTitle(videoInfo ? (
-        (playState == "paused" ? "⏸︎ " : (muted ? "🔇 " : "")) + videoInfo.title + " - NekoTube"
-    ) : "NekoTube");
 
     const mergedRef = useMergedRef(
         hoverRef,
@@ -144,6 +141,7 @@ export const VideoPlayer = () => {
                                     <PlayerTimestamp />
                                 </Group>
                                 <Group>
+                                    <FormatsButton />
                                     <OptionsButton />
                                     <FullscreenButton
                                         {...{

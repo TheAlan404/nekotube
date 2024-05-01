@@ -4,6 +4,7 @@ import { APIContext } from "../../api/context/APIController";
 import { IconAlertTriangle, IconSearch } from "@tabler/icons-react";
 import { useLocation, useNavigate, useNavigation, useSearchParams } from "react-router-dom";
 import { useKeyboardSfx } from "../../hooks/useSoundEffect";
+import { useHotkeys } from "@mantine/hooks";
 
 export const SearchBar = () => {
     const { api } = useContext(APIContext);
@@ -16,8 +17,13 @@ export const SearchBar = () => {
     const [suggestions, setSuggestions] = useState<string[]>([]);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [value, setValue] = useState((location.pathname == "/search" ? (new URLSearchParams(location.search).get("q") || "") : ""));
+    const ref = useRef<HTMLInputElement>(null);
     const abortController = useRef<AbortController>();
     const keyboardSfx = useKeyboardSfx();
+
+    useHotkeys([
+        ["ctrl + s", () => ref.current.focus()],
+    ], [], true);
 
     const options = (suggestions || []).map((item) => (
         <Combobox.Option value={item} key={item}>
@@ -58,6 +64,7 @@ export const SearchBar = () => {
     const search = (q: string) => {
         navigate("/search?" + new URLSearchParams({ q }));
         setValue(q || "");
+        ref.current.blur();
         combobox.closeDropdown();
     };
 
@@ -73,7 +80,8 @@ export const SearchBar = () => {
                 <Grid w="100%" gutter="xs">
                     <Grid.Col span="auto">
                         <TextInput
-                            placeholder="Search..."
+                            placeholder="Search... (Ctrl + S)"
+                            ref={ref}
                             value={value || ""}
                             onChange={(e) => {
                                 setValue(e.currentTarget.value);
@@ -123,7 +131,11 @@ export const SearchBar = () => {
                 )}
                 <Combobox.Options>
                     {options}
-                    {!loading && !errorMessage && !suggestions.length && <Combobox.Empty>No results found</Combobox.Empty>}
+                    {!loading && !errorMessage && !suggestions.length && (
+                        <Combobox.Empty>
+                            {value ? "Start typing to search" : "No results found"}
+                        </Combobox.Empty>
+                    )}
                 </Combobox.Options>
             </Combobox.Dropdown>
         </Combobox>

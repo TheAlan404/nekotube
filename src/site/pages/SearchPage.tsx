@@ -3,7 +3,7 @@ import { useContext, useEffect, useState } from "react";
 import { SearchResult } from "../../api/types/video";
 import { APIContext } from "../../api/context/APIController";
 import { useSearchParams } from "react-router-dom";
-import { VideoCard } from "../../components/cards/VideoCard";
+import { HorizontalVideoCard } from "../../components/cards/VideoCard";
 import { ErrorMessage } from "../../components/ui/ErrorMessage";
 
 export const SearchPage = () => {
@@ -43,12 +43,14 @@ export const SearchPage = () => {
             <Text>
                 {results.length} results
             </Text>
-            {results.filter(x => x.type == "video").map((result, i) => (
-                <VideoCard
-                    key={i}
-                    video={result}
-                />
-            ))}
+            <Stack w={{ base: "100%", md: "50%" }}>
+                {results.filter(x => x.type == "video").map((result, i) => (
+                    <HorizontalVideoCard
+                        key={i}
+                        video={result}
+                    />
+                ))}
+            </Stack>
         </Stack>
     )
 };

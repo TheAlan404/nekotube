@@ -14,6 +14,9 @@ export interface APIController {
     setInstance: (instance: Instance) => void;
     customInstance: boolean;
     setCustomInstance: (custom: boolean) => void;
+    favourited: Instance[];
+    addFavourite: (i: Instance) => void;
+    removeFavourite: (i: Instance) => void;
 
     api: APIProvider;
 };
@@ -47,9 +50,13 @@ export const APIControllerProvider = ({ children }: React.PropsWithChildren) => 
         key: "nekotube:instance",
         defaultValue: DEFAULT_INSTANCE,
     });
-    const [customInstance, setCustomInstance] = useLocalStorage({
+    const [customInstance, setCustomInstance] = useLocalStorage<boolean>({
         key: "nekotube:isCustomInstance",
         defaultValue: false,
+    });
+    const [favourited, setFavourited] = useLocalStorage<Instance[]>({
+        key: "nekotube:favouritedInstances",
+        defaultValue: [],
     });
     const [isRefreshing, setIsRefreshing] = useState(true);
     const [availableInstances, setAvailableInstances] = useState<Instance[]>([
@@ -91,6 +98,13 @@ export const APIControllerProvider = ({ children }: React.PropsWithChildren) => 
                 refreshAvailableInstances,
                 customInstance,
                 setCustomInstance,
+                favourited,
+                addFavourite: (i) => {
+                    setFavourited(v => v.some(x => x.url == i.url) ? v : [...v, i]);
+                },
+                removeFavourite: (i) => {
+                    setFavourited(v => v.filter(x => x.url !== i.url));
+                },
                 api,
             }}
         >

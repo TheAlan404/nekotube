@@ -3,7 +3,7 @@ import { ThumbnailRender } from "./ThumbnailRender";
 import { VideoInfo } from "../../api/types/video";
 import { Link } from "react-router-dom";
 
-export const VideoCard = ({
+export const HorizontalVideoCard = ({
     video,
 }: {
     video: VideoInfo,
@@ -20,6 +20,7 @@ export const VideoCard = ({
                 <Grid.Col span="content">
                     <ThumbnailRender
                         thumbnails={video.thumbnails}
+                        fallback={`https://img.youtube.com/vi/${video.id}/hqdefault.jpg`}
                     />
                 </Grid.Col>
                 <Grid.Col span="auto">

@@ -31,15 +31,14 @@ export const OptionsProvider = ({ children }: React.PropsWithChildren) => {
     const closeOptionsSfx = useSoundEffect(["closeSettings"]);
 
     const open = () => {
-        if(opened) return;
-        openOptionsSfx();
+        if(!opened) openOptionsSfx();
         handlers.open();
     };
 
     const close = () => {
-        if(!opened) return;
-        closeOptionsSfx();
+        if(opened) closeOptionsSfx();
         handlers.close();
+        setView("main");
     };
 
     const toggle = () => {

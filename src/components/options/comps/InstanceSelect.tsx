@@ -26,6 +26,7 @@ export const InstanceSelect = () => {
                         <InstanceCard
                             instance={currentInstance}
                             isCustom={customInstance}
+                            isSelected
                         />
                     </Grid.Col>
                     <Grid.Col span="content">

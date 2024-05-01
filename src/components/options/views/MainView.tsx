@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import { VideoPlayerContext } from "../../../api/context/VideoPlayerContext";
-import { Divider, Space, Stack, Text } from "@mantine/core";
+import { Divider, Grid, Space, Stack, Text } from "@mantine/core";
 import { InstanceSelect } from "../comps/InstanceSelect";
 import { FormatSelect } from "../comps/FormatSelect";
 import { PlaybackSpeed } from "../comps/PlaybackSpeed";
@@ -12,18 +12,22 @@ export const OptionsMainView = () => {
     const loaded = playState !== "error" && playState !== "loading";
 
     return (
-        <Stack align="center" w="100%" p="sm">
-            <Divider w="90%" label="Instance" />
-            <InstanceSelect />
-            <Divider w="90%" label="Video" />
-            {!loaded && (
-                <Text>Video not loaded</Text>
-            )}
-            {loaded && <FormatSelect />}
-            {loaded && <PlaybackSpeed />}
-            <Divider w="90%" label="Preferences" />
-            <PreferencesList />
-            <Space h="20vh" />
-        </Stack>
+        <Grid w="100%">
+            <Grid.Col span="auto">
+                <Stack align="center" w="100%">
+                    <Divider w="100%" label="Instance" labelPosition="left" />
+                    <InstanceSelect />
+                    <Divider w="100%" label="Video" labelPosition="left" />
+                    {!loaded && (
+                        <Text>Video not loaded</Text>
+                    )}
+                    {loaded && <FormatSelect />}
+                    {loaded && <PlaybackSpeed />}
+                    <Divider w="100%" label="Preferences" labelPosition="left" />
+                    <PreferencesList />
+                    <Space h="20vh" />
+                </Stack>
+            </Grid.Col>
+        </Grid>
     );
 };

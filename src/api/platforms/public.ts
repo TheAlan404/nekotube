@@ -4,9 +4,15 @@ import { Instance } from "../types/instances";
 
 const LT_PUBLIC_INSTANCES = "https://raw.githubusercontent.com/kuylar/lighttube/master/public_instances.json";
 
+interface PublicLighttubeInstance {
+    host: string;
+    api: boolean;
+    accounts: boolean;
+};
+
 export const fetchLightTubePublicInstances = async () => {
     const res = await fetch(LT_PUBLIC_INSTANCES);
-    const list: { host: string; api: boolean }[] = await res.json();
+    const list: PublicLighttubeInstance[] = await res.json();
 
     return list.filter(i => i.api).map(i => ({
         type: "lighttube",
@@ -41,5 +47,6 @@ export const fetchInvidiousPublicInstances = async () => {
             type: "invidious",
             url: i.uri,
             name,
+            notes: i.flag,
         } as Instance));
 };

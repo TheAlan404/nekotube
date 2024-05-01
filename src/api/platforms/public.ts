@@ -2,11 +2,16 @@ import { Instance } from "../types/instances";
 
 // --- lighttube ---
 
-const LT_PUBLIC_INSTANCES = "https://raw.githubusercontent.com/kuylar/lighttube/master/public_instances.json";
+const LT_PUBLIC_INSTANCES = "https://lighttube.kuylar.dev/instances";
 
 interface PublicLighttubeInstance {
     host: string;
-    api: boolean;
+    country: string;
+    scheme: "https";
+    apiEnabled: boolean;
+    accountsEnabled: boolean;
+    isCloudflare: boolean;
+    proxyEnabled: "all";
     accounts: boolean;
 };
 
@@ -14,10 +19,11 @@ export const fetchLightTubePublicInstances = async () => {
     const res = await fetch(LT_PUBLIC_INSTANCES);
     const list: PublicLighttubeInstance[] = await res.json();
 
-    return list.filter(i => i.api).map(i => ({
+    return list.filter(i => i.apiEnabled).map(i => ({
         type: "lighttube",
-        name: i.host.replace("https://", ""),
-        url: i.host,
+        name: i.host,
+        url: `${i.scheme}://${i.host}`,
+        notes: i.country + (i.isCloudflare ? ", cloudflare" : ""),
     } as Instance));
 };
 
@@ -47,6 +53,6 @@ export const fetchInvidiousPublicInstances = async () => {
             type: "invidious",
             url: i.uri,
             name,
-            notes: i.flag,
+            notes: i.region,
         } as Instance));
 };

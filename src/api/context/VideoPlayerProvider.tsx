@@ -82,9 +82,8 @@ export const VideoPlayerProvider = ({
     }, [videoInfo]);
 
     useEffect(() => {
-        if(!activeFormat) return;
-        console.log("Setting URL to", activeFormat.url);
-        videoElement.src = activeFormat.url;
+        console.log("Setting URL to", activeFormat?.url);
+        videoElement.src = activeFormat?.url;
     }, [activeFormat]);
 
     useVideoEventListener(videoElement, "ended", () => {

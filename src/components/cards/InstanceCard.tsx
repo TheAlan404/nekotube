@@ -74,6 +74,9 @@ export const InstanceCard = ({
                                 </Tooltip>
                             )}
                         </Group>
+                        <Text fs="xs" c="dimmed">
+                            {instance.notes}
+                        </Text>
                     </Stack>
                 </Grid.Col>
             </Grid>

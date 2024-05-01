@@ -52,6 +52,10 @@ export const VideoPlayerProvider = ({
         setAvailableFormats([]);
         setActiveFormat(null);
         setVideoInfo(null);
+        setActiveChapters({
+            chapters: [],
+            type: "video",
+        });
         if(!videoID) return;
         
         try {
@@ -81,7 +85,11 @@ export const VideoPlayerProvider = ({
         if(!videoInfo) return;
 
         setAvailableFormats(videoInfo.formats);
-        setActiveFormat(videoInfo.formats[0]);
+        setActiveFormat(videoInfo.formats
+            .filter(f => f.type == "basic")
+            .filter(f => currentInstance.type != "invidious" || f.isProxied)
+            .findLast(x=>x)
+        );
     }, [videoInfo]);
 
     useEffect(() => {
@@ -112,6 +120,27 @@ export const VideoPlayerProvider = ({
     useVideoEventListener(videoElement, "play", () => {
         setPlayState("playing");
     });
+
+    const seekTo = (ts: number) => {
+        videoElement.currentTime = clamp(0, ts, videoElement.duration);
+    };
+
+    const seekToChapterOffset = (offset: number = 0) => {
+        let currentChapterIndex = activeChapters.chapters.findIndex(c => c.time > videoElement.currentTime) - 1;
+        let currentChapter = activeChapters.chapters[currentChapterIndex];
+        if(!currentChapter) {
+            if(offset == 1) videoElement.fastSeek(videoElement.duration);
+            return;
+        }
+        let chapterProgress = videoElement.currentTime - currentChapter.time;
+        let targetIndex = currentChapterIndex + offset;
+        if(offset == -1) {
+            if(chapterProgress > 3) targetIndex++;
+        }
+        let target = activeChapters.chapters[targetIndex];
+        
+        videoElement.fastSeek(clamp(0, target?.time || 0, videoElement.duration));
+    }
 
     return (
         <VideoPlayerContext.Provider value={{
@@ -165,9 +194,8 @@ export const VideoPlayerProvider = ({
             muted,
             setMuted,
 
-            seekTo: (ts: number) => {
-                videoElement.currentTime = clamp(0, ts, videoElement.duration);
-            },
+            seekTo,
+            seekToChapterOffset,
         }}>
             {children}
         </VideoPlayerContext.Provider>

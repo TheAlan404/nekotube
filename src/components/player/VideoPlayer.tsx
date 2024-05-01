@@ -1,20 +1,19 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef } from "react";
 import { VideoPlayerContext } from "../../api/context/VideoPlayerContext"
-import { Box, Button, Drawer, Group, Loader, ScrollArea, Stack, Text, Title, Transition } from "@mantine/core";
+import { Box, Group, Loader, Stack, Text, Title, Transition } from "@mantine/core";
 import { PlayPauseButton } from "./controls/PlayPauseButton";
 import { PlayerTimestamp } from "./controls/PlayerTimestamp";
 import { VolumeControls } from "./controls/VolumeControls";
 import { ProgressBar } from "./bar/ProgressBar";
-import { useDisclosure, useDocumentTitle, useFullscreen, useHotkeys, useHover, useMergedRef } from "@mantine/hooks";
-import { IconAlertTriangle, IconReload } from "@tabler/icons-react";
+import { useDocumentTitle, useFullscreen, useHotkeys, useHover, useMergedRef } from "@mantine/hooks";
+import { IconAlertTriangle } from "@tabler/icons-react";
 import { FullscreenButton } from "./controls/FullscreenButton";
 import { OptionsButton } from "../options/links/OptionsButton";
-import { useSoundEffect } from "../../hooks/useSoundEffect";
 import { usePreference } from "../../api/pref/Preferences";
 import { ErrorMessage } from "../ui/ErrorMessage";
 
 export const VideoPlayer = () => {
-    const { videoElement, setVideoID, videoInfo, seekTo, togglePlay, playState, muted, setMuted, error, fetchVideoInfo } = useContext(VideoPlayerContext);
+    const { videoElement, seekToChapterOffset, videoInfo, seekTo, togglePlay, playState, muted, setMuted, error, fetchVideoInfo } = useContext(VideoPlayerContext);
     const containerRef = useRef<HTMLDivElement>(null);
     const { ref: fullscreenRef, fullscreen, toggle: toggleFullscreen } = useFullscreen();
     const keepControlsShown = usePreference("keepControlsShown");
@@ -34,6 +33,8 @@ export const VideoPlayer = () => {
     useHotkeys([
         ["ArrowLeft", () => seekTo(videoElement.currentTime - 5)],
         ["ArrowRight", () => seekTo(videoElement.currentTime + 5)],
+        ["Shift + ArrowRight", () => seekToChapterOffset(1)],
+        ["Shift + ArrowLeft", () => seekToChapterOffset(-1)],
         ["J", () => seekTo(videoElement.currentTime - 10)],
         ["L", () => seekTo(videoElement.currentTime + 10)],
         ["K", () => togglePlay()],
@@ -50,7 +51,7 @@ export const VideoPlayer = () => {
         fullscreenRef,
     );
 
-    const shouldShowControls = playState !== "error";
+    const shouldShowControls = keepControlsShown || hovered || (playState == "error");
 
     return (
         <Box w="100%" h="100%" className="videoPlayer" style={{ position: "relative" }} ref={mergedRef}>
@@ -65,7 +66,7 @@ export const VideoPlayer = () => {
                 ref={containerRef}
             />
             <Transition
-                mounted={keepControlsShown || hovered || (playState == "error")}
+                mounted={shouldShowControls}
                 keepMounted
             >
                 {(styles) => (

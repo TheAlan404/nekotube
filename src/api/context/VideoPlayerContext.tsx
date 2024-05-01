@@ -33,6 +33,7 @@ export interface VideoPlayerAPI {
     setMuted: (m: boolean) => void;
 
     seekTo: (ts: number) => void;
+    seekToChapterOffset: (offset: number) => void;
 };
 
 // @ts-ignore

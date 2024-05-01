@@ -1,8 +1,9 @@
 import { useDisclosure, useHotkeys } from "@mantine/hooks";
-import { createContext, useState } from "react";
+import { createContext, useCallback, useState } from "react";
 import { useSoundEffect } from "../../hooks/useSoundEffect";
-import { Drawer, ScrollArea } from "@mantine/core";
+import { Button, Drawer, Group, ScrollArea, Text } from "@mantine/core";
 import { OptionsRouter } from "./OptionsRouter";
+import { IconArrowLeft } from "@tabler/icons-react";
 
 export type OptionsView = "main" | "instanceSelect" | "openWith" | "formatSelect";
 
@@ -17,11 +18,11 @@ export interface OptionsContextAPI {
 
 export const OptionsContext = createContext<OptionsContextAPI>({
     opened: false,
-    open: () => {},
-    close: () => {},
-    toggle: () => {},
+    open: () => { },
+    close: () => { },
+    toggle: () => { },
     view: "main",
-    setView: () => {},
+    setView: () => { },
 });
 
 export const OptionsProvider = ({ children }: React.PropsWithChildren) => {
@@ -30,24 +31,24 @@ export const OptionsProvider = ({ children }: React.PropsWithChildren) => {
     const openOptionsSfx = useSoundEffect(["openSettings"]);
     const closeOptionsSfx = useSoundEffect(["closeSettings"]);
 
-    const open = () => {
-        if(!opened) openOptionsSfx();
+    const open = useCallback(() => {
+        if (!opened) openOptionsSfx();
         handlers.open();
-    };
+    }, [opened]);
 
-    const close = () => {
-        if(opened) closeOptionsSfx();
+    const close = useCallback(() => {
+        if (opened) closeOptionsSfx();
         handlers.close();
         setView("main");
-    };
+    }, [opened]);
 
-    const toggle = () => {
-        if(opened) {
+    const toggle = useCallback(() => {
+        if (opened) {
             close();
         } else {
             open();
         }
-    };
+    }, [opened]);
 
     useHotkeys([
         ["o", () => toggle()],
@@ -56,7 +57,7 @@ export const OptionsProvider = ({ children }: React.PropsWithChildren) => {
     useHotkeys([
         ["Ctrl + o", () => toggle()],
     ], [], true);
-    
+
     return (
         <OptionsContext.Provider
             value={{
@@ -70,11 +71,40 @@ export const OptionsProvider = ({ children }: React.PropsWithChildren) => {
         >
             <Drawer
                 opened={opened}
+                keepMounted
                 size="md"
                 onClose={() => close()}
                 position="right"
-                title="Options"
                 scrollAreaComponent={ScrollArea.Autosize}
+                styles={{
+                    title: {
+                        width: "100%",
+                    }
+                }}
+                title={(
+                    <Group w="100%" grow>
+                        {view !== "main" && (
+                            <Button
+                                variant="light"
+                                color="violet"
+                                leftSection={<IconArrowLeft />}
+                                onClick={() => setView("main")}
+                                fullWidth
+                                size="compact-md"
+                            >
+                                Back
+                            </Button>
+                        )}
+                        <Text>
+                            {({
+                                main: "Options",
+                                formatSelect: "Select Format",
+                                instanceSelect: "Select Instance",
+                                openWith: "Open with...",
+                            } as Record<OptionsView, string>)[view]}
+                        </Text>
+                    </Group>
+                )}
             >
                 <OptionsRouter />
             </Drawer>

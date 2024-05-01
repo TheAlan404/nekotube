@@ -4,6 +4,7 @@ import { OptionsContext } from "./OptionsContext";
 import { OptionsMainView } from "./views/MainView";
 import { OptionsInstanceView } from "./views/InstanceView";
 import { OptionsOpenWithView } from "./views/OpenWith";
+import { OptionsFormatView } from "./views/FormatView";
 
 export const OptionsRouter = () => {
     const { view } = useContext(OptionsContext);
@@ -13,6 +14,7 @@ export const OptionsRouter = () => {
             {view == "main" && <OptionsMainView />}
             {view == "instanceSelect" && <OptionsInstanceView />}
             {view == "openWith" && <OptionsOpenWithView />}
+            {view == "formatSelect" && <OptionsFormatView />}
         </Stack>
     );
 };

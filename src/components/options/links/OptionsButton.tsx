@@ -4,14 +4,14 @@ import { useContext } from "react";
 import { OptionsContext } from "../OptionsContext";
 
 export const OptionsButton = () => {
-    const { toggle } = useContext(OptionsContext);
+    const { open } = useContext(OptionsContext);
 
     return (
         <Tooltip label="Options (o)">
             <ActionIcon
                 variant="light"
                 color="violet"
-                onClick={() => toggle()}
+                onClick={() => open()}
             >
                 <IconSettings />
             </ActionIcon>

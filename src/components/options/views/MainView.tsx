@@ -7,6 +7,7 @@ import { PlaybackSpeed } from "../comps/PlaybackSpeed";
 import { PreferencesList } from "../comps/PreferencesList";
 import { RefetchInfo } from "../comps/RefetchInfo";
 import { OpenWithButton } from "../links/OpenWithButton";
+import { LoopVideo } from "../comps/LoopVideo";
 
 export const OptionsMainView = () => {
     const { videoInfo } = useContext(VideoPlayerContext);
@@ -26,6 +27,7 @@ export const OptionsMainView = () => {
                     )}
                     {loaded && <FormatSelect />}
                     {loaded && <PlaybackSpeed />}
+                    {loaded && <LoopVideo />}
                     <Divider w="100%" label="Preferences" labelPosition="left" />
                     <PreferencesList />
                     <Divider w="100%" label="Debugging" labelPosition="left" />

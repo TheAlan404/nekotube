@@ -37,8 +37,8 @@ export const Root = () => {
 
     return (
         <AppShell
-            header={{ height: 60 }}
-            padding="md"
+            header={{ height: "3em" }}
+            padding="xs"
         >
             <AppShell.Header>
                 <Group h="100%" px="md">

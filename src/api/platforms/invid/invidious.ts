@@ -33,22 +33,18 @@ export class InvidiousAPIProvider implements APIProvider {
         return await res.json() as T;
     }
 
-    convertRenderer = (d: InvidiousRenderer): Renderer => {
-        if(d.type == "video") {
-            return {
-                type: "video",
-                id: d.videoId,
-                title: d.title,
-                description: d.descriptionHtml,
-                thumbnails: d.videoThumbnails as Thumbnail[],
-                channel: {
-                    id: d.authorId,
-                    title: d.author,
-                },
-            } as Renderer;
-        } else {
-            return null;
-        }
+    convertVideoInfo = (d: InvidiousVideo): Renderer => {
+        return {
+            type: "video",
+            id: d.videoId,
+            title: d.title,
+            description: d.descriptionHtml,
+            thumbnails: d.videoThumbnails as Thumbnail[],
+            channel: {
+                id: d.authorId,
+                title: d.author,
+            },
+        } as Renderer;
     };
 
     searchSuggestions = async (query: string, signal?: AbortSignal) => {
@@ -76,6 +72,7 @@ export class InvidiousAPIProvider implements APIProvider {
                 channel: {
                     id: result.authorId,
                     title: result.author,
+                    thumbnails: result.authorThumbnails,
                 },
             } as Renderer)),
         };
@@ -98,6 +95,7 @@ export class InvidiousAPIProvider implements APIProvider {
             channel: {
                 id: v.authorId,
                 title: v.author,
+                thumbnails: v.authorThumbnails,
             },
             chapters: parseChapters(v.descriptionHtml),
             description: v.descriptionHtml,
@@ -105,10 +103,9 @@ export class InvidiousAPIProvider implements APIProvider {
             likeCount: v.likeCount,
             viewCount: v.viewCount,
             published: new Date(v.published),
-            thumbnails: v.videoThumbnails as Thumbnail[],
+            thumbnails: v.videoThumbnails,
             recommended: v.recommendedVideos
-                .filter(x => x.type == "video")
-                .map(this.convertRenderer),
+                .map(this.convertVideoInfo),
 
             formats: [
                 ...v.formatStreams.map((f, i) => ({

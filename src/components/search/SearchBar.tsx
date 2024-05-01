@@ -1,4 +1,4 @@
-import { ActionIcon, Button, Combobox, Grid, Group, Loader, Stack, Text, TextInput, useCombobox } from "@mantine/core";
+import { ActionIcon, Box, Button, Combobox, Grid, Group, Loader, Stack, Text, TextInput, useCombobox } from "@mantine/core";
 import { useContext, useEffect, useRef, useState } from "react";
 import { APIContext } from "../../api/context/APIController";
 import { IconAlertTriangle, IconSearch } from "@tabler/icons-react";
@@ -126,16 +126,21 @@ export const SearchBar = () => {
                     </Stack>
                 )}
                 {loading && (
-                    <Stack w="100%" align="center">
+                    <Stack w="100%" align="center" py="md">
                         <Loader />
                     </Stack>
                 )}
                 <Combobox.Options>
                     {options}
                     {!loading && !errorMessage && !suggestions.length && (
-                        <Combobox.Empty>
-                            {value ? "Start typing to search" : "No results found"}
-                        </Combobox.Empty>
+                        <Box py="md">
+                            {value ? "No results found" : (
+                                <Stack gap={0} align="center">
+                                    <Text c="var(--mantine-color-text)">Start typing to search</Text>
+                                    <Text fz="sm" c="dimmed">Suggestions will appear here</Text>
+                                </Stack>
+                            )}
+                        </Box>
                     )}
                 </Combobox.Options>
             </Combobox.Dropdown>

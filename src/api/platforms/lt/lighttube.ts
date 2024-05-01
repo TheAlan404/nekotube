@@ -84,7 +84,12 @@ export class LTAPIProvider implements APIProvider {
                     thumbnails: v.thumbnails,
                     channel: {
                         id: v.channel.id,
-                        title: v.channel.id,
+                        title: v.channel.title,
+                        thumbnails: [{
+                            url: v.channel.avatar,
+                            width: 176,
+                            height: 176,
+                        }]
                     },
                 } as VideoInfo & { type: "video" })),
         };
@@ -100,6 +105,11 @@ export class LTAPIProvider implements APIProvider {
             channel: {
                 id: ltVideo.channel.id,
                 title: ltVideo.channel.id,
+                thumbnails: [{
+                    url: ltVideo.channel.avatar,
+                    width: 176,
+                    height: 176,
+                }],
             },
             chapters: parseChapters(ltVideo.description),
             description: ltVideo.description,

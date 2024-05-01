@@ -1,6 +1,5 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import App from './App.tsx'
 import { MantineProvider, createTheme } from "@mantine/core"
 import './index.css'
 import '@mantine/core/styles.css';
@@ -12,6 +11,7 @@ import { PreferencesProvider } from "./api/pref/Preferences.tsx"
 import { NavigationProgress } from "@mantine/nprogress"
 import { NekoTubeRouter } from "./site/NekoTubeRouter.tsx"
 import { OptionsProvider } from "./components/options/OptionsContext.tsx"
+import { TabsProvider } from "./components/tabs/TabsContext.tsx"
 
 const theme = createTheme({
     colors: {
@@ -47,7 +47,9 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
             <PreferencesProvider>
                 <VideoPlayerProvider>
                     <OptionsProvider>
-                        <NekoTubeRouter />
+                        <TabsProvider>
+                            <NekoTubeRouter />
+                        </TabsProvider>
                     </OptionsProvider>
                 </VideoPlayerProvider>
             </PreferencesProvider>

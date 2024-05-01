@@ -1,13 +1,9 @@
 export const secondsToTimestamp = (secs: number) => {
-    let d = new Date(secs * 1000);
-
-    let h = (d.getHours() - 2).toString().padStart(2, "0");
-    let m = d.getMinutes().toString().padStart(2, "0");
-    let s = d.getSeconds().toString().padStart(2, "0");
-
-    return (
-        h == "00" ? [m, s] : [h, m, s]
-    ).join(":");
+    let t = new Date(secs * 1000).toISOString()
+        .split("T")[1]
+        .split(".")[0];
+    
+    return t.startsWith("00:") ? t.slice(3) : t;
 }
 
 export const timestampToSeconds = (ts: string) => {

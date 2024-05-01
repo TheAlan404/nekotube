@@ -5,6 +5,7 @@ export type SearchSuggestions = string[];
 export interface Channel {
     id: string;
     title: string;
+    thumbnails: Thumbnail[];
 };
 
 export interface VideoInfo {

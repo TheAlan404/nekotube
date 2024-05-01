@@ -12,6 +12,7 @@ import { OptionsButton } from "../options/links/OptionsButton";
 import { usePreference } from "../../api/pref/Preferences";
 import { ErrorMessage } from "../ui/ErrorMessage";
 import { FormatsButton } from "../options/links/FormatsButton";
+import { ToggleSidebarButton } from "../tabs/links/ToggleSidebarButton";
 
 export const VideoPlayer = () => {
     const { videoElement, seekToChapterOffset, videoInfo, seekTo, togglePlay, playState, muted, setMuted, error, fetchVideoInfo } = useContext(VideoPlayerContext);
@@ -71,15 +72,15 @@ export const VideoPlayer = () => {
                         w="100%"
                         h="100%"
                         justify="space-between"
-                        style={styles}
+                        style={{
+                            ...styles,
+                            background: "linear-gradient(to bottom, #000000FF, #00000000 5em), linear-gradient(to top, #000000FF 0%, #00000000 5em)",
+                        }}
                         className="clickListener"
                         onClick={(e) => e.currentTarget.classList.contains("clickListener") && togglePlay()}
                     >
                         <Stack
                             p="xs"
-                            style={{
-                                background: "linear-gradient(to bottom, #000000AA, #00000000)",
-                            }}
                             onClick={(e) => e.stopPropagation()}
                         >
                             <Group align="center" px="sm">
@@ -118,7 +119,10 @@ export const VideoPlayer = () => {
                                 <Stack w="100%" bg="dark" py="md">
                                     <ErrorMessage
                                         error={error}
-                                        retry={fetchVideoInfo}
+                                        retry={videoInfo ? (() => {
+                                            videoElement.load();
+                                            videoElement.play();
+                                        }) : fetchVideoInfo}
                                     />
                                 </Stack>
                             )}
@@ -127,9 +131,6 @@ export const VideoPlayer = () => {
                             gap="xs"
                             p="xs"
                             w="100%"
-                            style={{
-                                background: "linear-gradient(to top, #000000AA, #00000000)",
-                            }}
                             onClick={(e) => e.stopPropagation()}
                         >
                             <ProgressBar />
@@ -143,6 +144,7 @@ export const VideoPlayer = () => {
                                 <Group>
                                     <FormatsButton />
                                     <OptionsButton />
+                                    <ToggleSidebarButton />
                                     <FullscreenButton
                                         {...{
                                             fullscreen,

@@ -2,6 +2,7 @@ import { Grid, Paper, Stack, Text, Title } from "@mantine/core";
 import { ThumbnailRender } from "./ThumbnailRender";
 import { VideoInfo } from "../../api/types/video";
 import { Link } from "react-router-dom";
+import { ChannelCard } from "./ChannelCard";
 
 export const HorizontalVideoCard = ({
     video,
@@ -11,12 +12,13 @@ export const HorizontalVideoCard = ({
     return (
         <Paper
             withBorder
-            p="md"
+            p="xs"
             shadow="md"
             component={Link}
+            c="var(--mantine-color-text)"
             to={`/watch?v=${video.id}`}
         >
-            <Grid>
+            <Grid gutter="sm">
                 <Grid.Col span="content">
                     <ThumbnailRender
                         thumbnails={video.thumbnails}
@@ -24,13 +26,13 @@ export const HorizontalVideoCard = ({
                     />
                 </Grid.Col>
                 <Grid.Col span="auto">
-                    <Stack>
-                        <Title order={3}>
+                    <Stack gap="xs">
+                        <Text fw="bold">
                             {video.title}
-                        </Title>
-                        <Text>
-                            {video.description}
                         </Text>
+                        <ChannelCard
+                            channel={video.channel}
+                        />
                     </Stack>
                 </Grid.Col>
             </Grid>

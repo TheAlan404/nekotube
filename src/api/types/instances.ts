@@ -3,6 +3,7 @@ export interface LTInstance {
     name: string;
     url: string;
     notes?: string;
+    region?: string;
 };
 
 export interface InvidiousInstance {
@@ -10,6 +11,7 @@ export interface InvidiousInstance {
     name: string;
     url: string;
     notes?: string;
+    region?: string;
 };
 
 export type Instance = LTInstance | InvidiousInstance;

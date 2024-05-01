@@ -23,7 +23,8 @@ export const fetchLightTubePublicInstances = async () => {
         type: "lighttube",
         name: i.host,
         url: `${i.scheme}://${i.host}`,
-        notes: i.country + (i.isCloudflare ? ", cloudflare" : ""),
+        region: i.country,
+        notes: (i.isCloudflare ? "cloudflare" : ""),
     } as Instance));
 };
 
@@ -53,6 +54,6 @@ export const fetchInvidiousPublicInstances = async () => {
             type: "invidious",
             url: i.uri,
             name,
-            notes: i.region,
+            region: i.region,
         } as Instance));
 };

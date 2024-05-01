@@ -8,7 +8,7 @@ export const TimestampRegex = /([0-9]{1,2}:)?[0-9]{1,2}:[0-9]{1,2}/g;
 
 export const parseChapters = (description: string): Chapter[] => {
     let text = cleanDescription(description);
-    let lines = text.split(/<br>+/g);
+    let lines = text.split("\n");
     let chapters: Chapter[] = [];
 
     for(let line of lines) {
@@ -21,5 +21,6 @@ export const parseChapters = (description: string): Chapter[] => {
         });
     };
 
-    return chapters.sort((a, b) => a.time - b.time);
+    let sorted = chapters.sort((a, b) => a.time - b.time);
+    return sorted;
 };

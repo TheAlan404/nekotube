@@ -66,6 +66,7 @@ export const VideoPlayer = () => {
             />
             <Transition
                 mounted={keepControlsShown || hovered || (playState == "error")}
+                keepMounted
             >
                 {(styles) => (
                     <Stack

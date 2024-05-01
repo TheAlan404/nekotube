@@ -1,11 +1,5 @@
 export const cleanDescription = (text = "") => {
-    text = text.replaceAll("\n", "<br>");
-    text = text.replaceAll("&lt;", "<");
-    text = text.replaceAll("&gt;", ">");
-    //text = text.replace(/(<a href\=\")(.+)(\">)(.+)(<\/a>)/g, (match, p1, uri, p3, content, p5) => {
-    text = text.replace(/(<a href\=\")([^"]+)(\">)([^<]+)(<\/a>)/g, (match, p1, uri, p3, content, p5) => {
-        return content;
-    });
-
-    return text;
+    let parser = new DOMParser();
+    let doc = parser.parseFromString(text, "text/html");
+    return doc.documentElement.textContent;
 };

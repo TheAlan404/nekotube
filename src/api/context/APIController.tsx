@@ -6,24 +6,6 @@ import { fetchInvidiousPublicInstances, fetchLightTubePublicInstances } from "..
 import { InvidiousAPIProvider } from "../platforms/invid/invidious";
 import { useLocalStorage } from "@mantine/hooks";
 
-export interface APIController {
-    currentInstance: Instance;
-    availableInstances: Instance[];
-    isRefreshing: boolean;
-    refreshAvailableInstances: () => void;
-    setInstance: (instance: Instance) => void;
-    customInstance: boolean;
-    setCustomInstance: (custom: boolean) => void;
-    favourited: Instance[];
-    addFavourite: (i: Instance) => void;
-    removeFavourite: (i: Instance) => void;
-
-    api: APIProvider;
-};
-
-// @ts-ignore
-export const APIContext = createContext<APIController>();
-
 const CUSTOM_INSTANCES: Instance[] = [
     {
         type: "lighttube",
@@ -43,7 +25,34 @@ const DEFAULT_INSTANCE: Instance = {
     url: "https://tube.kuylar.dev",
 };
 
-const LT_PUBLIC_INSTANCES = "https://raw.githubusercontent.com/kuylar/lighttube/master/public_instances.json";
+export interface APIController {
+    currentInstance: Instance;
+    availableInstances: Instance[];
+    isRefreshing: boolean;
+    refreshAvailableInstances: () => void;
+    setInstance: (instance: Instance) => void;
+    customInstance: boolean;
+    setCustomInstance: (custom: boolean) => void;
+    favourited: Instance[];
+    addFavourite: (i: Instance) => void;
+    removeFavourite: (i: Instance) => void;
+
+    api: APIProvider;
+};
+
+export const APIContext = createContext<APIController>({
+    api: new LTAPIProvider(DEFAULT_INSTANCE!),
+    addFavourite: () => {},
+    removeFavourite: () => {},
+    refreshAvailableInstances: () => {},
+    setCustomInstance: () => {},
+    setInstance: () => {},
+    availableInstances: [],
+    currentInstance: DEFAULT_INSTANCE,
+    customInstance: false,
+    favourited: [],
+    isRefreshing: false,
+});
 
 export const APIControllerProvider = ({ children }: React.PropsWithChildren) => {
     const [currentInstance, setCurrentInstance] = useLocalStorage<Instance>({

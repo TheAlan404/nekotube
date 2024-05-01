@@ -89,6 +89,7 @@ export const SearchBar = () => {
                                 combobox.resetSelectedOption();
                                 combobox.openDropdown();
                             }}
+                            autoFocus={location.pathname == "/"}
                             onClick={() => combobox.openDropdown()}
                             onFocus={() => combobox.openDropdown()}
                             onBlur={() => combobox.closeDropdown()}

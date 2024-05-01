@@ -7,7 +7,7 @@ export const PlaybackSpeed = () => {
     const [playbackSpeed, setPlaybackSpeed] = useState(videoElement.playbackRate);
 
     return (
-        <Stack w="100%">
+        <Group w="100%" grow>
             <Text>
                 Playback Rate
             </Text>
@@ -32,6 +32,6 @@ export const PlaybackSpeed = () => {
 
                 </Grid.Col>
             </Grid>
-        </Stack>
+        </Group>
     );
 };

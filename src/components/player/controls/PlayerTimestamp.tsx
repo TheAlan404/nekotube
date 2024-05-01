@@ -5,7 +5,7 @@ import { CopyButton, Group, Text, Tooltip } from "@mantine/core";
 import { secondsToTimestamp } from "../../../utils/timestamp";
 
 export const PlayerTimestamp = () => {
-    const { videoElement } = useContext(VideoPlayerContext);
+    const { videoElement, activeChapters } = useContext(VideoPlayerContext);
     const [progress, setProgress] = useState(0);
 
     useVideoEventListener(videoElement, "timeupdate", () => {
@@ -13,6 +13,8 @@ export const PlayerTimestamp = () => {
     });
 
     const progressText = secondsToTimestamp(progress);
+    console.log(activeChapters.chapters, progress);
+    const currentChapter = activeChapters.chapters[activeChapters.chapters.findIndex((x) => x.time > progress) - 1];
 
     return (
         <Group>
@@ -33,6 +35,11 @@ export const PlayerTimestamp = () => {
             <Text span>
                 {secondsToTimestamp(videoElement.duration || 0)}
             </Text>
+            {currentChapter && (
+                <Text>
+                    {currentChapter.label}
+                </Text>
+            )}
         </Group>
     );
 };

@@ -5,6 +5,7 @@ import { InstanceSelect } from "../comps/InstanceSelect";
 import { FormatSelect } from "../comps/FormatSelect";
 import { PlaybackSpeed } from "../comps/PlaybackSpeed";
 import { PreferencesList } from "../comps/PreferencesList";
+import { RefetchInfo } from "../comps/RefetchInfo";
 
 export const OptionsMainView = () => {
     const { playState } = useContext(VideoPlayerContext);
@@ -25,6 +26,8 @@ export const OptionsMainView = () => {
                     {loaded && <PlaybackSpeed />}
                     <Divider w="100%" label="Preferences" labelPosition="left" />
                     <PreferencesList />
+                    <Divider w="100%" label="Debugging" labelPosition="left" />
+                    <RefetchInfo />
                     <Space h="20vh" />
                 </Stack>
             </Grid.Col>

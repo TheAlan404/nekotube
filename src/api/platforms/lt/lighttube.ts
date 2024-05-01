@@ -92,11 +92,13 @@ export class LTAPIProvider implements APIProvider {
                     ...f,
                     type: "basic",
                     id: `basic-${i}`,
+                    isProxied: false,
                 } as VideoFormat)),
                 ...ltPlayer.adaptiveFormats.map((f, i) => ({
                     ...f,
                     type: "adaptive",
                     id: `adaptive-${i}`,
+                    isProxied: false,
                 } as VideoFormat)),
 
                 ...ltPlayer.formats.map((f, i) => ({
@@ -104,12 +106,14 @@ export class LTAPIProvider implements APIProvider {
                     type: "basic",
                     id: `proxy-basic-${i}`,
                     url: `${this.instance.url}/proxy/media/${id}/${f.itag}`,
+                    isProxied: true,
                 } as VideoFormat)),
                 ...ltPlayer.adaptiveFormats.map((f, i) => ({
                     ...f,
                     type: "adaptive",
                     id: `proxy-adaptive-${i}`,
                     url: `${this.instance.url}/proxy/media/${id}/${f.itag}`,
+                    isProxied: true,
                 } as VideoFormat)),
             ],
         };

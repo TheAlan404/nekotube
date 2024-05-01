@@ -58,11 +58,14 @@ export const VideoPlayerProvider = ({
             let info = await api.getVideoInfo(videoID);
             setVideoInfo(info);
 
+            console.log("Fetched VideoData", info);
+
             let chapters = parseChapters(info.description);
             setActiveChapters({
                 type: "video",
                 chapters,
             });
+            console.log("Chapters from description:", chapters);
         } catch(e) {
             console.log(e);
             setError(e);
@@ -83,7 +86,7 @@ export const VideoPlayerProvider = ({
 
     useEffect(() => {
         console.log("Setting URL to", activeFormat?.url);
-        videoElement.src = activeFormat?.url;
+        if(videoElement.src != activeFormat?.url) videoElement.src = activeFormat?.url;
     }, [activeFormat]);
 
     useVideoEventListener(videoElement, "ended", () => {
@@ -95,7 +98,7 @@ export const VideoPlayerProvider = ({
     });
 
     useVideoEventListener(videoElement, "error", (e) => {
-        if(!videoElement.src) return;
+        if(!videoElement.src || videoElement.src.endsWith("/undefined")) return;
         setPlayState("error");
         console.log(e.error);
         console.log(videoElement.error);

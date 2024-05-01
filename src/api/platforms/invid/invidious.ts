@@ -51,10 +51,16 @@ export class InvidiousAPIProvider implements APIProvider {
         };
     }
 
+    formatURLProxied(uri: string) {
+        let url = new URL(uri);
+        url.host = this.instance.url.split("://")[1];
+        return url.href;
+    }
+
     getVideoInfo = async (id: string) => {
         let v: InvidiousVideoData = await this.request(`videos/${id}`);
 
-        console.log(v);
+        console.log({ invidiousVideoData: v });
 
         return {
             id,
@@ -74,6 +80,7 @@ export class InvidiousAPIProvider implements APIProvider {
                 ...v.formatStreams.map((f, i) => ({
                     type: "basic",
                     id: `basic-${i}`,
+                    isProxied: false,
                     itag: f.itag,
                     url: f.url,
                     mimeType: f.type,
@@ -85,12 +92,37 @@ export class InvidiousAPIProvider implements APIProvider {
                 ...v.adaptiveFormats.map((f, i) => ({
                     type: "adaptive",
                     id: `adaptive-${i}`,
+                    isProxied: false,
                     itag: f.itag,
                     url: f.url,
                     mimeType: f.type,
                     fps: f.fps,
                     bitrate: Number(f.bitrate),
                 } as VideoFormat)),
+                ...(this.instance.supportsProxy ? [
+                    ...v.formatStreams.map((f, i) => ({
+                        type: "basic",
+                        id: `basic-${i}-proxy`,
+                        itag: f.itag,
+                        url: this.formatURLProxied(f.url),
+                        isProxied: true,
+                        mimeType: f.type,
+                        fps: f.fps,
+                        width: Number(f.size.split("x")[0]),
+                        height: Number(f.size.split("x")[1]),
+                        bitrate: Number(f.bitrate),
+                    } as VideoFormat)),
+                    ...v.adaptiveFormats.map((f, i) => ({
+                        type: "adaptive",
+                        id: `adaptive-${i}-proxy`,
+                        itag: f.itag,
+                        url: this.formatURLProxied(f.url),
+                        isProxied: true,
+                        mimeType: f.type,
+                        fps: f.fps,
+                        bitrate: Number(f.bitrate),
+                    } as VideoFormat)),
+                ] : []),
             ],
         } as VideoData;
     };

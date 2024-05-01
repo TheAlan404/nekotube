@@ -2,7 +2,7 @@ import { Box, Button, Stack, Text } from "@mantine/core";
 import { IconAlertTriangle, IconReload } from "@tabler/icons-react";
 import { useSoundEffect } from "../../hooks/useSoundEffect";
 import { useEffect } from "react";
-import { ChangeInstanceButton } from "../options/ChangeInstanceButton";
+import { ChangeInstanceButton } from "../options/links/ChangeInstanceButton";
 
 const CORS_ERROR_MESSAGE = "NetworkError when attempting to fetch resource.";
 

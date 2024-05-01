@@ -13,7 +13,6 @@ export const PlayerTimestamp = () => {
     });
 
     const progressText = secondsToTimestamp(progress);
-    console.log(activeChapters.chapters, progress);
     const currentChapter = activeChapters.chapters[activeChapters.chapters.findIndex((x) => x.time > progress) - 1];
 
     return (

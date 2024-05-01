@@ -15,15 +15,16 @@ export const FormatSelect = () => {
             w="100%"
             label={"Format"}
             value={activeFormat.itag}
-            onChange={(v) => setFormat(availableFormats[Number(v)]!)}
-            data={availableFormats.map((f, i) => i.toString())}
-            renderOption={({ option: { value: i }, checked }) => (
+            onChange={(v) => setFormat(v)}
+            data={availableFormats.map((f, i) => f.id)}
+            renderOption={({ option: { value }, checked }) => (
                 <Group justify="space-between">
                     <Group>
                         <Stack>
-                            {availableFormats[Number(i)].itag}
-                            {availableFormats[Number(i)].mimeType}
-                            {availableFormats[Number(i)].fps}
+                            {availableFormats.find(x => x.id == value).id}
+                            {availableFormats.find(x => x.id == value).itag}
+                            {availableFormats.find(x => x.id == value).mimeType}
+                            {availableFormats.find(x => x.id == value).fps}
                         </Stack>
                     </Group>
                     <Group>

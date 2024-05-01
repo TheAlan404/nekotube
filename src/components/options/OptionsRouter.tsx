@@ -3,6 +3,7 @@ import { useContext } from "react";
 import { OptionsContext } from "./OptionsContext";
 import { OptionsMainView } from "./views/MainView";
 import { OptionsInstanceView } from "./views/InstanceView";
+import { OptionsOpenWithView } from "./views/OpenWith";
 
 export const OptionsRouter = () => {
     const { view } = useContext(OptionsContext);
@@ -11,6 +12,7 @@ export const OptionsRouter = () => {
         <Stack align="center" w="100%" h="100%">
             {view == "main" && <OptionsMainView />}
             {view == "instanceSelect" && <OptionsInstanceView />}
+            {view == "openWith" && <OptionsOpenWithView />}
         </Stack>
     );
 };

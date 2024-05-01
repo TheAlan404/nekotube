@@ -8,7 +8,7 @@ import { ProgressBar } from "./bar/ProgressBar";
 import { useDisclosure, useDocumentTitle, useFullscreen, useHotkeys, useHover, useMergedRef } from "@mantine/hooks";
 import { IconAlertTriangle, IconReload } from "@tabler/icons-react";
 import { FullscreenButton } from "./controls/FullscreenButton";
-import { OptionsButton } from "../options/OptionsButton";
+import { OptionsButton } from "../options/links/OptionsButton";
 import { useSoundEffect } from "../../hooks/useSoundEffect";
 import { usePreference } from "../../api/pref/Preferences";
 import { ErrorMessage } from "../ui/ErrorMessage";

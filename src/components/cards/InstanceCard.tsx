@@ -48,35 +48,37 @@ export const InstanceCard = ({
                             <Text c="dimmed" fz="sm">
                                 {instance.url}
                             </Text>
-                            {withControls && (
-                                <Tooltip
-                                    label={fav ? "Remove from favourites" : "Add to favourites"}
-                                    position="left"
-                                    withArrow
-                                >
-                                    <ActionIcon
-                                        variant="subtle"
-                                        color="gray"
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            if (fav)
-                                                removeFavourite(instance);
-                                            else
-                                                addFavourite(instance);
-                                        }}
+                            <Group>
+                                <Text fs="xs" c="dimmed">
+                                    {instance.region}
+                                </Text>
+                                {withControls && (
+                                    <Tooltip
+                                        label={fav ? "Remove from favourites" : "Add to favourites"}
+                                        position="left"
+                                        withArrow
                                     >
-                                        {fav ? (
-                                            <IconStarFilled color="var(--mantine-color-yellow-filled)" />
-                                        ) : (
-                                            <IconStar />
-                                        )}
-                                    </ActionIcon>
-                                </Tooltip>
-                            )}
+                                        <ActionIcon
+                                            variant="subtle"
+                                            color="gray"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                if (fav)
+                                                    removeFavourite(instance);
+                                                else
+                                                    addFavourite(instance);
+                                            }}
+                                        >
+                                            {fav ? (
+                                                <IconStarFilled color="var(--mantine-color-yellow-filled)" />
+                                            ) : (
+                                                <IconStar />
+                                            )}
+                                        </ActionIcon>
+                                    </Tooltip>
+                                )}
+                            </Group>
                         </Group>
-                        <Text fs="xs" c="dimmed">
-                            {instance.notes}
-                        </Text>
                     </Stack>
                 </Grid.Col>
             </Grid>

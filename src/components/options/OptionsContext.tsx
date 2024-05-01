@@ -4,7 +4,7 @@ import { useSoundEffect } from "../../hooks/useSoundEffect";
 import { Drawer, ScrollArea } from "@mantine/core";
 import { OptionsRouter } from "./OptionsRouter";
 
-export type OptionsView = "main" | "instanceSelect";
+export type OptionsView = "main" | "instanceSelect" | "openWith" | "formatSelect";
 
 export interface OptionsContextAPI {
     opened: boolean;

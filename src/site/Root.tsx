@@ -3,7 +3,7 @@ import { nprogress } from "@mantine/nprogress";
 import { IconBrandYoutube, IconCat } from "@tabler/icons-react";
 import { useContext, useEffect } from "react";
 import { Link, Outlet, useNavigation, useSearchParams } from "react-router-dom";
-import { OptionsButton } from "../components/options/OptionsButton";
+import { OptionsButton } from "../components/options/links/OptionsButton";
 import { SearchBar } from "../components/search/SearchBar";
 import { VideoPlayerContext } from "../api/context/VideoPlayerContext";
 

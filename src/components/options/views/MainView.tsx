@@ -6,11 +6,12 @@ import { FormatSelect } from "../comps/FormatSelect";
 import { PlaybackSpeed } from "../comps/PlaybackSpeed";
 import { PreferencesList } from "../comps/PreferencesList";
 import { RefetchInfo } from "../comps/RefetchInfo";
+import { OpenWithButton } from "../links/OpenWithButton";
 
 export const OptionsMainView = () => {
-    const { playState } = useContext(VideoPlayerContext);
+    const { videoInfo } = useContext(VideoPlayerContext);
 
-    const loaded = playState !== "error" && playState !== "loading";
+    const loaded = !!videoInfo;
 
     return (
         <Grid w="100%">
@@ -18,6 +19,7 @@ export const OptionsMainView = () => {
                 <Stack align="center" w="100%">
                     <Divider w="100%" label="Instance" labelPosition="left" />
                     <InstanceSelect />
+                    <OpenWithButton fullWidth />
                     <Divider w="100%" label="Video" labelPosition="left" />
                     {!loaded && (
                         <Text>Video not loaded</Text>

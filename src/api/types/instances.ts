@@ -1,17 +1,21 @@
-export interface LTInstance {
+export interface BaseInstance {
+    name: string;
+    url: string;
+    notes?: string;
+    region?: string;
+    supportsProxy?: boolean;
+};
+
+export interface LTInstance extends BaseInstance {
     type: "lighttube";
-    name: string;
-    url: string;
-    notes?: string;
-    region?: string;
 };
 
-export interface InvidiousInstance {
+export interface InvidiousInstance extends BaseInstance {
     type: "invidious";
-    name: string;
-    url: string;
-    notes?: string;
-    region?: string;
 };
 
-export type Instance = LTInstance | InvidiousInstance;
+export interface PoketubeInstance extends BaseInstance {
+    type: "poketube";
+};
+
+export type Instance = LTInstance | InvidiousInstance | PoketubeInstance;

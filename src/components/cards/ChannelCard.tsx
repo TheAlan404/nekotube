@@ -1,5 +1,5 @@
 import { Avatar, Group, Stack, Text } from "@mantine/core";
-import { Channel } from "../../api/types/video";
+import { Channel } from "../../api/types/channel";
 
 export const ChannelCard = ({
     channel,

@@ -3,7 +3,8 @@ import { APIProvider } from "../../types/api";
 import { InvidiousInstance } from "../../types/instances";
 import { Renderer, SearchSuggestions, Thumbnail, VideoData } from "../../types/video";
 import { VideoFormat } from "../../types/format";
-import { InvidiousRenderer, InvidiousVideo, InvidiousVideoData } from "./types";
+import { InvidiousCommentsResponse, InvidiousRenderer, InvidiousVideo, InvidiousVideoData } from "./types";
+import { Comment } from "../../types/comment";
 
 export class InvidiousAPIProvider implements APIProvider {
     instance: InvidiousInstance;
@@ -21,7 +22,7 @@ export class InvidiousAPIProvider implements APIProvider {
         let url = new URL(this.instance.url + "/api/v1/" + path);
 
         for(let [k,v] of Object.entries(opts?.query || {}))
-            url.searchParams.set(k, v);
+            if(v) url.searchParams.set(k, v);
         
         let res = await fetch(url, {
             signal: opts?.signal,
@@ -157,4 +158,28 @@ export class InvidiousAPIProvider implements APIProvider {
             ],
         } as VideoData;
     };
+
+    async getComments(id: string, key?: string) {
+        let data: InvidiousCommentsResponse = await this.request(`comments/${id}`, { query: { continuation: key } });
+
+        return {
+            key: data.continuation,
+            results: data.comments.map(c => ({
+                content: c.contentHtml,
+                edited: c.isEdited,
+                pinned: c.isPinned,
+                hearted: !!c.creatorHeart,
+                likeCount: c.likeCount,
+                id: c.commentId,
+                published: new Date(c.published),
+                replyCount: c.replies?.replyCount || 0,
+                replyKey: c.replies?.continuation,
+                channel: {
+                    id: c.authorId,
+                    title: c.author,
+                    thumbnails: c.authorThumbnails,
+                },
+            } as Comment)),
+        };
+    }
 };

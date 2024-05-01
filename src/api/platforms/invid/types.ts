@@ -123,3 +123,34 @@ export interface InvidiousPlaylistEntry {
 };
 
 export type InvidiousRenderer = InvidiousVideo | InvidiousPlaylist | InvidiousChannel;
+
+export interface InvidiousCommentsResponse {
+    videoId: string;
+    commentCount?: number;
+    comments: InvidiousComment[];
+    continuation: string;
+};
+
+export interface InvidiousComment {
+    author: string;    
+    authorId: string;    
+    authorUrl: string;
+    authorThumbnails: InvidiousImage[];
+    isEdited: boolean;
+    isPinned: boolean;
+    content: string;
+    contentHtml: string;
+    published: number;
+    publishedText: string;
+    likeCount: number;
+    commentId: string;
+    authorIsChannelOwner: boolean;
+    creatorHeart?: {
+        creatorThumbnail: string;
+        creatorName: string;
+    },
+    replies?: {
+        replyCount: number;
+        continuation: string;
+    },
+};

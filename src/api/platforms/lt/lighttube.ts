@@ -151,4 +151,11 @@ export class LTAPIProvider implements APIProvider {
             ],
         };
     };
+
+    async getComments(id, key) {
+        return {
+            key: null,
+            results: [],
+        };
+    }
 };

@@ -1,12 +1,7 @@
+import { Channel } from "./Channel";
 import { VideoFormat } from "./format";
 
 export type SearchSuggestions = string[];
-
-export interface Channel {
-    id: string;
-    title: string;
-    thumbnails: Thumbnail[];
-};
 
 export interface VideoInfo {
     id: string;

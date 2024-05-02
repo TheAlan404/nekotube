@@ -5,7 +5,7 @@ import { VideoData } from "../types/video";
 import { VideoFormat } from "../types/format";
 import { useVideoEventListener } from "../../hooks/useVideoEventListener";
 import { parseChapters } from "../../utils/parseChapters";
-import { clamp } from "@mantine/hooks";
+import { clamp, useLocalStorage } from "@mantine/hooks";
 import { SponsorBlockAPI } from "../platforms/sponsorblock/sponsorblock";
 
 export const VideoPlayerProvider = ({
@@ -30,7 +30,10 @@ export const VideoPlayerProvider = ({
     const [availableFormats, setAvailableFormats] = useState<VideoFormat[]>([]);
     const [playState, setPlayState] = useState<PlayState>("loading");
     const [error, setError] = useState<any | null>(null);
-    const [volume, setVolume] = useState(1);
+    const [volume, setVolume] = useLocalStorage({
+        key: "nekotube:volume",
+        defaultValue: 1,
+    });
     const [muted, setMuted] = useState(false);
 
     useEffect(() => {

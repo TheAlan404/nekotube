@@ -32,6 +32,7 @@ export const ChaptersTab = () => {
 
                         {activeChapters.chapters.map((chapter, i) => (
                             <Paper
+                                key={i}
                                 p="xs"
                                 withBorder
                                 shadow="md"

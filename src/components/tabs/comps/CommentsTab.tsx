@@ -18,6 +18,12 @@ export const CommentsTab = () => {
     const fetchComments = async (more?: boolean) => {
         setLoading(true);
         setError(null);
+        if(!videoID) {
+            setComments([]);
+            setLoading(false);
+            return;
+        };
+        
         try {
             let { key, results } = await api.getComments(videoID, more ? continuationKey : null);
             setComments((c) => more ? [...c, ...results] : results);

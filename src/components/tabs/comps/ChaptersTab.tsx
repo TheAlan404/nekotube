@@ -5,7 +5,7 @@ import { TimestampButton } from "../../ui/TimestampButton";
 import { useVideoEventListener } from "../../../hooks/useVideoEventListener";
 import { Chapter } from "../../../api/types/video";
 import { useScrollIntoObstructed } from "../../../hooks/useScrollIntoObstructed";
-import { IconArrowNarrowUp } from "@tabler/icons-react";
+import { IconArrowNarrowUp, IconX } from "@tabler/icons-react";
 
 export const ChaptersTab = () => {
     const { videoInfo, activeChapters, setActiveChapters, seekTo, videoElement } = useContext(VideoPlayerContext);
@@ -63,7 +63,19 @@ export const ChaptersTab = () => {
                             </Group>
                         )}
                         {activeChapters.type == "comment" && (
-                            "owo"
+                            <Group justify="space-between">
+                                <Text>
+                                    Showing chapters from a comment
+                                </Text>
+                                <Button
+                                    variant="light"
+                                    color="violet"
+                                    onClick={() => setActiveChapters("video")}
+                                    leftSection={<IconX />}
+                                >
+                                    Clear
+                                </Button>
+                            </Group>
                         )}
 
                         {activeChapters.chapters.map((chapter, i) => (

@@ -4,9 +4,13 @@ import { VideoFormat } from "../types/format";
 
 export type PlayState = "loading" | "playing" | "paused" | "error";
 
-export interface ActiveChapterList {
-    type: "video" | "comment" | "user";
+export type ActiveChapterList = {
+    type: "video" | "user";
     chapters: Chapter[];
+} | {
+    type: "comment";
+    chapters: Chapter[];
+    id: string;
 };
 
 export interface VideoPlayerAPI {
@@ -18,7 +22,7 @@ export interface VideoPlayerAPI {
 
     videoInfo?: VideoData;
     activeChapters: ActiveChapterList;
-    setActiveChapters: (source: ActiveChapterList["type"], chapters?: Chapter[]) => void;
+    setActiveChapters: (source: ActiveChapterList["type"], chapters?: Chapter[], id?: string) => void;
 
     activeFormat?: VideoFormat;
     availableFormats: VideoFormat[];

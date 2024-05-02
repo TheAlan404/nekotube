@@ -166,7 +166,7 @@ export const VideoPlayerProvider = ({
             },
 
             activeChapters,
-            setActiveChapters: (source, chapters = []) => {
+            setActiveChapters: (source, chapters = [], id = "") => {
                 if(source == "video") {
                     setActiveChapters({
                         type: "video",
@@ -176,6 +176,7 @@ export const VideoPlayerProvider = ({
                     setActiveChapters({
                         type: source,
                         chapters,
+                        id,
                     });
                 }
             },

@@ -1,4 +1,4 @@
-import { Loader, ScrollArea, Stack, Text } from "@mantine/core";
+import { Loader, ScrollArea, Space, Stack, Text } from "@mantine/core";
 import { useContext } from "react";
 import { VideoPlayerContext } from "../../../api/context/VideoPlayerContext";
 import { HorizontalVideoCard } from "../../cards/VideoCard";
@@ -11,7 +11,7 @@ export const RecommendedTab = () => {
             <Stack w="100%" p="xs">
                 {videoInfo ? (
                     <Stack w="100%">
-                        <Text ta="end" c="dimmed">
+                        <Text ta="end">
                             {videoInfo.recommended.length} recommended videos
                         </Text>
                         {videoInfo.recommended.map((renderer, i) => (
@@ -29,6 +29,7 @@ export const RecommendedTab = () => {
                         </Text>
                     </Stack>
                 )}
+                <Space h="10em" />
             </Stack>
         </ScrollArea>
     );

@@ -1,4 +1,4 @@
-import { Button, Group, Loader, ScrollArea, Space, Stack, Text } from "@mantine/core";
+import { Button, Checkbox, Group, Loader, ScrollArea, Space, Stack, Text } from "@mantine/core";
 import { useContext, useEffect, useState } from "react";
 import { VideoPlayerContext } from "../../../api/context/VideoPlayerContext";
 import { HorizontalVideoCard } from "../../cards/VideoCard";
@@ -14,6 +14,7 @@ export const CommentsTab = () => {
     const [isLoading, setLoading] = useState(true);
     const [comments, setComments] = useState<Comment[]>([]);
     const [continuationKey, setContinuationKey] = useState(null);
+    const [filterChapters, setFilterChapters] = useState(false);
 
     const fetchComments = async (more?: boolean) => {
         setLoading(true);
@@ -23,7 +24,7 @@ export const CommentsTab = () => {
             setLoading(false);
             return;
         };
-        
+
         try {
             let { key, results } = await api.getComments(videoID, more ? continuationKey : null);
             setComments((c) => more ? [...c, ...results] : results);
@@ -41,7 +42,9 @@ export const CommentsTab = () => {
     return (
         <ScrollArea w="100%" maw="100%" h="100%" type="scroll" scrollbars="y" offsetScrollbars>
             <Stack w="100%" p="xs">
-                <Group justify="end">
+                <Group justify="space-between">
+                    <Text>
+                    </Text>
                     <Text>
                         Showing {comments.length} comments
                     </Text>

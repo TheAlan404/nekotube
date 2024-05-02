@@ -1,5 +1,5 @@
-import { Box, Stack, Tabs } from "@mantine/core";
-import { useContext } from "react";
+import { Box, Stack, Tabs, Tooltip } from "@mantine/core";
+import React, { useContext } from "react";
 import { TabsContext } from "./TabsContext";
 import { TabType } from "./TabTypes";
 import { RecommendedTab } from "./comps/RecommendedTab";
@@ -45,18 +45,45 @@ export const TabsRenderer = () => {
                 </Tabs.Panel>
 
                 <Tabs.List grow>
-                    <Tabs.Tab value="videoInfo">
-                        <IconBrandYoutube />
-                    </Tabs.Tab>
-                    <Tabs.Tab value="recommended">
-                        <IconLayoutList />
-                    </Tabs.Tab>
-                    <Tabs.Tab value="comments">
-                        <IconMessage />
-                    </Tabs.Tab>
-                    <Tabs.Tab value="chapters">
-                        <IconList />
-                    </Tabs.Tab>
+                    <Tooltip.Group>
+                        {([
+                            {
+                                value: "videoInfo",
+                                title: "Video Info",
+                                icon: <IconBrandYoutube />,
+                            },
+                            {
+                                value: "recommended",
+                                title: "Recommended",
+                                icon: <IconLayoutList />,
+                            },
+                            {
+                                value: "comments",
+                                title: "Comments",
+                                icon: <IconMessage />,
+                            },
+                            {
+                                value: "chapters",
+                                title: "Chapters",
+                                icon: <IconList />,
+                            },
+                        ] as {
+                            value: string;
+                            title: string;
+                            icon: React.ReactNode;
+                            hidden?: boolean;
+                        }[]).filter(x => !x.hidden).map(({
+                            title,
+                            value,
+                            icon,
+                        }, i) => (
+                            <Tooltip label={title} withArrow>
+                                <Tabs.Tab value={value}>
+                                    {icon}
+                                </Tabs.Tab>
+                            </Tooltip>
+                        ))}
+                    </Tooltip.Group>
                 </Tabs.List>
             </Tabs>
         </Stack>

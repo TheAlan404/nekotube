@@ -5,12 +5,18 @@ export interface Preferences {
     uiSoundEffects: boolean;
     keepControlsShown: boolean;
     keepVolumeShown: boolean;
+    watchPageAnimations: boolean;
+    useSponsorBlock: boolean;
+    useDeArrow: boolean;
 };
 
 export const DefaultPreferences: Preferences = {
     uiSoundEffects: true,
     keepControlsShown: false,
     keepVolumeShown: false,
+    watchPageAnimations: true,
+    useSponsorBlock: true,
+    useDeArrow: false,
 };
 
 export interface PreferencesAPI {

@@ -1,12 +1,14 @@
-import { Box, Flex, Group, Stack } from "@mantine/core";
+import { Box, Flex } from "@mantine/core";
 import { VideoPlayer } from "../../components/player/VideoPlayer";
 import { SeparatorProps, useResizable } from "react-resizable-layout";
 import { useContext, useEffect, useRef } from "react";
 import { TabsContext } from "../../components/tabs/TabsContext";
 import { TabsRenderer } from "../../components/tabs/TabsRenderer";
 import { useFullscreen, useHotkeys, usePrevious } from "@mantine/hooks";
+import { usePreference } from "../../api/pref/Preferences";
 
 export const WatchPage = () => {
+    const animate = usePreference("watchPageAnimations");
     const { isTabsVisible: sidebarOpen, setTabsVisible } = useContext(TabsContext);
     const { fullscreen, toggle: toggleFullscreen } = useFullscreen();
 
@@ -19,6 +21,7 @@ export const WatchPage = () => {
         <WatchPageLayout
             theather={sidebarOpen}
             fullscreen={fullscreen}
+            animate={animate}
         />
     );
 };
@@ -26,12 +29,14 @@ export const WatchPage = () => {
 const WatchPageLayout = ({
     theather,
     fullscreen,
+    animate,
 }: {
     theather: boolean;
     fullscreen: boolean;
+    animate: boolean;
 }) => {
     const ref = useRef<HTMLDivElement>(null);
-    const per = 0.7;
+    const per = 0.65;
     const { position, separatorProps, setPosition } = useResizable({
         axis: "x",
         min: ref.current ? (ref.current.getBoundingClientRect().width * 0.5) : undefined,
@@ -39,9 +44,11 @@ const WatchPageLayout = ({
         max: ref.current ? (ref.current.getBoundingClientRect().width * 0.8) : undefined,
         containerRef: ref,
     });
-    //const prevOpen = usePrevious(sidebarOpen);
-    //const isClosing = prevOpen && !sidebarOpen;
-    //const isOpening = !prevOpen && sidebarOpen;
+    const prevOpen = usePrevious(theather) ?? theather;
+    const isClosing = prevOpen && !theather;
+    const isOpening = !prevOpen && theather;
+
+    console.log("width:", ref.current?.getBoundingClientRect()?.width)
 
     useEffect(() => {
         if(ref.current) setPosition(ref.current.getBoundingClientRect().width * per);
@@ -55,13 +62,18 @@ const WatchPageLayout = ({
 
     return (
         <Flex ref={ref} w="100%" h={height}>
-            <Box w={theather ? position : "100%"} h="100%">
+            <Box h="100%" style={{
+                width: theather ? position : "100%",
+                transition: (animate && (isOpening || isClosing)) ? "0.5s" : undefined,
+            }}>
                 <VideoPlayer />
             </Box>
             <Seperator
                 style={{
-                    ...separatorProps.style,
-                    display: theather ? undefined : "none",
+                    width: theather ? "0.5em" : "0px",
+                    transition: (animate && (isOpening || isClosing)) ? "0.5s" : undefined,
+                    marginLeft: theather ? "0.5em" : "0px",
+                    marginRight: theather ? "0.5em" : "0px",
                 }}
                 {...separatorProps}
             />
@@ -70,8 +82,8 @@ const WatchPageLayout = ({
                 style={{
                     overflow: "hidden",
                     width: theather ? `calc(100% - ${position}px)` : "0px",
-                    //transition: (isOpening || isClosing) ? "0.5s" : undefined,
                     marginLeft: "auto",
+                    transition: (animate && (isOpening || isClosing)) ? "0.5s" : undefined,
                 }}>
                 <TabsRenderer />
             </Box>
@@ -82,13 +94,12 @@ const WatchPageLayout = ({
 const Seperator = (props: SeparatorProps) => {
     return (
         <Box
-            w="0.5em"
-            mx="0.5em"
             h="100%"
             bg="dark"
             style={{
-                ...props.style,
                 userSelect: "none",
+                width: "0.5em",
+                ...props.style,
             }}
             {...props}
         />

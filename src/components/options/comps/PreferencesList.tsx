@@ -24,6 +24,24 @@ export const PreferencesList = () => {
                 checked={pref.keepVolumeShown}
                 onChange={(e) => set({ keepVolumeShown: e.currentTarget.checked })}
             />
+            <Checkbox
+                label="WatchPage animations"
+                description={"Do a cool animation when opening/closing sidebar"}
+                checked={pref.watchPageAnimations}
+                onChange={(e) => set({ watchPageAnimations: e.currentTarget.checked })}
+            />
+            <Checkbox
+                label="Enable SponsorBlock"
+                description={"TODO"}
+                checked={pref.useSponsorBlock}
+                onChange={(e) => set({ useSponsorBlock: e.currentTarget.checked })}
+            />
+            <Checkbox
+                label="Enable DeArrow"
+                description={"TODO"}
+                checked={pref.useDeArrow}
+                onChange={(e) => set({ useDeArrow: e.currentTarget.checked })}
+            />
         </Stack>
     );
 };

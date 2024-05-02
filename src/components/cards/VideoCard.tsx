@@ -3,6 +3,7 @@ import { ThumbnailRender } from "./ThumbnailRender";
 import { VideoInfo } from "../../api/types/video";
 import { Link } from "react-router-dom";
 import { ChannelCard } from "./ChannelCard";
+import { TextWithTooltip } from "../ui/TextWithTooltip";
 
 export const HorizontalVideoCard = ({
     video,
@@ -27,10 +28,10 @@ export const HorizontalVideoCard = ({
                     />
                 </Grid.Col>
                 <Grid.Col span="auto">
-                    <Stack gap="xs">
-                        <Text fw="bold">
+                    <Stack gap={0} justify="center">
+                        <TextWithTooltip lineClamp={2} fw="bold" fz="sm">
                             {video.title}
-                        </Text>
+                        </TextWithTooltip>
                         <ChannelCard
                             channel={video.channel}
                         />

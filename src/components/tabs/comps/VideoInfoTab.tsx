@@ -1,8 +1,10 @@
-import { Divider, Group, Loader, ScrollArea, Stack, Text, Title } from "@mantine/core";
+import { Divider, Group, Loader, ScrollArea, Space, Stack, Text, Title } from "@mantine/core";
 import { useContext } from "react";
 import { VideoPlayerContext } from "../../../api/context/VideoPlayerContext";
 import { MarkdownText } from "../../ui/MarkdownText";
 import { ChannelCard } from "../../cards/ChannelCard";
+import { VotingCard } from "../../cards/VotingCard";
+import { DateCard } from "../../cards/DateCard";
 
 export const VideoInfoTab = () => {
     const { videoInfo } = useContext(VideoPlayerContext);
@@ -16,7 +18,12 @@ export const VideoInfoTab = () => {
                             {videoInfo.title}
                         </Title>
                         <Group>
-                            wikes and diswikes uwu
+                            <VotingCard
+                                {...videoInfo}
+                            />
+                            <DateCard
+                                date={videoInfo.published}
+                            />
                         </Group>
                         <ChannelCard
                             channel={videoInfo.channel}
@@ -31,6 +38,7 @@ export const VideoInfoTab = () => {
                                 No description
                             </Text>
                         )}
+                        <Space h="10em" />
                     </Stack>
                 ) : (
                     <Stack w="100%" align="center">

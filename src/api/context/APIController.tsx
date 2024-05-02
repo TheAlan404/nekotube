@@ -7,22 +7,15 @@ import { InvidiousAPIProvider } from "../platforms/invid/invidious";
 import { useLocalStorage } from "@mantine/hooks";
 
 const CUSTOM_INSTANCES: Instance[] = [
-    {
-        type: "lighttube",
-        name: "lighttube-nightly.kuylar.dev",
-        url: "https://lighttube-nightly.kuylar.dev",
-    },
-    {
-        type: "lighttube",
-        name: "tube-nocors.kuylar.dev",
-        url: "https://tube-nocors.kuylar.dev",
-    }
+    
 ];
 
 const DEFAULT_INSTANCE: Instance = {
-    type: "lighttube",
-    name: "tube.kuylar.dev",
-    url: "https://tube.kuylar.dev",
+    type: "invidious",
+    name: "invidious.fdn.fr",
+    url: "https://invidious.fdn.fr",
+    region: "FR",
+    supportsProxy: true,
 };
 
 export interface APIController {
@@ -41,7 +34,7 @@ export interface APIController {
 };
 
 export const APIContext = createContext<APIController>({
-    api: new LTAPIProvider(DEFAULT_INSTANCE!),
+    api: new InvidiousAPIProvider(DEFAULT_INSTANCE!),
     addFavourite: () => {},
     removeFavourite: () => {},
     refreshAvailableInstances: () => {},

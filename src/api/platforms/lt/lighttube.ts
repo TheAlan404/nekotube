@@ -34,7 +34,8 @@ export class LTAPIProvider implements APIProvider {
         let res = await fetch(url, {
             signal: opts?.signal,
             headers: {
-                "Content-Type": "application/json; utf-8",
+                //"Content-Type": "application/json; utf-8",
+                //"Accept": "application/json; utf-8",
             },
         });
 

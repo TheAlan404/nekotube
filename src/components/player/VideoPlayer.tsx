@@ -40,7 +40,7 @@ export const VideoPlayer = () => {
         hoverRef
     );
 
-    const shouldShowControls = keepControlsShown || hovered || (playState == "error");
+    const shouldShowControls = keepControlsShown || hovered || (playState == "error") || (playState == "loading");
 
     return (
         <Box w="100%" h="100%" className="videoPlayer" style={{ position: "relative" }} ref={mergedRef}>

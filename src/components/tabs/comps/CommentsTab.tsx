@@ -14,7 +14,6 @@ export const CommentsTab = () => {
     const [isLoading, setLoading] = useState(true);
     const [comments, setComments] = useState<Comment[]>([]);
     const [continuationKey, setContinuationKey] = useState(null);
-    const [filterChapters, setFilterChapters] = useState(false);
 
     const fetchComments = async (more?: boolean) => {
         setLoading(true);

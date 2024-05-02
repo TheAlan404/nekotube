@@ -26,9 +26,6 @@ export class InvidiousAPIProvider implements APIProvider {
         
         let res = await fetch(url, {
             signal: opts?.signal,
-            headers: {
-                "Content-Type": "application/json; utf-8",
-            },
         });
 
         return await res.json() as T;
@@ -103,7 +100,7 @@ export class InvidiousAPIProvider implements APIProvider {
             keywords: v.keywords,
             likeCount: v.likeCount,
             viewCount: v.viewCount,
-            published: new Date(v.published),
+            published: new Date(v.published * 1000),
             thumbnails: v.videoThumbnails,
             recommended: v.recommendedVideos
                 .map(this.convertVideoInfo),
@@ -171,7 +168,7 @@ export class InvidiousAPIProvider implements APIProvider {
                 hearted: !!c.creatorHeart,
                 likeCount: c.likeCount,
                 id: c.commentId,
-                published: new Date(c.published),
+                published: new Date(c.published * 1000),
                 replyCount: c.replies?.replyCount || 0,
                 replyKey: c.replies?.continuation,
                 channel: {

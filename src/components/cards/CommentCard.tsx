@@ -3,11 +3,12 @@ import { Comment } from "../../api/types/comment";
 import { MarkdownText } from "../ui/MarkdownText";
 import { ChannelCard } from "./ChannelCard";
 import { VotingCard } from "./VotingCard";
-import { IconCopy, IconPinned, IconTableImport, IconTableOff } from "@tabler/icons-react";
+import { IconCopy, IconPencil, IconPinned, IconTableImport, IconTableOff } from "@tabler/icons-react";
 import { parseChapters, TimestampRegex } from "../../utils/parseChapters";
 import { useContext } from "react";
 import { VideoPlayerContext } from "../../api/context/VideoPlayerContext";
 import { cleanDescription } from "../../utils/cleanDescription";
+import { DateCard } from "./DateCard";
 
 export const CommentCard = ({
     comment
@@ -31,8 +32,18 @@ export const CommentCard = ({
                         channel={comment.channel}
                     />
                     <Group>
+                        <DateCard
+                            date={comment.published}
+                        />
+                        {comment.edited && (
+                            <Tooltip label="Edited">
+                                <IconPencil />
+                            </Tooltip>
+                        )}
                         {comment.pinned && (
-                            <IconPinned />
+                            <Tooltip label="Pinned">
+                                <IconPinned />
+                            </Tooltip>
                         )}
                     </Group>
                 </Group>

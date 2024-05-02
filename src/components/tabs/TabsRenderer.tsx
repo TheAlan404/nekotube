@@ -10,6 +10,8 @@ import { ChaptersTab } from "./comps/ChaptersTab";
 
 export const TabsRenderer = () => {
     const { currentTab, setCurrentTab } = useContext(TabsContext);
+
+    const height = `calc(100vh - var(--app-shell-header-height) - calc(var(--app-shell-padding) * 2) - 3em)`;
     
     return (
         <Stack h="100%" w="100%">
@@ -25,7 +27,7 @@ export const TabsRenderer = () => {
                     },
                     panel: {
                         flexGrow: 1,
-                        height: "calc(100vh - var(--app-shell-header-height) - calc(var(--app-shell-padding) * 2) - 3em)",
+                        height,
                     },
                 }}
             >

@@ -14,6 +14,7 @@ import { OptionsProvider } from "./components/options/OptionsContext.tsx"
 import { TabsProvider } from "./components/tabs/TabsContext.tsx"
 
 const theme = createTheme({
+    fontFamily: "Lexend-VariableFont",
     colors: {
         dark: [
             '#C1C2C5',

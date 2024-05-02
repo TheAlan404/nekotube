@@ -6,10 +6,13 @@ import { Link, Outlet, useLocation, useNavigation, useSearchParams } from "react
 import { OptionsButton } from "../components/options/links/OptionsButton";
 import { SearchBar } from "../components/search/SearchBar";
 import { VideoPlayerContext } from "../api/context/VideoPlayerContext";
-import { useDocumentTitle } from "@mantine/hooks";
+import { useDocumentTitle, useFullscreen } from "@mantine/hooks";
+import { TabsContext } from "../components/tabs/TabsContext";
 
 export const Root = () => {
     const { setVideoID, videoInfo, muted, playState } = useContext(VideoPlayerContext);
+    const { isTabsVisible } = useContext(TabsContext);
+    const { fullscreen } = useFullscreen();
     const [searchParams] = useSearchParams();
     const location = useLocation();
     const { state } = useNavigation();
@@ -39,6 +42,7 @@ export const Root = () => {
         <AppShell
             header={{ height: "3em" }}
             padding="xs"
+            disabled={fullscreen && !isTabsVisible}
         >
             <AppShell.Header>
                 <Group h="100%" px="md">

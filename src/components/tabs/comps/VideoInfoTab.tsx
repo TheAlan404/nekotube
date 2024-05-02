@@ -8,8 +8,8 @@ export const VideoInfoTab = () => {
     const { videoInfo } = useContext(VideoPlayerContext);
 
     return (
-        <ScrollArea w="100%" h="100%">
-            <Stack w="100%" p="xs">
+        <ScrollArea w="100%" maw="100%" h="100%" type="scroll" scrollbars="y" offsetScrollbars>
+            <Stack w="100%" maw="100%" p="xs">
                 {videoInfo ? (
                     <Stack w="100%">
                         <Title order={3}>

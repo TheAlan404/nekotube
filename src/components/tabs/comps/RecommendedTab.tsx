@@ -7,7 +7,7 @@ export const RecommendedTab = () => {
     const { videoInfo } = useContext(VideoPlayerContext);
 
     return (
-        <ScrollArea w="100%" h="100%">
+        <ScrollArea w="100%" maw="100%" h="100%">
             <Stack w="100%" p="xs">
                 {videoInfo ? (
                     <Stack w="100%">

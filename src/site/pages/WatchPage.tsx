@@ -4,10 +4,32 @@ import { SeparatorProps, useResizable } from "react-resizable-layout";
 import { useContext, useEffect, useRef } from "react";
 import { TabsContext } from "../../components/tabs/TabsContext";
 import { TabsRenderer } from "../../components/tabs/TabsRenderer";
-import { usePrevious } from "@mantine/hooks";
+import { useFullscreen, useHotkeys, usePrevious } from "@mantine/hooks";
 
 export const WatchPage = () => {
-    const { isTabsVisible: sidebarOpen } = useContext(TabsContext);
+    const { isTabsVisible: sidebarOpen, setTabsVisible } = useContext(TabsContext);
+    const { fullscreen, toggle: toggleFullscreen } = useFullscreen();
+
+    useHotkeys([
+        ["t", () => setTabsVisible(!sidebarOpen)],
+        ["f", () => toggleFullscreen()],
+    ]);
+
+    return (
+        <WatchPageLayout
+            theather={sidebarOpen}
+            fullscreen={fullscreen}
+        />
+    );
+};
+
+const WatchPageLayout = ({
+    theather,
+    fullscreen,
+}: {
+    theather: boolean;
+    fullscreen: boolean;
+}) => {
     const ref = useRef<HTMLDivElement>(null);
     const per = 0.7;
     const { position, separatorProps, setPosition } = useResizable({
@@ -22,20 +44,24 @@ export const WatchPage = () => {
     //const isOpening = !prevOpen && sidebarOpen;
 
     useEffect(() => {
-        setPosition(ref.current.getBoundingClientRect().width * per);
+        if(ref.current) setPosition(ref.current.getBoundingClientRect().width * per);
     }, [ref.current]);
 
-    const height = "calc(100vh - var(--app-shell-header-height) - calc(var(--app-shell-padding) * 2))";
+    const height = !theather && fullscreen ? (
+        `calc(100vh - calc(var(--app-shell-padding) * 2))`
+    ) : (
+        `calc(100vh - var(--app-shell-header-height) - calc(var(--app-shell-padding) * 2))`
+    );
 
     return (
         <Flex ref={ref} w="100%" h={height}>
-            <Box w={sidebarOpen ? position : "100%"} h="100%">
+            <Box w={theather ? position : "100%"} h="100%">
                 <VideoPlayer />
             </Box>
             <Seperator
                 style={{
                     ...separatorProps.style,
-                    display: sidebarOpen ? undefined : "none",
+                    display: theather ? undefined : "none",
                 }}
                 {...separatorProps}
             />
@@ -43,7 +69,7 @@ export const WatchPage = () => {
                 mah={height}
                 style={{
                     overflow: "hidden",
-                    width: sidebarOpen ? `calc(100% - ${position}px)` : "0px",
+                    width: theather ? `calc(100% - ${position}px)` : "0px",
                     //transition: (isOpening || isClosing) ? "0.5s" : undefined,
                     marginLeft: "auto",
                 }}>
@@ -56,7 +82,8 @@ export const WatchPage = () => {
 const Seperator = (props: SeparatorProps) => {
     return (
         <Box
-            w="1em"
+            w="0.5em"
+            mx="0.5em"
             h="100%"
             bg="dark"
             style={{

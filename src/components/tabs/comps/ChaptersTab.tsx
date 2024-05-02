@@ -15,7 +15,7 @@ export const ChaptersTab = () => {
     });
 
     return (
-        <ScrollArea w="100%" h="100%">
+        <ScrollArea w="100%" maw="100%" h="100%" offsetScrollbars>
             <Stack w="100%" p="xs">
                 {videoInfo ? (
                     <Stack w="100%">

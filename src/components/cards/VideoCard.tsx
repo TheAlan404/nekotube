@@ -15,6 +15,7 @@ export const HorizontalVideoCard = ({
             p="xs"
             shadow="md"
             component={Link}
+            className="hoverable"
             c="var(--mantine-color-text)"
             to={`/watch?v=${video.id}`}
         >

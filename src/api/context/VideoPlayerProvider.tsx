@@ -53,6 +53,7 @@ export const VideoPlayerProvider = ({
         setAvailableFormats([]);
         setActiveFormat(null);
         setVideoInfo(null);
+        setError(null);
         setActiveChapters({
             chapters: [],
             type: "video",
@@ -73,6 +74,18 @@ export const VideoPlayerProvider = ({
                 chapters,
             });
             console.log("Chapters from description:", chapters);
+
+            if(info.formats.length) {
+                setAvailableFormats(info.formats);
+                setActiveFormat(info.formats
+                    .filter(f => f.type == "basic")
+                    .filter(f => currentInstance.type != "invidious" || f.isProxied)
+                    .findLast(x=>x)
+                    || info.formats[0]
+                );
+            } else {
+                setError(new Error(`No available formats found :(`));
+            }
         } catch(e) {
             console.log(e);
             setError(e);
@@ -83,17 +96,6 @@ export const VideoPlayerProvider = ({
     useEffect(() => {
         fetchVideoInfo();
     }, [currentInstance, videoID]);
-
-    useEffect(() => {
-        if(!videoInfo) return;
-
-        setAvailableFormats(videoInfo.formats);
-        setActiveFormat(videoInfo.formats
-            .filter(f => f.type == "basic")
-            .filter(f => currentInstance.type != "invidious" || f.isProxied)
-            .findLast(x=>x)
-        );
-    }, [videoInfo]);
 
     useEffect(() => {
         console.log("Setting URL to", activeFormat?.url);

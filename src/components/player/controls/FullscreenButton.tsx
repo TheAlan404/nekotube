@@ -6,7 +6,7 @@ export const FullscreenButton = () => {
     const { fullscreen, toggle } = useFullscreen();
 
     return (
-        <Tooltip label={fullscreen ? "Minimize" : "Maximize"}>
+        <Tooltip label={fullscreen ? "Minimize (f)" : "Maximize (f)"}>
             <ActionIcon
                 onClick={() => toggle()}
                 variant="light"

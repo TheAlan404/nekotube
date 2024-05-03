@@ -17,13 +17,14 @@ export const Root = () => {
     const location = useLocation();
     const { state } = useNavigation();
 
+    let isNavigating = state != "idle" || (location.pathname == "/watch" && playState == "loading");
     useEffect(() => {
-        if(state == "idle") {
-            nprogress.complete();
-        } else {
+        if(isNavigating) {
             nprogress.start();
+        } else {
+            nprogress.complete();
         }
-    }, [state]);
+    }, [isNavigating]);
 
     const v = searchParams.get("v");
     useEffect(() => {

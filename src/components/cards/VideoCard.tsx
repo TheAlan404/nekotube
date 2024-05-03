@@ -1,9 +1,11 @@
-import { Grid, Paper, Stack, Text, Title } from "@mantine/core";
+import { Grid, Group, Paper, Stack, Text, Title } from "@mantine/core";
 import { ThumbnailRender } from "./ThumbnailRender";
 import { VideoInfo } from "../../api/types/video";
 import { Link } from "react-router-dom";
 import { ChannelCard } from "./ChannelCard";
 import { TextWithTooltip } from "../ui/TextWithTooltip";
+import { DateCard } from "./DateCard";
+import { ViewCountCard } from "./ViewCountCard";
 
 export const HorizontalVideoCard = ({
     video,
@@ -25,6 +27,7 @@ export const HorizontalVideoCard = ({
                     <ThumbnailRender
                         thumbnails={video.thumbnails}
                         fallback={`https://img.youtube.com/vi/${video.id}/hqdefault.jpg`}
+                        length={video.length}
                     />
                 </Grid.Col>
                 <Grid.Col span="auto">
@@ -32,6 +35,18 @@ export const HorizontalVideoCard = ({
                         <TextWithTooltip lineClamp={2} fw="bold" fz="sm">
                             {video.title}
                         </TextWithTooltip>
+                        <Group>
+                            {video.published && (
+                                <DateCard
+                                    date={video.published}
+                                />
+                            )}
+                            {video.viewCount && (
+                                <ViewCountCard
+                                    viewCount={video.viewCount}
+                                />
+                            )}
+                        </Group>
                         <ChannelCard
                             channel={video.channel}
                         />

@@ -57,9 +57,16 @@ export class LTAPIProvider implements APIProvider {
                 channel: {
                     id: d.channel.id,
                     title: d.channel.title,
+                    thumbnails: [{
+                        url: d.channel.avatar,
+                        width: 176,
+                        height: 176,
+                    }]
                 },
                 description: d.description,
                 thumbnails: d.thumbnails,
+                published: new Date(d.published),
+                viewCount: Number(d.viewCount),
             } as Renderer;
         } else {
             return null;
@@ -77,22 +84,7 @@ export class LTAPIProvider implements APIProvider {
         return {
             key: res.continuationKey,
             results: res.searchResults.filter(x => x.type == "videoRenderer")
-                .map(v => ({
-                    type: "video",
-                    id: v.id,
-                    title: v.title,
-                    description: v.description,
-                    thumbnails: v.thumbnails,
-                    channel: {
-                        id: v.channel.id,
-                        title: v.channel.title,
-                        thumbnails: [{
-                            url: v.channel.avatar,
-                            width: 176,
-                            height: 176,
-                        }]
-                    },
-                } as VideoInfo & { type: "video" })),
+                .map(this.convertRenderer),
         };
     }
 

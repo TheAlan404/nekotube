@@ -1,5 +1,5 @@
 import { Button, Checkbox, Group, Loader, ScrollArea, Space, Stack, Text } from "@mantine/core";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { VideoPlayerContext } from "../../../api/context/VideoPlayerContext";
 import { HorizontalVideoCard } from "../../cards/VideoCard";
 import { APIContext } from "../../../api/context/APIController";
@@ -38,6 +38,15 @@ export const CommentsTab = () => {
         fetchComments(false);
     }, [videoID, currentInstance]);
 
+    const list = useMemo(() => {
+        return comments.map((comment, i) => (
+            <CommentCard
+                key={i}
+                comment={comment}
+            />
+        ));
+    }, [comments]);
+
     return (
         <ScrollArea w="100%" maw="100%" h="100%" type="scroll" scrollbars="y" offsetScrollbars>
             <Stack w="100%" p="xs">
@@ -48,12 +57,7 @@ export const CommentsTab = () => {
                         Showing {comments.length} comments
                     </Text>
                 </Group>
-                {comments.map((comment, i) => (
-                    <CommentCard
-                        key={i}
-                        comment={comment}
-                    />
-                ))}
+                {list}
                 <ErrorMessage
                     error={error}
                     retry={() => fetchComments(!!comments.length)}

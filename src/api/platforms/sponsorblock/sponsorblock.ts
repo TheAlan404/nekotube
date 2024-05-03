@@ -66,9 +66,6 @@ export class SponsorBlockAPI {
         
         let res = await fetch(url, {
             signal: opts?.signal,
-            headers: {
-                "Content-Type": "application/json; utf-8",
-            },
         });
 
         return await res.json() as T;

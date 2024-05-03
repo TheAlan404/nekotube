@@ -8,15 +8,17 @@ export interface VideoInfo {
     title: string;
     description: string;
     thumbnails: Thumbnail[];
+    published?: Date;
+    viewCount?: number;
+    likeCount?: number;
+    dislikeCount?: number;
+    length?: number;
     channel: Channel;
 };
 
 export interface VideoData extends VideoInfo {
     chapters: Chapter[];
-    published: Date;
     keywords: string[];
-    likeCount?: number;
-    viewCount?: number;
     formats: VideoFormat[];
 
     recommended: Renderer[];

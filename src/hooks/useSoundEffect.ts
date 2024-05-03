@@ -32,7 +32,7 @@ export const useSoundEffect = (ids: SfxName[]) => {
     let uiSoundEffects = usePreference("uiSoundEffects");
     let sfx = ids.map(id => UISfxLibrary[id]);
 
-    return (volume?: number) => {
+    return async (volume?: number) => {
         if(!uiSoundEffects) return;
         randArr(sfx).play(volume);
     };

@@ -5,6 +5,7 @@ import { MarkdownText } from "../../ui/MarkdownText";
 import { ChannelCard } from "../../cards/ChannelCard";
 import { VotingCard } from "../../cards/VotingCard";
 import { DateCard } from "../../cards/DateCard";
+import { ViewCountCard } from "../../cards/ViewCountCard";
 
 export const VideoInfoTab = () => {
     const { videoInfo } = useContext(VideoPlayerContext);
@@ -21,9 +22,15 @@ export const VideoInfoTab = () => {
                             <VotingCard
                                 {...videoInfo}
                             />
-                            <DateCard
-                                date={videoInfo.published}
-                            />
+                            <Group wrap="nowrap">
+                                <DateCard
+                                    date={videoInfo.published}
+                                />
+                                <ViewCountCard
+                                    viewCount={videoInfo.viewCount}
+                                    size={"md"}
+                                />
+                            </Group>
                         </Group>
                         <ChannelCard
                             channel={videoInfo.channel}

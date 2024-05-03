@@ -42,6 +42,8 @@ export class InvidiousAPIProvider implements APIProvider {
                 id: d.authorId,
                 title: d.author,
             },
+            viewCount: d.viewCount,
+            length: d.lengthSeconds,
         } as Renderer;
     };
 
@@ -61,18 +63,8 @@ export class InvidiousAPIProvider implements APIProvider {
 
         return {
             key: null,
-            results: data.filter(x => x.type == "video").map(result => ({
-                type: "video",
-                id: result.videoId,
-                title: result.title,
-                description: result.descriptionHtml,
-                thumbnails: result.videoThumbnails,
-                channel: {
-                    id: result.authorId,
-                    title: result.author,
-                    thumbnails: result.authorThumbnails,
-                },
-            } as Renderer)),
+            results: data.filter(x => x.type == "video")
+                .map(this.convertVideoInfo),
         };
     }
 
@@ -102,6 +94,7 @@ export class InvidiousAPIProvider implements APIProvider {
             viewCount: v.viewCount,
             published: new Date(v.published * 1000),
             thumbnails: v.videoThumbnails,
+            length: v.lengthSeconds,
             recommended: v.recommendedVideos
                 .map(this.convertVideoInfo),
 

@@ -1,5 +1,5 @@
 import { Button, Group } from "@mantine/core";
-import { IconThumbUp } from "@tabler/icons-react";
+import { IconThumbDown, IconThumbUp } from "@tabler/icons-react";
 
 export const VotingCard = ({
     likeCount,
@@ -9,7 +9,7 @@ export const VotingCard = ({
     dislikeCount?: number,
 }) => {
     return (
-        <Group>
+        <Group wrap="nowrap">
             {!isNaN(likeCount) && (
                 <Button
                     leftSection={<IconThumbUp />}
@@ -18,6 +18,16 @@ export const VotingCard = ({
                     size="compact-md"
                 >
                     {likeCount}
+                </Button>
+            )}
+            {!isNaN(dislikeCount) && (
+                <Button
+                    leftSection={<IconThumbDown />}
+                    variant="subtle"
+                    color="violet"
+                    size="compact-md"
+                >
+                    {dislikeCount}
                 </Button>
             )}
         </Group>

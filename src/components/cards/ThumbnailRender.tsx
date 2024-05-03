@@ -1,12 +1,15 @@
-import { AspectRatio, Image } from "@mantine/core";
+import { AspectRatio, Box, Flex, Image, Text } from "@mantine/core";
 import { Thumbnail } from "../../api/types/video";
+import { secondsToTimestamp } from "../../utils/timestamp";
 
 export const ThumbnailRender = ({
     thumbnails,
     fallback,
+    length,
 }: {
     thumbnails: Thumbnail[],
     fallback?: string,
+    length?: number,
 }) => {
     const scale = 0.5;
     return (
@@ -16,6 +19,19 @@ export const ThumbnailRender = ({
                 fallbackSrc={fallback}
                 loading="lazy"
             />
+            <Flex w="100%" h="100%" align="end" justify="end">
+                {length && (
+                    <Text
+                        bg="dark"
+                        style={{ borderRadius: "var(--mantine-radius-sm)" }}
+                        px={2}
+                        fz="xs"
+                        m={2}
+                    >
+                        {secondsToTimestamp(length)}
+                    </Text>
+                )}
+            </Flex>
         </AspectRatio>
     );
 };

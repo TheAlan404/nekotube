@@ -25,10 +25,13 @@ export const PreferencesList = () => {
                 onChange={(e) => set({ keepVolumeShown: e.currentTarget.checked })}
             />
             <Checkbox
-                label="WatchPage animations"
-                description={"Do a cool animation when opening/closing sidebar"}
-                checked={pref.watchPageAnimations}
+                label="Sidebar open/close animation"
                 onChange={(e) => set({ watchPageAnimations: e.currentTarget.checked })}
+            />
+            <Checkbox
+                label="Enable ReturnYoutubeDislike"
+                checked={pref.useReturnYoutubeDislike}
+                onChange={(e) => set({ useReturnYoutubeDislike: e.currentTarget.checked })}
             />
             <Checkbox
                 label="Enable SponsorBlock"

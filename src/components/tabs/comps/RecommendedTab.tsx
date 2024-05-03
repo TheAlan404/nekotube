@@ -1,10 +1,19 @@
 import { Loader, ScrollArea, Space, Stack, Text } from "@mantine/core";
-import { useContext } from "react";
+import React, { useContext, useMemo } from "react";
 import { VideoPlayerContext } from "../../../api/context/VideoPlayerContext";
 import { HorizontalVideoCard } from "../../cards/VideoCard";
 
 export const RecommendedTab = () => {
     const { videoInfo } = useContext(VideoPlayerContext);
+
+    const list = useMemo(() => {
+        return (videoInfo?.recommended || []).map((renderer, i) => (
+            <HorizontalVideoCard
+                video={renderer}
+                key={i}
+            />
+        ));
+    }, [videoInfo?.recommended || []]);
 
     return (
         <ScrollArea w="100%" maw="100%" h="100%">
@@ -14,12 +23,7 @@ export const RecommendedTab = () => {
                         <Text ta="end">
                             {videoInfo.recommended.length} recommended videos
                         </Text>
-                        {videoInfo.recommended.map((renderer, i) => (
-                            <HorizontalVideoCard
-                                video={renderer}
-                                key={i}
-                            />
-                        ))}
+                        {list}
                     </Stack>
                 ) : (
                     <Stack w="100%" align="center">

@@ -40,15 +40,13 @@ const WatchPageLayout = ({
     const { position, separatorProps, setPosition } = useResizable({
         axis: "x",
         min: ref.current ? (ref.current.getBoundingClientRect().width * 0.5) : undefined,
-        initial: ref.current ? (ref.current.getBoundingClientRect().width * per) : undefined,
+        initial: ref.current ? (ref.current.getBoundingClientRect().width * per) : window.innerWidth * per,
         max: ref.current ? (ref.current.getBoundingClientRect().width * 0.8) : undefined,
         containerRef: ref,
     });
     const prevOpen = usePrevious(theather) ?? theather;
     const isClosing = prevOpen && !theather;
     const isOpening = !prevOpen && theather;
-
-    console.log("width:", ref.current?.getBoundingClientRect()?.width)
 
     useEffect(() => {
         if(ref.current) setPosition(ref.current.getBoundingClientRect().width * per);

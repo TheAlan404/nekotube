@@ -5,6 +5,8 @@ import { LTAPIProvider } from "../platforms/lt/lighttube";
 import { fetchInvidiousPublicInstances, fetchLightTubePublicInstances } from "../platforms/public";
 import { InvidiousAPIProvider } from "../platforms/invid/invidious";
 import { useLocalStorage } from "@mantine/hooks";
+import { DislikeAPI } from "../platforms/ryd/dislikeapi";
+import { SponsorBlockAPI } from "../platforms/sponsorblock/sponsorblock";
 
 const CUSTOM_INSTANCES: Instance[] = [
     
@@ -31,6 +33,8 @@ export interface APIController {
     removeFavourite: (i: Instance) => void;
 
     api: APIProvider;
+    dislikesApi: DislikeAPI;
+    sponsorBlockApi: SponsorBlockAPI;
 };
 
 export const APIContext = createContext<APIController>({
@@ -45,6 +49,9 @@ export const APIContext = createContext<APIController>({
     customInstance: false,
     favourited: [],
     isRefreshing: false,
+
+    dislikesApi: new DislikeAPI(),
+    sponsorBlockApi: new SponsorBlockAPI(),
 });
 
 export const APIControllerProvider = ({ children }: React.PropsWithChildren) => {
@@ -89,6 +96,9 @@ export const APIControllerProvider = ({ children }: React.PropsWithChildren) => 
             throw new Error("uhhh");
         }
     }, [currentInstance]);
+
+    const dislikesApi = useMemo(() => new DislikeAPI(), []);
+    const sponsorBlockApi = useMemo(() => new SponsorBlockAPI(), []);
     
     return (
         <APIContext.Provider
@@ -108,6 +118,8 @@ export const APIControllerProvider = ({ children }: React.PropsWithChildren) => 
                     setFavourited(v => v.filter(x => x.url !== i.url));
                 },
                 api,
+                dislikesApi,
+                sponsorBlockApi,
             }}
         >
             {children}

@@ -8,6 +8,7 @@ export interface Preferences {
     watchPageAnimations: boolean;
     useSponsorBlock: boolean;
     useDeArrow: boolean;
+    useReturnYoutubeDislike: boolean;
 };
 
 export const DefaultPreferences: Preferences = {
@@ -17,6 +18,7 @@ export const DefaultPreferences: Preferences = {
     watchPageAnimations: true,
     useSponsorBlock: true,
     useDeArrow: false,
+    useReturnYoutubeDislike: true,
 };
 
 export interface PreferencesAPI {
@@ -33,6 +35,13 @@ export const PreferencesProvider = ({ children }: React.PropsWithChildren) => {
     const [preferences, setPreferences] = useLocalStorage({
         key: "nekotube:preferences",
         defaultValue: DefaultPreferences,
+        deserialize(value) {
+            let j: Preferences = JSON.parse(value || JSON.stringify(DefaultPreferences));
+            for(let [k, v] of Object.entries(DefaultPreferences))
+                if(typeof v === "boolean" && typeof j[k] != typeof v)
+                    j[k] = v;
+            return j;
+        },
     });
 
     return (

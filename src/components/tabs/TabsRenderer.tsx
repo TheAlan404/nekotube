@@ -1,4 +1,4 @@
-import { Box, Stack, Tabs, Tooltip } from "@mantine/core";
+import { Box, Loader, Stack, Tabs, Tooltip } from "@mantine/core";
 import React, { useContext } from "react";
 import { TabsContext } from "./TabsContext";
 import { TabType } from "./TabTypes";
@@ -7,18 +7,26 @@ import { CommentsTab } from "./comps/CommentsTab";
 import { VideoInfoTab } from "./comps/VideoInfoTab";
 import { IconBrandYoutube, IconLayoutList, IconList, IconMessage } from "@tabler/icons-react";
 import { ChaptersTab } from "./comps/ChaptersTab";
+import { clamp, useHotkeys } from "@mantine/hooks";
 
 export const TabsRenderer = () => {
-    const { currentTab, setCurrentTab } = useContext(TabsContext);
+    const { currentTab, setCurrentTab, availableTabs } = useContext(TabsContext);
 
     const height = `calc(100vh - var(--app-shell-header-height) - calc(var(--app-shell-padding) * 2) - 3em)`;
-    
+
+    useHotkeys([
+        ["z", () => setCurrentTab(availableTabs[availableTabs.indexOf(currentTab) - 1] || availableTabs[availableTabs.length - 1])],
+        ["x", () => setCurrentTab(availableTabs[availableTabs.indexOf(currentTab) + 1] || availableTabs[0])],
+    ]);
+
     return (
         <Stack h="100%" w="100%">
             <Tabs
                 value={currentTab}
                 onChange={(v) => setCurrentTab(v as TabType)}
+                keepMounted={true}
                 inverted
+                color="violet"
                 styles={{
                     root: {
                         height: "100%",
@@ -31,18 +39,23 @@ export const TabsRenderer = () => {
                     },
                 }}
             >
-                <Tabs.Panel value="videoInfo">
-                    <VideoInfoTab />
-                </Tabs.Panel>
-                <Tabs.Panel value="recommended">
-                    <RecommendedTab />
-                </Tabs.Panel>
-                <Tabs.Panel value="comments">
-                    <CommentsTab />
-                </Tabs.Panel>
-                <Tabs.Panel value="chapters">
-                    <ChaptersTab />
-                </Tabs.Panel>
+                {Object.entries({
+                    videoInfo: <VideoInfoTab />,
+                    recommended: <RecommendedTab />,
+                    comments: <CommentsTab />,
+                    chapters: <ChaptersTab />,
+                } as Record<TabType, React.ReactNode>).map(([type, el], i) => (
+                    <Tabs.Panel
+                        value={type}
+                        key={i}
+                    >
+                        <React.Suspense
+                            fallback={<Loader />}
+                        >
+                            {el}
+                        </React.Suspense>
+                    </Tabs.Panel>
+                ))}
 
                 <Tabs.List grow>
                     <Tooltip.Group>
@@ -68,11 +81,10 @@ export const TabsRenderer = () => {
                                 icon: <IconList />,
                             },
                         ] as {
-                            value: string;
+                            value: TabType;
                             title: string;
                             icon: React.ReactNode;
-                            hidden?: boolean;
-                        }[]).filter(x => !x.hidden).map(({
+                        }[]).filter(x => availableTabs.includes(x.value)).map(({
                             title,
                             value,
                             icon,

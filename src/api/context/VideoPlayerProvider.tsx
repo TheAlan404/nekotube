@@ -7,18 +7,24 @@ import { useVideoEventListener } from "../../hooks/useVideoEventListener";
 import { parseChapters } from "../../utils/parseChapters";
 import { clamp, useLocalStorage } from "@mantine/hooks";
 import { SponsorBlockAPI } from "../platforms/sponsorblock/sponsorblock";
+import { PreferencesContext } from "../pref/Preferences";
 
 export const VideoPlayerProvider = ({
     children
 }: React.PropsWithChildren) => {
-    //const sourceElement = useRef<HTMLSourceElement>(null);
     const videoElement = useMemo(() => {
         let el = document.createElement("video");
         el.style.width = "100%";
         el.style.height = "100%";
         return el;
     }, []);
-    const { api, currentInstance } = useContext(APIContext);
+    const {
+        api,
+        currentInstance,
+        dislikesApi,
+        sponsorBlockApi,
+    } = useContext(APIContext);
+    const { pref } = useContext(PreferencesContext);
 
     const [videoID, setVideoID] = useState<string | null>(null);
     const [videoInfo, setVideoInfo] = useState<VideoData | null>(null);
@@ -30,10 +36,7 @@ export const VideoPlayerProvider = ({
     const [availableFormats, setAvailableFormats] = useState<VideoFormat[]>([]);
     const [playState, setPlayState] = useState<PlayState>("loading");
     const [error, setError] = useState<any | null>(null);
-    const [volume, setVolume] = useLocalStorage({
-        key: "nekotube:volume",
-        defaultValue: 1,
-    });
+    const [volume, setVolume] = useState(JSON.parse(localStorage.getItem("nekotube:volume") ?? "1"));
     const [muted, setMuted] = useState(false);
 
     useEffect(() => {
@@ -49,6 +52,7 @@ export const VideoPlayerProvider = ({
 
     useEffect(() => {
         videoElement.volume = volume;
+        localStorage.setItem("nekotube:volume", JSON.stringify(volume));
     }, [volume]);
 
     const fetchVideoInfo = async () => {
@@ -67,7 +71,20 @@ export const VideoPlayerProvider = ({
         
         try {
             let info = await api.getVideoInfo(videoID);
-            setVideoInfo(info);
+
+            let dislikesResponse = pref.useReturnYoutubeDislike ? (
+                await dislikesApi.getDislikes(videoID)
+            ) : (
+                null
+            );
+
+            setVideoInfo({
+                ...info,
+                dislikeCount: dislikesResponse?.dislikes,
+                published: info.published || dislikesResponse?.dateCreated ? (
+                    new Date(dislikesResponse?.dateCreated)
+                ) : null,
+            });
 
             console.log("Fetched VideoData", info);
 

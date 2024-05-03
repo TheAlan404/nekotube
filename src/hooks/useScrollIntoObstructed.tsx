@@ -14,6 +14,7 @@ export const useScrollIntoObstructed = () => {
         targetRef: scrollTargetRef,
         scrollableRef: scrollContainerRef,
     } = useScrollIntoView<HTMLDivElement, HTMLDivElement>({
+        duration: 0,
         isList: true,
     });
 

@@ -36,6 +36,9 @@ export const LayoutTop = () => {
                             {playState == "loading" && (
                                 videoInfo ? "starting playback..." : "fetching video info..."
                             )}
+                            {playState !== "error" && playState !== "loading" && (
+                                videoInfo?.channel?.title
+                            )}
                         </Text>
                     </Stack>
                 </Grid.Col>

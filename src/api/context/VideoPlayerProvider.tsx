@@ -1,13 +1,13 @@
-import { useContext, useEffect, useMemo, useRef, useState } from "react";
-import { ActiveChapterList, PlayState, VideoPlayerContext } from "./VideoPlayerContext";
+import { useContext, useEffect, useMemo, useState } from "react";
+import { PlayState, VideoPlayerContext } from "./VideoPlayerContext";
 import { APIContext } from "./APIController";
 import { VideoData } from "../types/video";
 import { VideoFormat } from "../types/format";
 import { useVideoEventListener } from "../../hooks/useVideoEventListener";
 import { parseChapters } from "../../utils/parseChapters";
-import { clamp, useLocalStorage } from "@mantine/hooks";
-import { SponsorBlockAPI } from "../platforms/sponsorblock/sponsorblock";
+import { clamp } from "@mantine/hooks";
 import { PreferencesContext } from "../pref/Preferences";
+import { ActiveChapterList } from "../types/chapter";
 
 export const VideoPlayerProvider = ({
     children
@@ -56,6 +56,7 @@ export const VideoPlayerProvider = ({
     }, [volume]);
 
     const fetchVideoInfo = async () => {
+        videoElement.currentTime = 0;
         setPlayState("loading");
         setAvailableFormats([]);
         setActiveFormat(null);
@@ -119,7 +120,9 @@ export const VideoPlayerProvider = ({
 
     useEffect(() => {
         console.log("Setting URL to", activeFormat?.url);
+        let t = videoElement.currentTime;
         if(videoElement.src != activeFormat?.url) videoElement.src = activeFormat?.url;
+        videoElement.currentTime = t;
     }, [activeFormat]);
 
     useVideoEventListener(videoElement, "ended", () => {

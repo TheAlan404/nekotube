@@ -42,7 +42,7 @@ export const Root = () => {
     return (
         <AppShell
             header={{ height: "3em" }}
-            padding="xs"
+            padding={0}
             disabled={fullscreen && !isTabsVisible}
         >
             <AppShell.Header>

@@ -1,19 +1,18 @@
-import { useContext, useEffect, useRef } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { VideoPlayerContext } from "../../api/context/VideoPlayerContext"
 import { Box, Stack, Transition } from "@mantine/core";
-import { useHotkeys, useHover, useMergedRef } from "@mantine/hooks";
+import { useDebouncedCallback, useHotkeys, useHover, useMergedRef } from "@mantine/hooks";
 import { usePreference } from "../../api/pref/Preferences";
 import { LayoutTop } from "./layout/LayoutTop";
 import { LayoutMiddle } from "./layout/LayoutMiddle";
 import { LayoutBottom } from "./layout/LayoutBottom";
 
 export const VideoPlayer = () => {
-    const { videoElement, seekToChapterOffset, videoInfo, seekTo, togglePlay, playState, muted, setMuted, error, fetchVideoInfo } = useContext(VideoPlayerContext);
+    const { videoElement, seekToChapterOffset, seekTo, togglePlay, playState, muted, setMuted } = useContext(VideoPlayerContext);
     const containerRef = useRef<HTMLDivElement>(null);
     const keepControlsShown = usePreference("keepControlsShown");
-    const { ref: hoverRef, hovered } = useHover();
-
-    // -- binding --
+    const { hovered, ref } = useHover();
+    const [showControls, setShowControls] = useState(true);
 
     useEffect(() => {
         containerRef.current?.appendChild(videoElement);
@@ -21,8 +20,6 @@ export const VideoPlayer = () => {
             videoElement.pause();
         };
     }, [videoElement, containerRef.current]);
-
-    // -- hotkeys --
 
     useHotkeys([
         ["ArrowLeft", () => seekTo(videoElement.currentTime - 5)],
@@ -34,16 +31,32 @@ export const VideoPlayer = () => {
         ["K", () => togglePlay()],
         ["Space", () => togglePlay()],
         ["m", () => setMuted(!muted)],
+        ["0", () => seekTo(0)],
     ]);
 
-    const mergedRef = useMergedRef(
-        hoverRef
+    const hideCallback = useDebouncedCallback(() => {
+        setShowControls(false);
+    }, 2000);
+
+    const shouldShowControls = (
+        keepControlsShown
+        || showControls
+        || hovered
+        || (playState == "error")
+        || (playState == "loading")
     );
 
-    const shouldShowControls = keepControlsShown || hovered || (playState == "error") || (playState == "loading");
-
     return (
-        <Box w="100%" h="100%" className="videoPlayer" style={{ position: "relative" }} ref={mergedRef}>
+        <Box
+            w="100%"
+            h="100%"
+            className="videoPlayer"
+            style={{ position: "relative" }}
+            onMouseMove={() => {
+                setShowControls(true);
+                hideCallback();
+            }}
+        >
             <Box
                 bg="dark.9"
                 style={{
@@ -72,7 +85,9 @@ export const VideoPlayer = () => {
                     >
                         <LayoutTop />
                         <LayoutMiddle />
-                        <LayoutBottom />
+                        <div ref={ref}>
+                            <LayoutBottom />
+                        </div>
                     </Stack>
                 )}
             </Transition>

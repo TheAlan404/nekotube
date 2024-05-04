@@ -66,14 +66,14 @@ export const ProgressBar = () => {
 
     return (
         <Group align="center" w="100%">
-            <Group gap={4} wrap="nowrap" w="100%" h="0.4em" ref={ref}>
+            <Group gap={2} wrap="nowrap" w="100%" h="0.4em" ref={ref}>
                 {segments.map((segment, i) => (
                     <div
                         key={i}
                         className="progressbar-outer"
                         style={{
-                            left: `calc(${segment.position.start}% + 1px)`,
-                            width: `calc(${segment.position.end}% - 2px)`,
+                            left: `${segment.position.start}%`,
+                            width: `${segment.position.end}%`,
                         }}
                     >
                         <div

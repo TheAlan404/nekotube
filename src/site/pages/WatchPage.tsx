@@ -53,13 +53,13 @@ const WatchPageLayout = ({
     }, [ref.current]);
 
     const height = !theather && fullscreen ? (
-        `calc(100vh - calc(var(--app-shell-padding) * 2))`
+        `calc(100vh)`
     ) : (
-        `calc(100vh - var(--app-shell-header-height) - calc(var(--app-shell-padding) * 2))`
+        `calc(100vh - var(--app-shell-header-height))`
     );
 
     return (
-        <Flex ref={ref} w="100%" h={height}>
+        <Flex ref={ref} w="100%" h={height} style={{ overflow: "hidden" }}>
             <Box h="100%" style={{
                 width: theather ? position : "100%",
                 transition: (animate && (isOpening || isClosing)) ? "0.5s" : undefined,

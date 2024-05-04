@@ -1,4 +1,5 @@
 import { Channel } from "./Channel";
+import { Chapter } from "./chapter";
 import { VideoFormat } from "./format";
 
 export type SearchSuggestions = string[];
@@ -22,11 +23,6 @@ export interface VideoData extends VideoInfo {
     formats: VideoFormat[];
 
     recommended: Renderer[];
-};
-
-export interface Chapter {
-    time: number;
-    label: string;
 };
 
 export interface Caption {

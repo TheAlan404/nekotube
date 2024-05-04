@@ -1,4 +1,4 @@
-import { Group, Stack } from "@mantine/core";
+import { Group, Stack, StackProps } from "@mantine/core";
 import { ProgressBar } from "../bar/ProgressBar";
 import { PlayPauseButton } from "../controls/PlayPauseButton";
 import { VolumeControls } from "../controls/VolumeControls";
@@ -8,13 +8,14 @@ import { OptionsButton } from "../../options/links/OptionsButton";
 import { ToggleSidebarButton } from "../../tabs/links/ToggleSidebarButton";
 import { FullscreenButton } from "../controls/FullscreenButton";
 
-export const LayoutBottom = () => {
+export const LayoutBottom = (props: StackProps) => {
     return (
         <Stack
             gap="xs"
             p="xs"
             w="100%"
             onClick={(e) => e.stopPropagation()}
+            {...props}
         >
             <ProgressBar />
 

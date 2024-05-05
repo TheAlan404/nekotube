@@ -31,13 +31,12 @@ export const ChaptersTab = () => {
     useVideoEventListener(videoElement, "timeupdate", update);
     useEffect(() => update(), []);
 
-    
     const filteredChapters = activeChapters.chapters
         .filter(x => x.label.toLowerCase().includes(search.toLowerCase()));
 
     const allGroups = [...new Set(filteredChapters.map(c => c.group)).values()];
 
-    const isCurrentShown = filteredChapters.includes(currentChapter);
+    const isCurrentShown = group == currentChapter?.group && filteredChapters.includes(currentChapter);
 
     const createList = (chapters: Chapter[]) => {
         return chapters.map((chapter, i) => (

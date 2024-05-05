@@ -18,8 +18,10 @@ export const LayoutMiddle = () => {
                     <ErrorMessage
                         error={error}
                         retry={videoInfo ? (() => {
+                            let t = videoElement.currentTime;
                             videoElement.load();
                             videoElement.play();
+                            videoElement.currentTime = t;
                         }) : fetchVideoInfo}
                     />
                 </Stack>

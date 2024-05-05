@@ -10,16 +10,17 @@ import { LayoutBottom } from "./layout/LayoutBottom";
 export const VideoPlayer = () => {
     const { videoElement, seekToChapterOffset, seekTo, togglePlay, playState, muted, setMuted } = useContext(VideoPlayerContext);
     const containerRef = useRef<HTMLDivElement>(null);
+    const videoContainerRef = useRef<HTMLDivElement>(null);
     const keepControlsShown = usePreference("keepControlsShown");
     const { hovered, ref } = useHover();
     const [showControls, setShowControls] = useState(true);
 
     useEffect(() => {
-        containerRef.current?.appendChild(videoElement);
+        videoContainerRef.current?.appendChild(videoElement);
         return () => {
             videoElement.pause();
         };
-    }, [videoElement, containerRef.current]);
+    }, [videoElement, videoContainerRef.current]);
 
     useHotkeys([
         ["ArrowLeft", () => seekTo(videoElement.currentTime - 5)],
@@ -36,7 +37,7 @@ export const VideoPlayer = () => {
 
     const hideCallback = useDebouncedCallback(() => {
         setShowControls(false);
-    }, 2000);
+    }, 1000);
 
     const shouldShowControls = (
         keepControlsShown
@@ -50,11 +51,21 @@ export const VideoPlayer = () => {
         <Box
             w="100%"
             h="100%"
-            className="videoPlayer"
+            className="videoPlayer clickListener"
             style={{ position: "relative" }}
-            onMouseMove={() => {
+            ref={containerRef}
+            onMouseMove={(e) => {
+                let xPer = e.clientX / containerRef.current.getBoundingClientRect().width;
+                let threshold = 0.01;
+                if(xPer < threshold || xPer > (1 - threshold)) return;
                 setShowControls(true);
                 hideCallback();
+            }}
+            onClick={(e) => {
+                if(!e.currentTarget.classList.contains("clickListener")) return;
+                let xPer = e.clientX / containerRef.current.getBoundingClientRect().width;
+                if(xPer == 0 || xPer == 1) return;
+                togglePlay();
             }}
         >
             <Box
@@ -65,7 +76,7 @@ export const VideoPlayer = () => {
                     height: "100%",
                     zIndex: "-100",
                 }}
-                ref={containerRef}
+                ref={videoContainerRef}
             />
             <Transition
                 mounted={shouldShowControls}
@@ -81,7 +92,6 @@ export const VideoPlayer = () => {
                             background: "linear-gradient(to bottom, #000000FF, #00000000 3em), linear-gradient(to top, #000000FF 0%, #00000000 5em)",
                         }}
                         className="clickListener"
-                        onClick={(e) => e.currentTarget.classList.contains("clickListener") && togglePlay()}
                     >
                         <LayoutTop />
                         <LayoutMiddle />

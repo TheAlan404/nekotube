@@ -5,6 +5,7 @@ import { IconAlertTriangle, IconSearch } from "@tabler/icons-react";
 import { useLocation, useNavigate, useNavigation, useSearchParams } from "react-router-dom";
 import { useKeyboardSfx } from "../../hooks/useSoundEffect";
 import { useHotkeys } from "@mantine/hooks";
+import { parseSearchShortcut, SearchShortcut, SearchShortcutRenderer, shortcutToLocation } from "./SearchShortcut";
 
 export const SearchBar = () => {
     const { api } = useContext(APIContext);
@@ -17,6 +18,8 @@ export const SearchBar = () => {
     const [suggestions, setSuggestions] = useState<string[]>([]);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [value, setValue] = useState((location.pathname == "/search" ? (new URLSearchParams(location.search).get("q") || "") : ""));
+    const [pickedSuggestion, setPickedSuggestion] = useState("");
+    const [shortcut, setShortcut] = useState<SearchShortcut | null>(null);
     const ref = useRef<HTMLInputElement>(null);
     const abortController = useRef<AbortController>();
     const keyboardSfx = useKeyboardSfx();
@@ -82,9 +85,10 @@ export const SearchBar = () => {
                         <TextInput
                             placeholder="Search... (Ctrl + S)"
                             ref={ref}
-                            value={value || ""}
+                            value={pickedSuggestion || value || ""}
                             onChange={(e) => {
                                 setValue(e.currentTarget.value);
+                                setShortcut(parseSearchShortcut(e.currentTarget.value));
                                 fetchSuggestions(e.currentTarget.value);
                                 combobox.resetSelectedOption();
                                 combobox.openDropdown();
@@ -95,7 +99,19 @@ export const SearchBar = () => {
                             onBlur={() => combobox.closeDropdown()}
                             onKeyDown={(e) => {
                                 keyboardSfx(e);
-                                if (e.key == "Enter" && combobox.getSelectedOptionIndex() == -1) search(e.currentTarget.value);
+                                if (e.key == "Enter" && combobox.getSelectedOptionIndex() == -1) {
+                                    if(shortcut) {
+                                        navigate(shortcutToLocation(shortcut));
+                                        setValue(e.currentTarget.value || "");
+                                        ref.current.blur();
+                                        combobox.closeDropdown();
+                                    } else {
+                                        search(e.currentTarget.value);
+                                    }
+                                }
+                            }}
+                            onKeyUp={(e) => {
+                                setPickedSuggestion(suggestions[combobox.getSelectedOptionIndex()])
                             }}
                             rightSection={loading && <Loader size={18} />}
                         />
@@ -125,6 +141,13 @@ export const SearchBar = () => {
                         </Stack>
                     </Stack>
                 )}
+                {shortcut && (
+                    <Stack w="100%">
+                        <SearchShortcutRenderer
+                            shortcut={shortcut}
+                        />
+                    </Stack>
+                )}
                 {loading && (
                     <Stack w="100%" align="center" py="md">
                         <Loader />
@@ -133,14 +156,16 @@ export const SearchBar = () => {
                 <Combobox.Options>
                     {options}
                     {!loading && !errorMessage && !suggestions.length && (
-                        <Box py="md">
-                            {value ? "No results found" : (
+                        <Stack py="md" align="center">
+                            {value ? (
+                                shortcut ? "" : "No results found"
+                            ) : (
                                 <Stack gap={0} align="center">
                                     <Text c="var(--mantine-color-text)">Start typing to search</Text>
                                     <Text fz="sm" c="dimmed">Suggestions will appear here</Text>
                                 </Stack>
                             )}
-                        </Box>
+                        </Stack>
                     )}
                 </Combobox.Options>
             </Combobox.Dropdown>

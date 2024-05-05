@@ -1,4 +1,4 @@
-import { Accordion, ActionIcon, Button, Grid, Group, Loader, Paper, ScrollArea, Space, Stack, Text, TextInput, Transition } from "@mantine/core";
+import { Accordion, ActionIcon, Button, Grid, Group, Loader, Paper, ScrollArea, Slider, Space, Stack, Text, TextInput, Transition } from "@mantine/core";
 import { useContext, useEffect, useMemo, useState } from "react";
 import { VideoPlayerContext } from "../../../api/context/VideoPlayerContext";
 import { TimestampButton } from "../../ui/TimestampButton";
@@ -8,6 +8,7 @@ import { useScrollIntoObstructed } from "../../../hooks/useScrollIntoObstructed"
 import { IconArrowNarrowUp, IconX } from "@tabler/icons-react";
 import { randArr } from "../../../utils/math";
 import { useKeyboardSfx } from "../../../hooks/useSoundEffect";
+import { secondsToTimestamp } from "../../../utils/timestamp";
 
 export const ChaptersTab = () => {
     const { videoInfo, activeChapters, setActiveChapters, seekTo, videoElement } = useContext(VideoPlayerContext);
@@ -189,7 +190,27 @@ const ChapterButton = ({
     isCurrent?: boolean,
     xref?: React.Ref<HTMLDivElement>,
 }) => {
-    const { seekTo } = useContext(VideoPlayerContext);
+    const { seekTo, videoElement, activeChapters } = useContext(VideoPlayerContext);
+    const [progress, setProgress] = useState(0);
+
+    const chapterDuration = useMemo(() => {
+        let currentIndex = activeChapters.chapters.indexOf(chapter);
+        let nextChapter = activeChapters.chapters[currentIndex + 1];
+        let endTime = nextChapter?.time || videoElement.duration;
+        let chapterDuration = endTime - chapter.time;
+        return chapterDuration;
+    }, [chapter, isCurrent]);
+
+    const update = () => {
+        setProgress(videoElement.currentTime);
+    };
+
+    useEffect(() => {
+        if(!isCurrent) return;
+
+        videoElement.addEventListener("timeupdate", update);
+        return () => videoElement.removeEventListener("timeupdate", update);
+    }, [isCurrent]);
 
     return (
         <Paper
@@ -202,20 +223,40 @@ const ChapterButton = ({
             ref={xref}
             onClick={() => seekTo(chapter.time)}
         >
-            <Grid>
-                <Grid.Col span="content">
-                    <TimestampButton
-                        time={chapter.time}
-                        isActive={isCurrent}
-                        readonly
-                    />
-                </Grid.Col>
-                <Grid.Col span="auto">
-                    <Text>
-                        {chapter.label}
-                    </Text>
-                </Grid.Col>
-            </Grid>
+            <Stack>
+                <Grid>
+                    <Grid.Col span="content">
+                        <TimestampButton
+                            time={chapter.time}
+                            isActive={isCurrent}
+                            readonly
+                        />
+                    </Grid.Col>
+                    <Grid.Col span="auto">
+                        <Text>
+                            {chapter.label}
+                        </Text>
+                    </Grid.Col>
+                </Grid>
+                {isCurrent && (
+                    <div onClick={(e) => e.stopPropagation()}>
+                        <Slider
+                            min={chapter.time}
+                            max={chapter.time + chapterDuration}
+                            value={progress}
+                            onChange={(v) => seekTo(v)}
+                            label={secondsToTimestamp}
+                            color="violet"
+                            thumbSize={0}
+                            styles={{
+                                thumb: {
+                                    borderColor: "unset"
+                                }
+                            }}
+                        />
+                    </div>
+                )}
+            </Stack>
         </Paper>
     )
 };

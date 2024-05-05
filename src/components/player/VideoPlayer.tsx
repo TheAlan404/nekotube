@@ -37,7 +37,7 @@ export const VideoPlayer = () => {
 
     const hideCallback = useDebouncedCallback(() => {
         setShowControls(false);
-    }, 1000);
+    }, 2000);
 
     const shouldShowControls = (
         keepControlsShown

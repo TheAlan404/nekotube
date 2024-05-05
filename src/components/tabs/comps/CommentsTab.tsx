@@ -1,4 +1,4 @@
-import { Button, Checkbox, Group, Loader, ScrollArea, Space, Stack, Text } from "@mantine/core";
+import { Button, Checkbox, Group, Loader, Paper, ScrollArea, Space, Stack, Text } from "@mantine/core";
 import { useContext, useEffect, useMemo, useState } from "react";
 import { VideoPlayerContext } from "../../../api/context/VideoPlayerContext";
 import { HorizontalVideoCard } from "../../cards/VideoCard";
@@ -50,13 +50,15 @@ export const CommentsTab = () => {
     return (
         <ScrollArea w="100%" maw="100%" h="100%" type="scroll" scrollbars="y" offsetScrollbars>
             <Stack w="100%" p="xs">
-                <Group justify="space-between">
-                    <Text>
-                    </Text>
-                    <Text>
-                        Showing {comments.length} comments
-                    </Text>
-                </Group>
+                <Paper p="xs" withBorder w="100%" bg="dark.7" style={{ position: "sticky", top: "var(--mantine-spacing-sm)", zIndex: 30 }}>
+                    <Group justify="space-between">
+                        <Text>
+                        </Text>
+                        <Text>
+                            Showing {comments.length} comments
+                        </Text>
+                    </Group>
+                </Paper>
                 {list}
                 <ErrorMessage
                     error={error}

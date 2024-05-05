@@ -6,8 +6,10 @@ import { TabsContext } from "../../components/tabs/TabsContext";
 import { TabsRenderer } from "../../components/tabs/TabsRenderer";
 import { useFullscreen, useHotkeys, usePrevious } from "@mantine/hooks";
 import { usePreference } from "../../api/pref/Preferences";
+import { VideoPlayerContext } from "../../api/context/VideoPlayerContext";
 
 export const WatchPage = () => {
+    const { activeFormat } = useContext(VideoPlayerContext);
     const animate = usePreference("watchPageAnimations");
     const { isTabsVisible: sidebarOpen, setTabsVisible } = useContext(TabsContext);
     const { fullscreen, toggle: toggleFullscreen } = useFullscreen();
@@ -22,6 +24,7 @@ export const WatchPage = () => {
             theather={sidebarOpen}
             fullscreen={fullscreen}
             animate={animate}
+            aspect={activeFormat ? (activeFormat.width / activeFormat.height) : 16/9}
         />
     );
 };
@@ -30,18 +33,24 @@ const WatchPageLayout = ({
     theather,
     fullscreen,
     animate,
+    aspect,
 }: {
     theather: boolean;
     fullscreen: boolean;
     animate: boolean;
+    aspect?: number;
 }) => {
     const ref = useRef<HTMLDivElement>(null);
+    let rect = ref.current ? ref.current.getBoundingClientRect() : null;
+    // w/h = a , a*h = w
+    let nice = rect ? (aspect * rect.height) : null;
+
     const per = 0.65;
     const { position, separatorProps, setPosition } = useResizable({
         axis: "x",
-        min: ref.current ? (ref.current.getBoundingClientRect().width * 0.5) : undefined,
-        initial: ref.current ? (ref.current.getBoundingClientRect().width * per) : window.innerWidth * per,
-        max: ref.current ? (ref.current.getBoundingClientRect().width * 0.8) : undefined,
+        min: window.innerWidth * 0.4,
+        initial: nice || (window.innerWidth * per),
+        max: window.innerWidth * 0.8,
         containerRef: ref,
     });
     const prevOpen = usePrevious(theather) ?? theather;
@@ -49,8 +58,8 @@ const WatchPageLayout = ({
     const isOpening = !prevOpen && theather;
 
     useEffect(() => {
-        if(ref.current) setPosition(ref.current.getBoundingClientRect().width * per);
-    }, [ref.current]);
+        if(ref.current && aspect) setPosition(aspect * ref.current.getBoundingClientRect().height);
+    }, [ref.current, aspect]);
 
     const height = !theather && fullscreen ? (
         `calc(100vh)`
@@ -67,11 +76,9 @@ const WatchPageLayout = ({
                 <VideoPlayer />
             </Box>
             <Seperator
+                show={theather}
                 style={{
-                    width: theather ? "0.5em" : "0px",
                     transition: (animate && (isOpening || isClosing)) ? "0.5s" : undefined,
-                    marginLeft: theather ? "0.5em" : "0px",
-                    marginRight: theather ? "0.5em" : "0px",
                 }}
                 {...separatorProps}
             />
@@ -89,17 +96,23 @@ const WatchPageLayout = ({
     );
 };
 
-const Seperator = (props: SeparatorProps) => {
+const Seperator = (props: SeparatorProps & { show: boolean }) => {
     return (
         <Box
             h="100%"
-            bg="dark"
-            style={{
-                userSelect: "none",
-                width: "0.5em",
-                ...props.style,
-            }}
+            bg="dark.4"
+            className="hoverable"
             {...props}
+            style={{
+                ...props.style,
+                userSelect: "none",
+                cursor: "col-resize",
+                ...(props.show ? {
+                    marginLeft: "0.1em",
+                    marginRight: "0.1em",
+                    width: "0.5em",
+                } : {}),
+            }}
         />
     )
 }

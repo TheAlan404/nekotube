@@ -1,20 +1,27 @@
-import { Text, TextProps, Tooltip } from "@mantine/core";
+import { Stack, Text, TextProps, Tooltip } from "@mantine/core";
 import React from "react";
 import { useIsShortened } from "../../hooks/useIsShortened";
 
-export const TextWithTooltip = (props: TextProps & React.PropsWithChildren) => {
-    const { ref, isShortened } = useIsShortened();
+export const TextWithTooltip = (
+    props: TextProps & React.PropsWithChildren & { extra?: string }
+) => {
+    const { ref, isShortened } = useIsShortened<HTMLParagraphElement>();
     
     return (
         <Tooltip
-            label={props.children}
+            label={(
+                <Stack>
+                    {props.children}
+                    <br />
+                    {props.extra}
+                </Stack>
+            )}
             withArrow
-            disabled={!isShortened}
+            disabled={!props.extra && !isShortened}
             multiline
         >
             <Text
                 {...props}
-                // @ts-ignore
                 ref={ref}
             />
         </Tooltip>

@@ -41,7 +41,7 @@ export const PreferencesList = () => {
             />
             <Checkbox
                 label="Enable DeArrow"
-                description={"TODO"}
+                description={"Reduce clickbait by using crowdsourced titles and thumbnails"}
                 checked={pref.useDeArrow}
                 onChange={(e) => set({ useDeArrow: e.currentTarget.checked })}
             />

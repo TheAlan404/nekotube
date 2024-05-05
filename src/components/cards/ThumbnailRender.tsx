@@ -1,4 +1,4 @@
-import { AspectRatio, Box, Flex, Image, Text } from "@mantine/core";
+import { AspectRatio, Box, Flex, Image, Loader, Text } from "@mantine/core";
 import { Thumbnail } from "../../api/types/video";
 import { secondsToTimestamp } from "../../utils/timestamp";
 
@@ -6,10 +6,12 @@ export const ThumbnailRender = ({
     thumbnails,
     fallback,
     length,
+    loading,
 }: {
     thumbnails: Thumbnail[],
     fallback?: string,
     length?: number,
+    loading?: boolean,
 }) => {
     const scale = 0.5;
     return (
@@ -30,6 +32,9 @@ export const ThumbnailRender = ({
                     >
                         {secondsToTimestamp(length)}
                     </Text>
+                )}
+                {loading && (
+                    <Loader size="xs" />
                 )}
             </Flex>
         </AspectRatio>

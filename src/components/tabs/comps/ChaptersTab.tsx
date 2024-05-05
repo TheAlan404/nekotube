@@ -1,5 +1,5 @@
-import { Accordion, ActionIcon, Button, Grid, Group, Loader, Paper, ScrollArea, Slider, Space, Stack, Text, TextInput, Transition } from "@mantine/core";
-import { useContext, useEffect, useMemo, useState } from "react";
+import { Accordion, ActionIcon, Button, Grid, Group, Loader, Paper, ScrollArea, Slider, Space, Stack, Text, TextInput, Tooltip, Transition } from "@mantine/core";
+import { ForwardedRef, forwardRef, useContext, useEffect, useMemo, useState } from "react";
 import { VideoPlayerContext } from "../../../api/context/VideoPlayerContext";
 import { TimestampButton } from "../../ui/TimestampButton";
 import { useVideoEventListener } from "../../../hooks/useVideoEventListener";
@@ -37,22 +37,22 @@ export const ChaptersTab = () => {
 
     const allGroups = [...new Set(filteredChapters.map(c => c.group)).values()];
 
-    const isCurrentShown = group !== currentChapter?.group && filteredChapters.includes(currentChapter);
+    const isCurrentShown = (allGroups.length == 1 ? true : (group == currentChapter?.group)) && filteredChapters.includes(currentChapter);
 
     const createList = (chapters: Chapter[]) => {
         return chapters.map((chapter, i) => (
             <ChapterButton
                 key={i}
-                chapter={chapter}
+                ref={currentChapter == chapter ? targetRef : undefined}
                 isCurrent={currentChapter == chapter}
-                xref={currentChapter == chapter ? targetRef : undefined}
+                chapter={chapter}
             />
         ));
     };
 
     return (
         <ScrollArea w="100%" maw="100%" h="100%" offsetScrollbars viewportRef={containerRef}>
-            <Stack w="100%" p="xs">
+            <Stack w="100%">
                 {videoInfo ? (
                     <Stack w="100%">
                         <ShowCurrentChapterButton
@@ -62,50 +62,63 @@ export const ChaptersTab = () => {
                                 scrollIntoView({ alignment: "center" })
                             }}
                         />
+
                         {activeChapters.type == "video" && (
-                            <Group justify="center">
+                            <Group justify="center" p="xs">
                                 <Text>
                                     Showing chapters from video description
                                 </Text>
                             </Group>
                         )}
                         {activeChapters.type == "comment" && (
-                            <Group justify="space-between">
+                            <Group justify="space-between" p="xs">
                                 <Text>
                                     Showing chapters from a comment
                                 </Text>
-                                <Button
-                                    variant="light"
-                                    color="violet"
-                                    onClick={() => setActiveChapters("video")}
-                                    leftSection={<IconX />}
-                                >
-                                    Clear
-                                </Button>
-                            </Group>
-                        )}
-
-                        {false && activeChapters.chapters.length > 5 && (
-                            <TextInput
-                                label="Search chapters"
-                                placeholder={randArr(activeChapters.chapters).label + "..."}
-                                value={search}
-                                onChange={(e) => setSearch(e.currentTarget.value)}
-                                onKeyDown={keyboardSfx}
-                                rightSection={(search && (
+                                <Tooltip label="Clear">
                                     <ActionIcon
                                         variant="light"
-                                        color="gray"
-                                        onClick={() => setSearch("")}
+                                        color="violet"
+                                        onClick={() => setActiveChapters("video")}
                                     >
                                         <IconX />
                                     </ActionIcon>
-                                ))}
-                            />
+                                </Tooltip>
+                            </Group>
+                        )}
+
+                        {activeChapters.chapters.length > 5 && (
+                            <Paper
+                                bg="dark.7"
+                                shadow="md"
+                                withBorder
+                                p="xs"
+                                pos="sticky"
+                                style={{ top: "0px", zIndex: 30 }}
+                            >
+                                <Stack>
+                                    <TextInput
+                                        label="Search chapters"
+                                        placeholder={"meow..."}
+                                        value={search}
+                                        onChange={(e) => setSearch(e.currentTarget.value)}
+                                        onKeyDown={keyboardSfx}
+                                        rightSection={(search && (
+                                            <ActionIcon
+                                                variant="light"
+                                                color="gray"
+                                                onClick={() => setSearch("")}
+                                            >
+                                                <IconX />
+                                            </ActionIcon>
+                                        ))}
+                                    />
+                                </Stack>
+                            </Paper>
                         )}
 
                         {allGroups.length == 1 ? (
-                            <Stack>
+                            <Stack p="xs">
                                 {createList(filteredChapters)}
                             </Stack>
                         ) : (
@@ -119,7 +132,7 @@ export const ChaptersTab = () => {
                                             {group}
                                         </Accordion.Control>
                                         <Accordion.Panel>
-                                            <Stack>
+                                            <Stack p="xs">
                                                 {createList(filteredChapters.filter(c => c.group == group))}
                                             </Stack>
                                         </Accordion.Panel>
@@ -181,15 +194,15 @@ const ShowCurrentChapterButton = ({
     )
 }
 
-const ChapterButton = ({
+interface ChapterButtonProps {
+    chapter: Chapter;
+    isCurrent?: boolean;
+};
+
+const ChapterButton = forwardRef<HTMLDivElement, ChapterButtonProps>(({
     chapter,
     isCurrent,
-    xref,
-}: {
-    chapter: Chapter,
-    isCurrent?: boolean,
-    xref?: React.Ref<HTMLDivElement>,
-}) => {
+}, ref) => {
     const { seekTo, videoElement, activeChapters } = useContext(VideoPlayerContext);
     const [progress, setProgress] = useState(0);
 
@@ -206,7 +219,7 @@ const ChapterButton = ({
     };
 
     useEffect(() => {
-        if(!isCurrent) return;
+        if (!isCurrent) return;
 
         videoElement.addEventListener("timeupdate", update);
         return () => videoElement.removeEventListener("timeupdate", update);
@@ -220,7 +233,7 @@ const ChapterButton = ({
             style={{ cursor: "pointer" }}
             className="hoverable"
             bg={isCurrent ? "dark.5" : undefined}
-            ref={xref}
+            ref={ref}
             onClick={() => seekTo(chapter.time)}
         >
             <Stack>
@@ -259,4 +272,4 @@ const ChapterButton = ({
             </Stack>
         </Paper>
     )
-};
+});

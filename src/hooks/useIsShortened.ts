@@ -20,11 +20,11 @@ export const isEllipsisActive = (e: HTMLElement) => {
     }
 }
 
-export const isLineClampActive = (e: HTMLElement) => e.scrollHeight > e.clientHeight;
+export const isLineClampActive = <T extends HTMLElement>(e: T) => e.scrollHeight > e.clientHeight;
 
-export const useIsShortened = () => {
+export const useIsShortened = <T extends HTMLElement>() => {
     const [isShortened, setShortened] = useState(false);
-    const ref = useRef<HTMLElement>(null);
+    const ref = useRef<T>(null);
 
     useEffect(() => {
         if(ref.current) setShortened(isLineClampActive(ref.current));

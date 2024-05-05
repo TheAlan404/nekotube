@@ -1,5 +1,5 @@
 import { clamp } from "@mantine/hooks";
-import { Chapter } from "../../../api/types/video";
+import { Chapter } from "../../../api/types/chapter";
 import { Buffered } from "../../../utils/getBuffered";
 
 export interface Position {
@@ -15,7 +15,7 @@ export interface Segment {
 };
 
 export const calculateSegments = ({
-    chapters,
+    chapters: originalChapters,
     progress,
     duration,
     buffered,
@@ -25,6 +25,8 @@ export const calculateSegments = ({
     duration: number;
     buffered: Buffered[];
 }): Segment[] => {
+    let chapters = originalChapters.reduce((arr, c) => arr.some(x => x.time == c.time) ? arr : [...arr, c], []);
+
     // |  =======      ===      |
     // |      |.....|      |    |
     const getBufferedPositions = (startTime: number, endTime: number): Position[] => {
@@ -35,14 +37,13 @@ export const calculateSegments = ({
             if(startTime > buf.end) continue;
 
             // 0-aligned
-            let bufferStart = buf.start - startTime;
+            let bufferStart = Math.max(0, buf.start - startTime);
             let bufferEnd = Math.min(buf.end, endTime) - startTime;
 
-            let segmentDuration = endTime - startTime;
-
+            let chapterDuration = endTime - startTime;
             pos.push({
-                start: (bufferStart / segmentDuration) * 100,
-                end: (bufferEnd / segmentDuration) * 100,
+                start: (bufferStart / chapterDuration) * 100,
+                end: (bufferEnd / chapterDuration) * 100,
             });
         }
 

@@ -66,7 +66,9 @@ export const ProgressBar = () => {
 
     return (
         <Group align="center" w="100%">
-            <Group gap={2} wrap="nowrap" w="100%" h="0.4em" ref={ref}>
+            <Group wrap="nowrap" w="100%" h="0.4em" ref={ref} style={{
+                position: "relative"
+            }}>
                 {segments.map((segment, i) => (
                     <div
                         key={i}
@@ -76,22 +78,22 @@ export const ProgressBar = () => {
                             width: `${segment.position.end}%`,
                         }}
                     >
-                        <div
-                            className="progressbar-inner"
-                            style={{ width: segment.progress + "%" }}
-                            data-playing={segment.progress < 100}
-                            data-loading={playState == "loading"}
-                        />
                         {segment.buffered.map((buf, i) => (
                             <div
                                 className="progressbar-buffer"
                                 key={i}
                                 style={{
                                     left: buf.start + "%",
-                                    width: (buf.end - buf.start) + "%"
+                                    width: (buf.end - buf.start) + "%",
                                 }}
                             />
                         ))}
+                        <div
+                            className="progressbar-inner"
+                            style={{ width: segment.progress + "%" }}
+                            data-playing={segment.progress < 100}
+                            data-loading={playState == "loading"}
+                        />
                     </div>
                 ))}
 

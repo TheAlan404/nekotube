@@ -36,7 +36,7 @@ export const ChaptersTab = () => {
 
     const allGroups = [...new Set(filteredChapters.map(c => c.group)).values()];
 
-    const isCurrentShown = group == currentChapter?.group && filteredChapters.includes(currentChapter);
+    const isCurrentShown = group !== currentChapter?.group && filteredChapters.includes(currentChapter);
 
     const createList = (chapters: Chapter[]) => {
         return chapters.map((chapter, i) => (

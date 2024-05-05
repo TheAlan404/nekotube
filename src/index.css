@@ -9,17 +9,37 @@
     background-color: var(--mantine-color-dark-5) !important;
 }
 
+.progressbar-outer {
+    position: absolute;
+    overflow: hidden;
+    opacity: 0.7;
+    background-color: var(--mantine-color-dark-9);
+    transition: 0.1s;
+    clip-path: inset(0px 1px 0px 1px);
+}
+
 .progressbar-outer,
 .progressbar-inner,
 .progressbar-buffer {
     height: 100%;
 }
 
-.progressbar-outer {
-    overflow: hidden;
+.progressbar-outer:hover {
+    height: 150%;
+}
+
+.progressbar-inner,
+.progressbar-buffer {
+    position: absolute;
+}
+
+.progressbar-inner {
+    background-color: var(--mantine-color-violet-filled);
+}
+
+.progressbar-buffer {
+    background-color: var(--mantine-color-blue-light);
     opacity: 0.7;
-    background-color: var(--mantine-color-dark-9);
-    transition: 0.1s;
 }
 
 .progressbar-thumb {
@@ -30,19 +50,6 @@
     background-color: var(--mantine-color-violet-filled);
 }
 
-.progressbar-outer:hover {
-    height: 150%;
-}
-
-.progressbar-inner {
-    background-color: var(--mantine-color-violet-filled);
-}
-
-.progressbar-buffer {
-    background-color: var(--mantine-color-yellow-filled);
-    opacity: 0.7;
-}
-
 /* -- rounded corners -- */
 
 .progressbar-inner[data-playing="true"] {
@@ -50,12 +57,18 @@
     border-bottom-right-radius: var(--mantine-radius-md);
 }
 
+.progressbar-outer:only-of-type {
+    clip-path: inset(0px 0px 0px 0px);
+}
+
 .progressbar-outer:first-of-type {
+    clip-path: inset(0px 1px 0px 0px);
     border-top-left-radius: var(--mantine-radius-md);
     border-bottom-left-radius: var(--mantine-radius-md);
 }
 
 .progressbar-outer:last-of-type {
+    clip-path: inset(0px 0px 0px 1px);
     border-top-right-radius: var(--mantine-radius-md);
     border-bottom-right-radius: var(--mantine-radius-md);
 }

@@ -5,13 +5,8 @@ import './index.css'
 import '@mantine/core/styles.css';
 import '@mantine/notifications/styles.css';
 import '@mantine/nprogress/styles.css';
-import { APIControllerProvider } from "./api/context/APIController.tsx"
-import { VideoPlayerProvider } from "./api/context/VideoPlayerProvider.tsx"
-import { PreferencesProvider } from "./api/pref/Preferences.tsx"
 import { NavigationProgress } from "@mantine/nprogress"
 import { NekoTubeRouter } from "./site/NekoTubeRouter.tsx"
-import { OptionsProvider } from "./components/options/OptionsContext.tsx"
-import { TabsProvider } from "./components/tabs/TabsContext.tsx"
 
 const theme = createTheme({
     fontFamily: "Lexend-VariableFont",
@@ -44,16 +39,6 @@ const theme = createTheme({
 ReactDOM.createRoot(document.getElementById('root')!).render(
     <MantineProvider theme={theme} defaultColorScheme="dark">
         <NavigationProgress color="violet" />
-        <APIControllerProvider>
-            <PreferencesProvider>
-                <VideoPlayerProvider>
-                    <OptionsProvider>
-                        <TabsProvider>
-                            <NekoTubeRouter />
-                        </TabsProvider>
-                    </OptionsProvider>
-                </VideoPlayerProvider>
-            </PreferencesProvider>
-        </APIControllerProvider>
+        <NekoTubeRouter />
     </MantineProvider>,
 )

@@ -4,11 +4,32 @@ import { ErrorPage } from "./pages/ErrorPage";
 import { HomePage } from "./pages/HomePage";
 import { WatchPage } from "./pages/WatchPage";
 import { SearchPage } from "./pages/SearchPage";
+import { APIControllerProvider } from "../api/context/APIController";
+import { PreferencesProvider } from "../api/pref/Preferences";
+import { VideoPlayerProvider } from "../api/context/VideoPlayerProvider";
+import { OptionsProvider } from "../components/options/OptionsContext";
+import { TabsProvider } from "../components/tabs/TabsContext";
+
+const ContextStack = () => {
+    return (
+        <APIControllerProvider>
+            <PreferencesProvider>
+                <VideoPlayerProvider>
+                    <OptionsProvider>
+                        <TabsProvider>
+                            <Root />
+                        </TabsProvider>
+                    </OptionsProvider>
+                </VideoPlayerProvider>
+            </PreferencesProvider>
+        </APIControllerProvider>
+    )
+}
 
 const router = createBrowserRouter([
     {
         path: "/",
-        element: <Root />,
+        element: <ContextStack />,
         errorElement: <ErrorPage />,
         children: [
             {

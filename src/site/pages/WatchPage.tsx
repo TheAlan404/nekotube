@@ -96,7 +96,13 @@ const WatchPageLayout = ({
     );
 };
 
-const Seperator = (props: SeparatorProps & { show: boolean }) => {
+const Seperator = (allProps: SeparatorProps & { show: boolean }) => {
+    const {
+        show,
+        style,
+        ...props
+    } = allProps;
+
     return (
         <Box
             h="100%"
@@ -104,10 +110,10 @@ const Seperator = (props: SeparatorProps & { show: boolean }) => {
             className="hoverable"
             {...props}
             style={{
-                ...props.style,
+                ...style,
                 userSelect: "none",
                 cursor: "col-resize",
-                ...(props.show ? {
+                ...(show ? {
                     marginLeft: "0.1em",
                     marginRight: "0.1em",
                     width: "0.5em",

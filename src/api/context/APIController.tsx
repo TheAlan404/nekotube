@@ -2,7 +2,7 @@ import { createContext, useEffect, useMemo, useState } from "react";
 import { Instance } from "../types/instances";
 import { APIProvider } from "../types/api";
 import { LTAPIProvider } from "../platforms/lt/lighttube";
-import { fetchInvidiousPublicInstances, fetchLightTubePublicInstances } from "../platforms/public";
+import { fetchInvidiousPublicInstances, fetchLightTubePublicInstances, fetchPoketubePublicInstances } from "../platforms/public";
 import { InvidiousAPIProvider } from "../platforms/invid/invidious";
 import { useLocalStorage } from "@mantine/hooks";
 import { DislikeAPI } from "../platforms/ryd/dislikeapi";
@@ -78,6 +78,7 @@ export const APIControllerProvider = ({ children }: React.PropsWithChildren) => 
         setAvailableInstances([
             ...await fetchLightTubePublicInstances(),
             ...await fetchInvidiousPublicInstances(),
+            ...await fetchPoketubePublicInstances(),
             ...CUSTOM_INSTANCES,
         ]);
         setIsRefreshing(false);

@@ -98,7 +98,6 @@ export const OptionsInstanceView = () => {
                             value={type}
                             key={i}
                         >
-
                             <InstanceSearch
                                 search={search}
                                 setSearch={setSearch}

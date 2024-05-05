@@ -89,7 +89,7 @@ export const TabsRenderer = () => {
                             value,
                             icon,
                         }, i) => (
-                            <Tooltip label={title} withArrow>
+                            <Tooltip label={title} withArrow key={i}>
                                 <Tabs.Tab value={value}>
                                     {icon}
                                 </Tabs.Tab>

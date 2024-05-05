@@ -1,3 +1,4 @@
+import { getRegionFromEmoji } from "../../utils/flagEmoji";
 import { Instance } from "../types/instances";
 
 // --- lighttube ---
@@ -92,5 +93,6 @@ export const fetchPoketubePublicInstances = async () => {
             name,
             supportsProxy: i.proxy,
             notes: i.CLOUDFLARE ? "cloudflare" : "",
+            region: getRegionFromEmoji(i.region),
         } as Instance));
 };

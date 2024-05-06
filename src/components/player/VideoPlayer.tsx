@@ -39,6 +39,11 @@ export const VideoPlayer = () => {
         setShowControls(false);
     }, 2000);
 
+    useEffect(() => {
+        setShowControls(true);
+        hideCallback();
+    }, [playState]);
+
     const shouldShowControls = (
         keepControlsShown
         || showControls

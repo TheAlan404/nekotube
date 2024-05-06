@@ -1,31 +1,47 @@
 import { Chapter } from "../api/types/chapter";
 import { cleanDescription } from "./cleanDescription";
-import { timestampToSeconds } from "./timestamp";
 
 const trimChapterName = (s: string) => s.trim().startsWith("-") ? s.trim().replace("-", "").trim() : s.trim();
 
-export const TimestampRegex = /([0-9]{1,2}:)?[0-9]{1,2}:[0-9]{1,2}/g;
-
 export const parseChapters = (description: string): Chapter[] => {
-    let text = cleanDescription(description);
-    let lines = text.split("\n");
+    let parts = cleanDescription(description);
     let chapters: Chapter[] = [];
-    let group = "";
 
-    for(let line of lines) {
-        if(!line) continue;
-        let matches = line.match(TimestampRegex);
-        if(!matches) {
-            group = line;
+    let group = "";
+    let time = null;
+    let label = "";
+    const flush = () => {
+        if(time === null && label) {
+            group = label;
+        }
+
+        if(time !== null && label) chapters.push({
+            time,
+            label: trimChapterName(label),
+            group,
+        });
+
+        label = "";
+        time = null;
+    };
+
+    for(let part of parts) {
+        if(part.type == "newline") {
+            flush();
             continue;
         };
 
-        chapters.push({
-            time: timestampToSeconds(matches[0]),
-            label: trimChapterName(line.replace(TimestampRegex, "")),
-            group,
-        });
-    };
+        if(part.type == "text") label += part.data;
+        if(part.type == "link") label += part.href;
+
+        if(part.type == "timestamp") {
+            time = part.time;
+        }
+    }
+
+    flush();
+
+    console.log("Parsed chapters", chapters);
 
     let sorted = chapters.sort((a, b) => a.time - b.time);
     return sorted;

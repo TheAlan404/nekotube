@@ -15,3 +15,5 @@ export const timestampToSeconds = (ts: string) => {
     acc += (list[3] || 0) * 60 * 60 * 24;
     return acc;
 };
+
+export const TimestampRegex = /([0-9]{1,2}:)?[0-9]{1,2}:[0-9]{1,2}/;

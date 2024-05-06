@@ -2,6 +2,53 @@ import { Accordion, Button, Group, List, Space, Stack, Text, Title } from "@mant
 import { ChangeInstanceButton } from "../../components/options/links/ChangeInstanceButton";
 import { IconExternalLink } from "@tabler/icons-react";
 
+const CHANGELOGS = `
+0.1.2
+- DeArrow support
+- SearchBar shortcuts for video IDs and URLs
+- Implemented the "Open With" section
+- Added PokeTube public instances listing
+- Aspect ratio is now automatic
+- Chapters now can be grouped
+- Current chapter now has a progress bar on the chapters tab
+- Improved tabs performance
+- Improved progress bar performance
+
+
+0.1.1
+- Added WatchPage animations
+- Added changelogs and improved homepage
+- Chapters based on comments
+- Comments copy button
+- Jump to current chapter button
+- New cool font "borrowed" from Sharkey
+`
+    .split("\n")
+    .map(x => x.trim())
+    .filter(x => x)
+    .reduce<{ version: string; items: string[]; }[]>((prev, cur) => {
+        if(cur.startsWith("-")) {
+            return [
+                ...prev.filter((v, i, a) => i !== a.length - 1),
+                {
+                    version: prev[prev.length - 1].version,
+                    items: [
+                        ...prev[prev.length - 1].items,
+                        cur.replace("-", "").trim(),
+                    ],
+                }
+            ]
+        } else {
+            return [
+                ...prev,
+                {
+                    version: cur,
+                    items: [],
+                }
+            ]
+        }
+    }, []);
+
 export const HomePage = () => {
     return (
         <Stack align="center" w="100%" h="100%" justify="center">
@@ -56,17 +103,18 @@ export const HomePage = () => {
                         </Accordion.Control>
                         <Accordion.Panel>
                             <List>
-                                <List.Item>
-                                    0.1.1
-                                    <List withPadding>
-                                        <List.Item>Added WatchPage animations</List.Item>
-                                        <List.Item>Added changelogs and improved homepage</List.Item>
-                                        <List.Item>Chapters based on comments</List.Item>
-                                        <List.Item>Comments copy button</List.Item>
-                                        <List.Item>Jump to current chapter button</List.Item>
-                                        <List.Item>New cool font "borrowed" from Sharkey</List.Item>
-                                    </List>
-                                </List.Item>
+                                {CHANGELOGS.map((ver, i) => (
+                                    <List.Item key={i}>
+                                        {ver.version}
+                                        <List withPadding>
+                                            {ver.items.map((item, i) => (
+                                                <List.Item key={i}>
+                                                    {item}
+                                                </List.Item>
+                                            ))}
+                                        </List>
+                                    </List.Item>
+                                ))}
                             </List>
                         </Accordion.Panel>
                     </Accordion.Item>

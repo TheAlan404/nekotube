@@ -1,39 +1,8 @@
-import { Box, Text, TypographyStylesProvider } from "@mantine/core";
+import { Box, Text } from "@mantine/core";
 import { useMemo } from "react";
 import { TimestampButton } from "./TimestampButton";
-import { timestampToSeconds } from "../../utils/timestamp";
 import { cleanDescription } from "../../utils/cleanDescription";
-import { TimestampRegex } from "../../utils/parseChapters";
-
-const regex = new RegExp("(" + [
-    "\n",
-    "<b>.+<\/b>",
-    "[0-9]{1,2}:[0-9]{1,2}:[0-9]{1,2}",
-    "[0-9]{1,2}:[0-9]{1,2}",
-].join("|") + ")");
-
-const boldRegex = /(<b>)(.+)(<\/b>)/g;
-
-const parts = {
-    newLine: () => (
-        <br />
-    ),
-    text: (v) => (
-        <Text span>
-            {v}
-        </Text>
-    ),
-    bold: (v) => (
-        <Text span fw="bold">
-            {v}
-        </Text>
-    ),
-    timestamp: (v) => (
-        <TimestampButton
-            time={timestampToSeconds(v)}
-        />
-    ),
-};
+import { ExternalLink } from "./ExternalLink";
 
 export const MarkdownText = ({
     text,
@@ -41,18 +10,36 @@ export const MarkdownText = ({
     text: string;
 }) => {
     let elements = useMemo(() => {
-        let clean = cleanDescription(text);
+        let parts = cleanDescription(text);
 
-        let list = clean.split(regex);
+        return parts
+            .map(part => {
+                if(part.type == "newline") return (
+                    <br />
+                );
 
-        return list
-            .filter(x => x)
-            .map(item => {
-                if(item == "\n") return parts.newLine();
-                if(TimestampRegex.test(item)) return parts.timestamp(item);
-                if(boldRegex.test(item)) return parts.bold(item);
+                if(part.type == "timestamp") return (
+                    <TimestampButton
+                        time={part.time}
+                    />
+                );
 
-                return parts.text(item);
+                if(part.type == "link") return (
+                    <ExternalLink
+                        link={part.href}
+                        text={part.href}
+                    />
+                );
+
+                return (
+                    <Text
+                        span
+                        fw={part.bold ? "bold" : undefined}
+                        fz="sm"
+                    >
+                        {part.data}
+                    </Text>
+                );
             });
     }, [text]);
 

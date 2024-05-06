@@ -41,9 +41,7 @@ const WatchPageLayout = ({
     aspect?: number;
 }) => {
     const ref = useRef<HTMLDivElement>(null);
-    let rect = ref.current ? ref.current.getBoundingClientRect() : null;
-    // w/h = a , a*h = w
-    let nice = rect ? (aspect * rect.height) : null;
+    let nice = ref.current ? (aspect * ref.current.getBoundingClientRect().height) : null;
 
     const per = 0.65;
     const { position, separatorProps, setPosition } = useResizable({

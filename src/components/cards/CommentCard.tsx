@@ -1,14 +1,15 @@
-import { ActionIcon, CopyButton, Grid, Group, Paper, Stack, Tooltip } from "@mantine/core";
+import { ActionIcon, Box, CopyButton, Grid, Group, Paper, Stack, Tooltip } from "@mantine/core";
 import { Comment } from "../../api/types/comment";
 import { MarkdownText } from "../ui/MarkdownText";
 import { ChannelCard } from "./ChannelCard";
 import { VotingCard } from "./VotingCard";
 import { IconCopy, IconPencil, IconPinned, IconTableImport, IconTableOff } from "@tabler/icons-react";
-import { parseChapters, TimestampRegex } from "../../utils/parseChapters";
+import { parseChapters } from "../../utils/parseChapters";
 import { useContext } from "react";
 import { VideoPlayerContext } from "../../api/context/VideoPlayerContext";
-import { cleanDescription } from "../../utils/cleanDescription";
+import { cleanDescription, textPartsToString } from "../../utils/cleanDescription";
 import { DateCard } from "./DateCard";
+import { TimestampRegex } from "../../utils/timestamp";
 
 export const CommentCard = ({
     comment
@@ -47,9 +48,11 @@ export const CommentCard = ({
                         )}
                     </Group>
                 </Group>
-                <MarkdownText
-                    text={comment.content}
-                />
+                <Box fz="sm">
+                    <MarkdownText
+                        text={comment.content}
+                    />
+                </Box>
                 <Group justify="space-between">
                     <Group>
                         <VotingCard
@@ -76,7 +79,7 @@ export const CommentCard = ({
                                 </ActionIcon>
                             </Tooltip>
                         )}
-                        <CopyButton value={cleanDescription(comment.content)}>
+                        <CopyButton value={textPartsToString(cleanDescription(comment.content))}>
                             {({ copied, copy }) => (
                                 <Tooltip label={copied ? "Copied!" : "Copy contents"}>
                                     <ActionIcon

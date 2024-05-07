@@ -14,6 +14,7 @@ export const VideoPlayerProvider = ({
 }: React.PropsWithChildren) => {
     const videoElement = useMemo(() => {
         let el = document.createElement("video");
+        el.autoplay = true;
         el.style.width = "100%";
         el.style.height = "100%";
         return el;
@@ -155,7 +156,7 @@ export const VideoPlayerProvider = ({
     useEffect(() => {
         console.log("Setting URL to", activeFormat?.url);
         let t = videoElement.currentTime;
-        if(videoElement.src != activeFormat?.url) videoElement.src = activeFormat?.url;
+        if(videoElement.src != (activeFormat?.url || "_")) videoElement.src = (activeFormat?.url || "_");
         videoElement.currentTime = t;
     }, [activeFormat]);
 
@@ -179,14 +180,11 @@ export const VideoPlayerProvider = ({
     });
 
     useVideoEventListener(videoElement, "loadeddata", () => {
-        videoElement.play()
-            .catch(e => {
-                setPlayState("paused");
-            })
+        
     });
 
     useVideoEventListener(videoElement, "error", (e) => {
-        if(!videoElement.src || videoElement.src.endsWith("/undefined")) return;
+        if(!videoElement.src || videoElement.src.endsWith("/_")) return;
         setPlayState("error");
         console.log(e.error);
         console.log(videoElement.error);

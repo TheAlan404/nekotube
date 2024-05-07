@@ -87,6 +87,13 @@ export const cleanDescription = (text = "") => {
                             href.replace("/watch?v=", "").split("&t=")[1]
                         ) || null,
                     });
+                } else if(href.startsWith("/shorts")) {
+
+                } else if(href.startsWith("/post/")) {
+                    /* parts.push({
+                        type: "post",
+                        data: href.split("/")[2],
+                    }) */
                 } else {
                     parts.push({
                         type: "link",

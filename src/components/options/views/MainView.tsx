@@ -5,7 +5,7 @@ import { InstanceSelect } from "../comps/InstanceSelect";
 import { FormatSelect } from "../comps/FormatSelect";
 import { PlaybackSpeed } from "../comps/PlaybackSpeed";
 import { PreferencesList } from "../comps/PreferencesList";
-import { RefetchInfo } from "../comps/RefetchInfo";
+import { DebuggingSection } from "../comps/DebuggingSection";
 import { OpenWithButton } from "../links/OpenWithButton";
 import { LoopVideo } from "../comps/LoopVideo";
 
@@ -31,7 +31,7 @@ export const OptionsMainView = () => {
                     <Divider w="100%" label="Preferences" labelPosition="left" />
                     <PreferencesList />
                     <Divider w="100%" label="Debugging" labelPosition="left" />
-                    <RefetchInfo />
+                    <DebuggingSection />
                     <Space h="20vh" />
                 </Stack>
             </Grid.Col>

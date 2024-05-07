@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { PlayState, VideoPlayerContext } from "./VideoPlayerContext";
 import { APIContext } from "../provider/APIController";
 import { VideoData } from "../types/video";
@@ -39,6 +39,7 @@ export const VideoPlayerProvider = ({
     const [volume, setVolume] = useState(JSON.parse(localStorage.getItem("nekotube:volume") ?? "1"));
     const [muted, setMuted] = useState(false);
     const [autoplayDate, setAutoplayDate] = useState<Date | null>(null);
+    const autoplayRef = useRef<number>();
 
     useEffect(() => {
         return () => {
@@ -80,13 +81,15 @@ export const VideoPlayerProvider = ({
                 null
             );
 
-            setVideoInfo({
+            info = {
                 ...info,
                 dislikeCount: dislikesResponse?.dislikes,
                 published: info.published || dislikesResponse?.dateCreated ? (
                     new Date(dislikesResponse?.dateCreated)
                 ) : null,
-            });
+            };
+
+            setVideoInfo(info);
 
             console.log("Fetched VideoData", info);
 
@@ -95,7 +98,6 @@ export const VideoPlayerProvider = ({
                 type: "video",
                 chapters,
             });
-            console.log("Chapters from description:", chapters);
 
             if(info.formats.length) {
                 setAvailableFormats(info.formats);
@@ -108,12 +110,43 @@ export const VideoPlayerProvider = ({
             } else {
                 setError(new Error(`No available formats found :(`));
             }
+
+            navigator.mediaSession.metadata = new MediaMetadata({
+                title: info.title,
+                artist: info.channel.title,
+                album: "NekoTube",
+                artwork: info.thumbnails.map(({ width, height, url }) => ({
+                    src: url,
+                    sizes: `${width}x${height}`,
+                })),
+            });
         } catch(e) {
             console.log(e);
             setError(e);
             setPlayState("error");
         }
     };
+
+    const seekTo = (ts: number) => {
+        videoElement.currentTime = clamp(0, ts, videoElement.duration);
+    };
+
+    const seekToChapterOffset = (offset: number = 0) => {
+        let currentChapterIndex = activeChapters.chapters.findIndex(c => c.time > videoElement.currentTime) - 1;
+        let currentChapter = activeChapters.chapters[currentChapterIndex];
+        if(!currentChapter) {
+            if(offset == 1) videoElement.fastSeek(videoElement.duration);
+            return;
+        }
+        let chapterProgress = videoElement.currentTime - currentChapter.time;
+        let targetIndex = currentChapterIndex + offset;
+        if(offset == -1) {
+            if(chapterProgress > 3) targetIndex++;
+        }
+        let target = activeChapters.chapters[targetIndex];
+        
+        videoElement.fastSeek(clamp(0, target?.time || 0, videoElement.duration));
+    }
 
     useEffect(() => {
         fetchVideoInfo();
@@ -127,7 +160,22 @@ export const VideoPlayerProvider = ({
     }, [activeFormat]);
 
     useVideoEventListener(videoElement, "ended", () => {
-        setAutoplayDate(new Date(Date.now() + 10 * 1000));
+        if(!pref.autoplay) return;
+
+        let waitDuration = 10 * 1000;
+        console.log("Will autoplay in", waitDuration);
+        setAutoplayDate(new Date(Date.now() + waitDuration));
+        clearTimeout(autoplayRef.current);
+        autoplayRef.current = setTimeout(() => {
+            setAutoplayDate(null);
+            clearTimeout(autoplayRef.current);
+
+            // #MARKER
+            let id = videoInfo.recommended[0]?.id;
+            if(!id) return;
+
+            setVideoID(id);
+        }, waitDuration);
     });
 
     useVideoEventListener(videoElement, "loadeddata", () => {
@@ -150,26 +198,27 @@ export const VideoPlayerProvider = ({
         setPlayState("playing");
     });
 
-    const seekTo = (ts: number) => {
-        videoElement.currentTime = clamp(0, ts, videoElement.duration);
-    };
+    useVideoEventListener(videoElement, "timeupdate", () => {
+        navigator.mediaSession.setPositionState({
+            duration: videoElement.duration,
+            playbackRate: videoElement.playbackRate,
+            position: videoElement.currentTime,
+        });
+    });
 
-    const seekToChapterOffset = (offset: number = 0) => {
-        let currentChapterIndex = activeChapters.chapters.findIndex(c => c.time > videoElement.currentTime) - 1;
-        let currentChapter = activeChapters.chapters[currentChapterIndex];
-        if(!currentChapter) {
-            if(offset == 1) videoElement.fastSeek(videoElement.duration);
-            return;
-        }
-        let chapterProgress = videoElement.currentTime - currentChapter.time;
-        let targetIndex = currentChapterIndex + offset;
-        if(offset == -1) {
-            if(chapterProgress > 3) targetIndex++;
-        }
-        let target = activeChapters.chapters[targetIndex];
-        
-        videoElement.fastSeek(clamp(0, target?.time || 0, videoElement.duration));
-    }
+    useEffect(() => {
+        navigator.mediaSession.setActionHandler("play", () => videoElement.play());
+        navigator.mediaSession.setActionHandler("pause", () => videoElement.pause());
+        navigator.mediaSession.setActionHandler("seekto", (details) => {
+            if(details.fastSeek) {
+                videoElement.fastSeek(details.seekTime);
+            } else {
+                seekTo(details.seekTime);
+            }
+        });
+        navigator.mediaSession.setActionHandler("seekbackward", (details) => seekTo(videoElement.currentTime - (details.seekOffset || 10)));
+        navigator.mediaSession.setActionHandler("seekforward", (details) => seekTo(videoElement.currentTime + (details.seekOffset || 10)));
+    }, []);
 
     return (
         <VideoPlayerContext.Provider value={{
@@ -229,6 +278,7 @@ export const VideoPlayerProvider = ({
 
             autoplayDate,
             cancelAutoplay: () => {
+                clearTimeout(autoplayRef.current);
                 setAutoplayDate(null);
             },
         }}>

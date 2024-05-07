@@ -2,8 +2,10 @@ import { Checkbox, Group, Loader, Paper, ScrollArea, Space, Stack, Text } from "
 import React, { useContext, useMemo } from "react";
 import { VideoPlayerContext } from "../../../api/player/VideoPlayerContext";
 import { HorizontalVideoCard } from "../../cards/VideoCard";
+import { PreferencesContext } from "../../../api/pref/Preferences";
 
 export const RecommendedTab = () => {
+    const { pref, set } = useContext(PreferencesContext);
     const { videoInfo } = useContext(VideoPlayerContext);
 
     const list = useMemo(() => {
@@ -24,6 +26,8 @@ export const RecommendedTab = () => {
                             <Group w="100%" justify="space-between">
                                 <Checkbox
                                     label="Autoplay"
+                                    checked={pref.autoplay}
+                                    onChange={(e) => set({ autoplay: e.currentTarget.checked })}
                                 />
                                 <Text ta="end">
                                     {videoInfo.recommended.length} recommended videos

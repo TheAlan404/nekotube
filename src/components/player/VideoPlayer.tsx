@@ -8,7 +8,16 @@ import { LayoutMiddle } from "./layout/LayoutMiddle";
 import { LayoutBottom } from "./layout/LayoutBottom";
 
 export const VideoPlayer = () => {
-    const { videoElement, seekToChapterOffset, seekTo, togglePlay, playState, muted, setMuted } = useContext(VideoPlayerContext);
+    const {
+        videoElement,
+        seekToChapterOffset,
+        seekTo,
+        togglePlay,
+        playState,
+        muted,
+        setMuted,
+        autoplayDate,
+    } = useContext(VideoPlayerContext);
     const containerRef = useRef<HTMLDivElement>(null);
     const videoContainerRef = useRef<HTMLDivElement>(null);
     const keepControlsShown = usePreference("keepControlsShown");
@@ -48,6 +57,7 @@ export const VideoPlayer = () => {
         keepControlsShown
         || showControls
         || hovered
+        || !!autoplayDate
         || (playState == "error")
         || (playState == "loading")
     );

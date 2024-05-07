@@ -11,9 +11,19 @@ export type TextPart = {
     type: "timestamp";
     time: number;
 } | {
-    type: "link",
+    type: "link";
     href: string;
-}
+} | {
+    type: "channel";
+    id: string;
+} | {
+    type: "hashtag";
+    data: string;
+} | {
+    type: "videoLink";
+    id: string;
+    time?: number;
+};
 
 export const cleanDescription = (text = "") => {
     let parser = new DOMParser();
@@ -46,16 +56,41 @@ export const cleanDescription = (text = "") => {
         } else if(node.nodeType == Node.ELEMENT_NODE) {
             if(node.nodeName == "A") {
                 let el = node as HTMLAnchorElement;
-                let isTimestamp = TimestampRegex.test(el.textContent);
-                if(isTimestamp) {
+
+                let href = el.getAttribute("href");
+                
+                if(TimestampRegex.test(el.textContent)) {
                     parts.push({
                         type: "timestamp",
                         time: timestampToSeconds(el.textContent),
                     })
+                } else if (href.startsWith("/channel/")) {
+                    parts.push({
+                        type: "channel",
+                        id: href.split("/")[2],
+                    })
+                } else if(href.startsWith("/@")) {
+                    parts.push({
+                        type: "channel",
+                        id: href.split("/")[1],
+                    })
+                } else if(href.startsWith("/hashtag/")) {
+                    parts.push({
+                        type: "hashtag",
+                        data: href.split("/")[2],
+                    })
+                } else if(href.startsWith("/watch")) {
+                    parts.push({
+                        type: "videoLink",
+                        id: href.replace("/watch?v=", "").split("&t=")[0],
+                        time: Number(
+                            href.replace("/watch?v=", "").split("&t=")[1]
+                        ) || null,
+                    });
                 } else {
                     parts.push({
                         type: "link",
-                        href: el.href,
+                        href: href,
                     })
                 }
             } else if(node.nodeName == "B") {

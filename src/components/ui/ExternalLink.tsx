@@ -3,10 +3,8 @@ import { IconExternalLink } from "@tabler/icons-react";
 
 export const ExternalLink = ({
     link,
-    text,
 }: {
     link: string;
-    text: string;
 }) => (
     <Button
         variant="light"
@@ -17,6 +15,6 @@ export const ExternalLink = ({
         href={link}
         target="_blank"
     >
-        {text}
+        {new URL(link).host}
     </Button>
 );

@@ -36,6 +36,7 @@ export const TabsRenderer = () => {
                     panel: {
                         flexGrow: 1,
                         height,
+                        width: "100%",
                     },
                 }}
             >

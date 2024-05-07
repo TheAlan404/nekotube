@@ -1,4 +1,4 @@
-import { Box, Text } from "@mantine/core";
+import { Box, Button, Text } from "@mantine/core";
 import { useMemo } from "react";
 import { TimestampButton } from "./TimestampButton";
 import { cleanDescription } from "../../utils/cleanDescription";
@@ -27,8 +27,33 @@ export const MarkdownText = ({
                 if(part.type == "link") return (
                     <ExternalLink
                         link={part.href}
-                        text={part.href}
                     />
+                );
+
+                if(part.type == "hashtag") return (
+                    <Text c="blue">
+                        #{part.data}
+                    </Text>
+                );
+
+                if(part.type == "channel") return (
+                    <Button
+                        color="dark"
+                        variant="light"
+                        size="compact-sm"
+                    >
+                        {part.id}
+                    </Button>
+                );
+
+                if(part.type == "videoLink") return (
+                    <Button
+                        color="dark"
+                        variant="light"
+                        size="compact-sm"
+                    >
+                        {part.id}
+                    </Button>
                 );
 
                 return (
@@ -44,7 +69,7 @@ export const MarkdownText = ({
     }, [text]);
 
     return (
-        <Box>
+        <Box w="100%">
             {elements.map((el, i) => (
                 <span key={i}>
                     {el}

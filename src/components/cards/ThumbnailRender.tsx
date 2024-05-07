@@ -15,17 +15,12 @@ export const ThumbnailRender = ({
 }) => {
     const scale = 0.5;
     return (
-        <AspectRatio ratio={16/9} w={(16 * scale) + "em"} h={(9 * scale) + "em"}>
-            <Image
-                src={thumbnails[thumbnails.length-1]?.url}
-                fallbackSrc={fallback}
-                loading="lazy"
-            />
-            <Flex w="100%" h="100%" align="end" justify="end">
+        <AspectRatio ratio={16/9} w={(16 * scale) + "em"} h={(9 * scale) + "em"} pos="relative">
+            <Flex w="100%" h="100%" align="end" justify="end" pos="absolute">
                 {length && (
                     <Text
                         bg="dark"
-                        style={{ borderRadius: "var(--mantine-radius-sm)" }}
+                        style={{ borderRadius: "var(--mantine-radius-sm)", zIndex: "5" }}
                         px={2}
                         fz="xs"
                         m={2}
@@ -37,6 +32,11 @@ export const ThumbnailRender = ({
                     <Loader size="xs" />
                 )}
             </Flex>
+            <Image
+                src={thumbnails[thumbnails.length-1]?.url}
+                fallbackSrc={fallback}
+                loading="lazy"
+            />
         </AspectRatio>
     );
 };

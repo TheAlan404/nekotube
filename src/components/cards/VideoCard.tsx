@@ -8,7 +8,7 @@ import { DateCard } from "./DateCard";
 import { ViewCountCard } from "./ViewCountCard";
 import { useContext, useEffect, useState } from "react";
 import { usePreference } from "../../api/pref/Preferences";
-import { APIContext } from "../../api/context/APIController";
+import { APIContext } from "../../api/provider/APIController";
 
 export const HorizontalVideoCard = ({
     video: originalVideo,

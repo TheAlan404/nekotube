@@ -1,5 +1,5 @@
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
-import { VideoPlayerContext } from "../../../api/context/VideoPlayerContext";
+import { VideoPlayerContext } from "../../../api/player/VideoPlayerContext";
 import { useVideoEventListener } from "../../../hooks/useVideoEventListener";
 import { Group } from "@mantine/core";
 import { calculateSegments, Segment } from "./segments";

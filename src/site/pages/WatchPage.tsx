@@ -6,7 +6,7 @@ import { TabsContext } from "../../components/tabs/TabsContext";
 import { TabsRenderer } from "../../components/tabs/TabsRenderer";
 import { useFullscreen, useHotkeys, usePrevious } from "@mantine/hooks";
 import { usePreference } from "../../api/pref/Preferences";
-import { VideoPlayerContext } from "../../api/context/VideoPlayerContext";
+import { VideoPlayerContext } from "../../api/player/VideoPlayerContext";
 
 export const WatchPage = () => {
     const { activeFormat } = useContext(VideoPlayerContext);

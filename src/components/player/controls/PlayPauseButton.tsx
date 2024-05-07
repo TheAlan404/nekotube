@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { VideoPlayerContext } from "../../../api/context/VideoPlayerContext";
+import { VideoPlayerContext } from "../../../api/player/VideoPlayerContext";
 import { ActionIcon, Tooltip } from "@mantine/core";
 import { IconPlayerPlay, IconPlayerPause } from "@tabler/icons-react";
 

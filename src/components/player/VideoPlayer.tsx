@@ -1,5 +1,5 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import { VideoPlayerContext } from "../../api/context/VideoPlayerContext"
+import { VideoPlayerContext } from "../../api/player/VideoPlayerContext"
 import { Box, Stack, Transition } from "@mantine/core";
 import { useDebouncedCallback, useHotkeys, useHover, useMergedRef } from "@mantine/hooks";
 import { usePreference } from "../../api/pref/Preferences";

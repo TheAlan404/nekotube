@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { VideoPlayerContext } from "../../../api/context/VideoPlayerContext";
+import { VideoPlayerContext } from "../../../api/player/VideoPlayerContext";
 import { Checkbox, Group } from "@mantine/core";
 
 export const LoopVideo = () => {

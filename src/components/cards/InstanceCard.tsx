@@ -2,7 +2,7 @@ import { ActionIcon, Checkbox, CheckIcon, Code, Grid, Group, Paper, Stack, Text,
 import { Instance } from "../../api/types/instances";
 import { IconCheck, IconStar, IconStarFilled, IconWorldCheck, IconWorldX } from "@tabler/icons-react";
 import { useContext } from "react";
-import { APIContext } from "../../api/context/APIController";
+import { APIContext } from "../../api/provider/APIController";
 import { getFlagEmoji } from "../../utils/flagEmoji";
 
 export const InstanceCard = ({

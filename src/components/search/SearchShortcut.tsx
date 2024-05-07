@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { APIContext } from "../../api/context/APIController";
+import { APIContext } from "../../api/provider/APIController";
 import { HorizontalVideoCard } from "../cards/VideoCard";
 import { isVideoID, VideoIDLength } from "../../utils/ids";
 import { Loader, Stack, Text } from "@mantine/core";

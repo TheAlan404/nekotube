@@ -1,7 +1,7 @@
 import { Button, Loader, Stack, Text } from "@mantine/core";
 import { useContext, useEffect, useState } from "react";
 import { Renderer } from "../../api/types/video";
-import { APIContext } from "../../api/context/APIController";
+import { APIContext } from "../../api/provider/APIController";
 import { useSearchParams } from "react-router-dom";
 import { HorizontalVideoCard } from "../../components/cards/VideoCard";
 import { ErrorMessage } from "../../components/ui/ErrorMessage";

@@ -5,7 +5,7 @@ import { useContext, useEffect } from "react";
 import { Link, Outlet, useLocation, useNavigation, useSearchParams } from "react-router-dom";
 import { OptionsButton } from "../components/options/links/OptionsButton";
 import { SearchBar } from "../components/search/SearchBar";
-import { VideoPlayerContext } from "../api/context/VideoPlayerContext";
+import { VideoPlayerContext } from "../api/player/VideoPlayerContext";
 import { useDocumentTitle, useFullscreen } from "@mantine/hooks";
 import { TabsContext } from "../components/tabs/TabsContext";
 

@@ -1,6 +1,6 @@
 import { ActionIcon, Box, Button, Combobox, Grid, Group, Loader, Stack, Text, TextInput, useCombobox } from "@mantine/core";
 import { useContext, useEffect, useRef, useState } from "react";
-import { APIContext } from "../../api/context/APIController";
+import { APIContext } from "../../api/provider/APIController";
 import { IconAlertTriangle, IconSearch } from "@tabler/icons-react";
 import { useLocation, useNavigate, useNavigation, useSearchParams } from "react-router-dom";
 import { useKeyboardSfx } from "../../hooks/useSoundEffect";

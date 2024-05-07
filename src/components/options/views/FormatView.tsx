@@ -2,7 +2,7 @@ import { useContext, useState } from "react";
 import { OptionsContext } from "../OptionsContext";
 import { Button, Checkbox, Group, SegmentedControl, Stack, Text } from "@mantine/core";
 import { IconArrowLeft } from "@tabler/icons-react";
-import { VideoPlayerContext } from "../../../api/context/VideoPlayerContext";
+import { VideoPlayerContext } from "../../../api/player/VideoPlayerContext";
 import { FormatCard } from "../../cards/FormatCard";
 import { VideoFormatType } from "../../../api/types/format";
 

@@ -30,6 +30,9 @@ export interface VideoPlayerAPI {
 
     seekTo: (ts: number) => void;
     seekToChapterOffset: (offset: number) => void;
+
+    autoplayDate: Date | null;
+    cancelAutoplay: () => void;
 };
 
 // @ts-ignore

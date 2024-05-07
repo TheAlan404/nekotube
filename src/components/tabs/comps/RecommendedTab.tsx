@@ -1,6 +1,6 @@
 import { Checkbox, Group, Loader, Paper, ScrollArea, Space, Stack, Text } from "@mantine/core";
 import React, { useContext, useMemo } from "react";
-import { VideoPlayerContext } from "../../../api/context/VideoPlayerContext";
+import { VideoPlayerContext } from "../../../api/player/VideoPlayerContext";
 import { HorizontalVideoCard } from "../../cards/VideoCard";
 
 export const RecommendedTab = () => {

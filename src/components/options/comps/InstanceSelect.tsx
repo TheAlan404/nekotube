@@ -1,6 +1,6 @@
 import { ActionIcon, Button, Fieldset, Grid, Group, InputBase, Paper, SegmentedControl, Select, Stack, Text, TextInput, Tooltip, UnstyledButton } from "@mantine/core";
 import { useContext, useEffect, useState } from "react";
-import { APIContext } from "../../../api/context/APIController";
+import { APIContext } from "../../../api/provider/APIController";
 import { IconArrowRight, IconReload } from "@tabler/icons-react";
 import { Instance } from "../../../api/types/instances";
 import { OptionsContext } from "../OptionsContext";

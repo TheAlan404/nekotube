@@ -1,6 +1,6 @@
 import { Box, Grid, Paper, Stack, Tabs, Text } from "@mantine/core";
 import React, { useContext } from "react";
-import { APIContext } from "../../../api/context/APIController";
+import { APIContext } from "../../../api/provider/APIController";
 import { IconBrandYoutube } from "@tabler/icons-react";
 import { useLocation } from "react-router-dom";
 import { InstanceCard } from "../../cards/InstanceCard";

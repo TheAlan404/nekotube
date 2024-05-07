@@ -6,7 +6,7 @@ import { VotingCard } from "./VotingCard";
 import { IconCopy, IconPencil, IconPinned, IconTableImport, IconTableOff } from "@tabler/icons-react";
 import { parseChapters } from "../../utils/parseChapters";
 import { useContext } from "react";
-import { VideoPlayerContext } from "../../api/context/VideoPlayerContext";
+import { VideoPlayerContext } from "../../api/player/VideoPlayerContext";
 import { cleanDescription, textPartsToString } from "../../utils/cleanDescription";
 import { DateCard } from "./DateCard";
 import { TimestampRegex } from "../../utils/timestamp";

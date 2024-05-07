@@ -1,7 +1,7 @@
 import { Grid, Group, Loader, Stack, Text, Title } from "@mantine/core";
 import { IconAlertTriangle } from "@tabler/icons-react";
 import { useContext } from "react";
-import { VideoPlayerContext } from "../../../api/context/VideoPlayerContext";
+import { VideoPlayerContext } from "../../../api/player/VideoPlayerContext";
 
 export const LayoutTop = () => {
     const { playState, videoInfo } = useContext(VideoPlayerContext);

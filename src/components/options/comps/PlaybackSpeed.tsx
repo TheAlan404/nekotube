@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { VideoPlayerContext } from "../../../api/context/VideoPlayerContext";
+import { VideoPlayerContext } from "../../../api/player/VideoPlayerContext";
 import { Grid, Group, Slider, Stack, Text } from "@mantine/core";
 
 export const PlaybackSpeed = () => {

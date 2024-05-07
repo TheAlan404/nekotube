@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { VideoPlayerContext } from "../../../api/context/VideoPlayerContext";
+import { VideoPlayerContext } from "../../../api/player/VideoPlayerContext";
 import { useVideoEventListener } from "../../../hooks/useVideoEventListener";
 import { CopyButton, Group, Text, Tooltip } from "@mantine/core";
 import { secondsToTimestamp } from "../../../utils/timestamp";

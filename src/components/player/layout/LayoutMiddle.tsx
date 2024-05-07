@@ -1,6 +1,6 @@
 import { Box, Loader, Stack } from "@mantine/core";
 import { useContext } from "react";
-import { VideoPlayerContext } from "../../../api/context/VideoPlayerContext";
+import { VideoPlayerContext } from "../../../api/player/VideoPlayerContext";
 import { ErrorMessage } from "../../ui/ErrorMessage";
 
 export const LayoutMiddle = () => {

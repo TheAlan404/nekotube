@@ -4,9 +4,9 @@ import { ErrorPage } from "./pages/ErrorPage";
 import { HomePage } from "./pages/HomePage";
 import { WatchPage } from "./pages/WatchPage";
 import { SearchPage } from "./pages/SearchPage";
-import { APIControllerProvider } from "../api/context/APIController";
+import { APIControllerProvider } from "../api/provider/APIController";
 import { PreferencesProvider } from "../api/pref/Preferences";
-import { VideoPlayerProvider } from "../api/context/VideoPlayerProvider";
+import { VideoPlayerProvider } from "../api/player/VideoPlayerProvider";
 import { OptionsProvider } from "../components/options/OptionsContext";
 import { TabsProvider } from "../components/tabs/TabsContext";
 

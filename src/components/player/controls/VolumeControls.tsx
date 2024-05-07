@@ -1,7 +1,7 @@
 import { ActionIcon, Group, Slider, Stack, Tooltip, Transition } from "@mantine/core";
 import { clamp, useHover } from "@mantine/hooks";
 import { useContext, useState } from "react";
-import { VideoPlayerContext } from "../../../api/context/VideoPlayerContext";
+import { VideoPlayerContext } from "../../../api/player/VideoPlayerContext";
 import { IconVolume, IconVolume2, IconVolumeOff } from "@tabler/icons-react";
 import { usePreference } from "../../../api/pref/Preferences";
 

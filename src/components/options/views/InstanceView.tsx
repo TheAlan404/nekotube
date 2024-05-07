@@ -2,7 +2,7 @@ import { ActionIcon, Box, Button, Checkbox, Combobox, Divider, Flex, Grid, Group
 import { Suspense, useContext, useState } from "react";
 import { OptionsContext } from "../OptionsContext";
 import { IconArrowBack, IconArrowLeft, IconReload, IconStar } from "@tabler/icons-react";
-import { APIContext } from "../../../api/context/APIController";
+import { APIContext } from "../../../api/provider/APIController";
 import { Instance } from "../../../api/types/instances";
 import { InstanceCard } from "../../cards/InstanceCard";
 

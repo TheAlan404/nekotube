@@ -1,6 +1,6 @@
 import { Accordion, ActionIcon, Button, Grid, Group, Loader, Paper, ScrollArea, Slider, Space, Stack, Text, TextInput, Tooltip, Transition } from "@mantine/core";
 import { ForwardedRef, forwardRef, useContext, useEffect, useMemo, useState } from "react";
-import { VideoPlayerContext } from "../../../api/context/VideoPlayerContext";
+import { VideoPlayerContext } from "../../../api/player/VideoPlayerContext";
 import { TimestampButton } from "../../ui/TimestampButton";
 import { useVideoEventListener } from "../../../hooks/useVideoEventListener";
 import { Chapter } from "../../../api/types/chapter";

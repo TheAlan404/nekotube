@@ -1,6 +1,6 @@
 import { Divider, Group, Loader, ScrollArea, Space, Stack, Text, Title } from "@mantine/core";
 import { useContext } from "react";
-import { VideoPlayerContext } from "../../../api/context/VideoPlayerContext";
+import { VideoPlayerContext } from "../../../api/player/VideoPlayerContext";
 import { MarkdownText } from "../../ui/MarkdownText";
 import { ChannelCard } from "../../cards/ChannelCard";
 import { VotingCard } from "../../cards/VotingCard";

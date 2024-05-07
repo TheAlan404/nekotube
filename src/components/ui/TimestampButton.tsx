@@ -1,7 +1,7 @@
 import { Button } from "@mantine/core";
 import { secondsToTimestamp } from "../../utils/timestamp";
 import { useContext } from "react";
-import { VideoPlayerContext } from "../../api/context/VideoPlayerContext";
+import { VideoPlayerContext } from "../../api/player/VideoPlayerContext";
 
 export const TimestampButton = ({
     time,

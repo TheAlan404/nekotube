@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { VideoPlayerContext } from "../../../api/context/VideoPlayerContext";
+import { VideoPlayerContext } from "../../../api/player/VideoPlayerContext";
 import { Divider, Grid, Space, Stack, Text } from "@mantine/core";
 import { InstanceSelect } from "../comps/InstanceSelect";
 import { FormatSelect } from "../comps/FormatSelect";

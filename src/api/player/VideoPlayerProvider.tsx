@@ -1,6 +1,6 @@
 import { useContext, useEffect, useMemo, useState } from "react";
 import { PlayState, VideoPlayerContext } from "./VideoPlayerContext";
-import { APIContext } from "./APIController";
+import { APIContext } from "../provider/APIController";
 import { VideoData } from "../types/video";
 import { VideoFormat } from "../types/format";
 import { useVideoEventListener } from "../../hooks/useVideoEventListener";
@@ -38,6 +38,7 @@ export const VideoPlayerProvider = ({
     const [error, setError] = useState<any | null>(null);
     const [volume, setVolume] = useState(JSON.parse(localStorage.getItem("nekotube:volume") ?? "1"));
     const [muted, setMuted] = useState(false);
+    const [autoplayDate, setAutoplayDate] = useState<Date | null>(null);
 
     useEffect(() => {
         return () => {
@@ -126,7 +127,7 @@ export const VideoPlayerProvider = ({
     }, [activeFormat]);
 
     useVideoEventListener(videoElement, "ended", () => {
-        setPlayState("paused");
+        setAutoplayDate(new Date(Date.now() + 10 * 1000));
     });
 
     useVideoEventListener(videoElement, "loadeddata", () => {
@@ -225,6 +226,11 @@ export const VideoPlayerProvider = ({
 
             seekTo,
             seekToChapterOffset,
+
+            autoplayDate,
+            cancelAutoplay: () => {
+                setAutoplayDate(null);
+            },
         }}>
             {children}
         </VideoPlayerContext.Provider>

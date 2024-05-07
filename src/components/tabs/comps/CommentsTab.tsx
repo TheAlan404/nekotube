@@ -1,8 +1,8 @@
 import { Button, Checkbox, Group, Loader, Paper, ScrollArea, Space, Stack, Text } from "@mantine/core";
 import { useContext, useEffect, useMemo, useState } from "react";
-import { VideoPlayerContext } from "../../../api/context/VideoPlayerContext";
+import { VideoPlayerContext } from "../../../api/player/VideoPlayerContext";
 import { HorizontalVideoCard } from "../../cards/VideoCard";
-import { APIContext } from "../../../api/context/APIController";
+import { APIContext } from "../../../api/provider/APIController";
 import { Comment } from "../../../api/types/comment";
 import { CommentCard } from "../../cards/CommentCard";
 import { ErrorMessage } from "../../ui/ErrorMessage";

@@ -180,6 +180,9 @@ export const VideoPlayerProvider = ({
 
     useVideoEventListener(videoElement, "loadeddata", () => {
         videoElement.play()
+            .catch(e => {
+                setPlayState("paused");
+            })
     });
 
     useVideoEventListener(videoElement, "error", (e) => {

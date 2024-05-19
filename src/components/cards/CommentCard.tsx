@@ -7,7 +7,7 @@ import { IconCopy, IconPencil, IconPinned, IconTableImport, IconTableOff } from 
 import { parseChapters } from "../../utils/parseChapters";
 import { useContext } from "react";
 import { VideoPlayerContext } from "../../api/player/VideoPlayerContext";
-import { cleanDescription, textPartsToString } from "../../utils/cleanDescription";
+import { parseFormattedText, textPartsToString } from "../../utils/parseFormattedText";
 import { DateCard } from "./DateCard";
 import { TimestampRegex } from "../../utils/timestamp";
 
@@ -79,7 +79,7 @@ export const CommentCard = ({
                                 </ActionIcon>
                             </Tooltip>
                         )}
-                        <CopyButton value={textPartsToString(cleanDescription(comment.content))}>
+                        <CopyButton value={textPartsToString(parseFormattedText(comment.content))}>
                             {({ copied, copy }) => (
                                 <Tooltip label={copied ? "Copied!" : "Copy contents"}>
                                     <ActionIcon

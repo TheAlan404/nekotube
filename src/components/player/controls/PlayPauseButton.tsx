@@ -1,22 +1,31 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { VideoPlayerContext } from "../../../api/player/VideoPlayerContext";
 import { ActionIcon, Tooltip } from "@mantine/core";
 import { IconPlayerPlay, IconPlayerPause } from "@tabler/icons-react";
+import { useVideoEventListener } from "../../../hooks/useVideoEventListener";
+import { useIsMobile } from "../../../hooks/useIsMobile";
 
 export const PlayPauseButton = () => {
-    const { playState, togglePlay } = useContext(VideoPlayerContext);
+    const isMobile = useIsMobile();
+    const { videoElement, playState, togglePlay } = useContext(VideoPlayerContext);
+    let playing = playState == "playing";
+    //let [playing, setPlaying] = useState(!videoElement.paused);
+    let disabled = playState == "loading" || playState == "error";
+
+    //useVideoEventListener(videoElement, "play", () => setPlaying(true));
+    //useVideoEventListener(videoElement, "pause", () => setPlaying(false));
 
     return (
         <Tooltip
-            disabled={playState == "loading" || playState == "error"}
-            label={playState == "playing" ? "Pause (k)" : "Play (k)"}
+            disabled={disabled}
+            label={playing ? "Pause (k)" : "Play (k)"}
         >
             <ActionIcon
                 onClick={() => togglePlay()}
                 variant="light"
                 color="violet"
             >
-                {playState == "playing" ? (
+                {playing ? (
                     <IconPlayerPause />
                 ) : (
                     <IconPlayerPlay />

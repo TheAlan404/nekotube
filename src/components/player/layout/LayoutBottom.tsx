@@ -7,28 +7,33 @@ import { FormatsButton } from "../../options/links/FormatsButton";
 import { OptionsButton } from "../../options/links/OptionsButton";
 import { ToggleSidebarButton } from "../../tabs/links/ToggleSidebarButton";
 import { FullscreenButton } from "../controls/FullscreenButton";
+import { useIsMobile } from "../../../hooks/useIsMobile";
 
 export const LayoutBottom = (props: StackProps) => {
+    const isMobile = useIsMobile();
+
+    let gap = isMobile ? "5px" : "xs";
+
     return (
         <Stack
-            gap="xs"
-            p="xs"
+            gap={gap}
+            p={gap}
             w="100%"
             onClick={(e) => e.stopPropagation()}
             {...props}
         >
             <ProgressBar />
 
-            <Group justify="space-between">
-                <Group>
+            <Group justify="space-between" wrap="nowrap">
+                <Group gap={gap} wrap="nowrap">
                     <PlayPauseButton />
                     <VolumeControls />
                     <PlayerTimestamp />
                 </Group>
-                <Group>
-                    <FormatsButton />
+                <Group gap={gap} wrap="nowrap">
+                    {!isMobile && <FormatsButton />}
                     <OptionsButton />
-                    <ToggleSidebarButton />
+                    {!isMobile && <ToggleSidebarButton />}
                     <FullscreenButton />
                 </Group>
             </Group>

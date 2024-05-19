@@ -6,8 +6,10 @@ import { usePreference } from "../../api/pref/Preferences";
 import { LayoutTop } from "./layout/LayoutTop";
 import { LayoutMiddle } from "./layout/LayoutMiddle";
 import { LayoutBottom } from "./layout/LayoutBottom";
+import { useIsMobile } from "../../hooks/useIsMobile";
 
 export const VideoPlayer = () => {
+    const isMobile = useIsMobile();
     const {
         videoElement,
         seekToChapterOffset,
@@ -80,6 +82,11 @@ export const VideoPlayer = () => {
             }}
             onClick={(e) => {
                 if(!e.currentTarget.classList.contains("clickListener")) return;
+                if(isMobile && !shouldShowControls) {
+                    setShowControls(true);
+                    hideCallback();
+                    return;
+                }
                 let xPer = e.clientX / containerRef.current.getBoundingClientRect().width;
                 if(xPer == 0 || xPer == 1) return;
                 togglePlay();

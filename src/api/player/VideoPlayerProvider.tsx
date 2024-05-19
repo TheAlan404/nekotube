@@ -8,6 +8,7 @@ import { parseChapters } from "../../utils/parseChapters";
 import { clamp } from "@mantine/hooks";
 import { PreferencesContext } from "../pref/Preferences";
 import { ActiveChapterList } from "../types/chapter";
+import { useNavigate } from "react-router-dom";
 
 export const VideoPlayerProvider = ({
     children
@@ -26,6 +27,8 @@ export const VideoPlayerProvider = ({
         sponsorBlockApi,
     } = useContext(APIContext);
     const { pref } = useContext(PreferencesContext);
+
+    const navigate = useNavigate();
 
     const [videoID, setVideoID] = useState<string | null>(null);
     const [videoInfo, setVideoInfo] = useState<VideoData | null>(null);
@@ -175,7 +178,7 @@ export const VideoPlayerProvider = ({
             let id = videoInfo.recommended[0]?.id;
             if(!id) return;
 
-            setVideoID(id);
+            navigate({ pathname: "/watch", search: "?"+new URLSearchParams({ v: id }).toString() });
         }, waitDuration);
     });
 

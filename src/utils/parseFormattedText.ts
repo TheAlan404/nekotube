@@ -25,7 +25,7 @@ export type TextPart = {
     time?: number;
 };
 
-export const cleanDescription = (text = "") => {
+export const parseFormattedText = (text = "") => {
     let parser = new DOMParser();
     let doc = parser.parseFromString(text.replaceAll("<br>", "\n"), "text/html");
 
@@ -100,6 +100,13 @@ export const cleanDescription = (text = "") => {
                         href: href,
                     })
                 }
+            } else if(node.nodeName == "I") {
+                parts.push({
+                    type: "text",
+                    data: node.nodeValue,
+                    bold: false,
+                    italic: true,
+                });
             } else if(node.nodeName == "B") {
                 parts.push({
                     type: "text",

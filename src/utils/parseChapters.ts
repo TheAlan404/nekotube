@@ -1,10 +1,10 @@
 import { Chapter } from "../api/types/chapter";
-import { cleanDescription } from "./cleanDescription";
+import { parseFormattedText } from "./parseFormattedText";
 
 const trimChapterName = (s: string) => s.trim().startsWith("-") ? s.trim().replace("-", "").trim() : s.trim();
 
 export const parseChapters = (description: string): Chapter[] => {
-    let parts = cleanDescription(description);
+    let parts = parseFormattedText(description);
     let chapters: Chapter[] = [];
 
     let group = "";

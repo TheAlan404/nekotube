@@ -59,8 +59,6 @@ export class InvidiousAPIProvider implements APIProvider {
     async search(q: string) {
         let data: InvidiousRenderer[] = await this.request("search", { query: { q } });
 
-        console.log(data);
-
         return {
             key: null,
             results: data.filter(x => x.type == "video")
@@ -76,8 +74,6 @@ export class InvidiousAPIProvider implements APIProvider {
 
     getVideoInfo = async (id: string) => {
         let v: InvidiousVideoData = await this.request(`videos/${id}`);
-
-        console.log({ invidiousVideoData: v });
 
         return {
             id,

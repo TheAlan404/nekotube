@@ -1,7 +1,7 @@
 import { Box, Button, Text } from "@mantine/core";
 import { useMemo } from "react";
 import { TimestampButton } from "./TimestampButton";
-import { cleanDescription } from "../../utils/cleanDescription";
+import { parseFormattedText } from "../../utils/parseFormattedText";
 import { ExternalLink } from "./ExternalLink";
 
 export const MarkdownText = ({
@@ -10,7 +10,7 @@ export const MarkdownText = ({
     text: string;
 }) => {
     let elements = useMemo(() => {
-        let parts = cleanDescription(text);
+        let parts = parseFormattedText(text);
 
         return parts
             .map(part => {

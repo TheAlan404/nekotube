@@ -2,9 +2,11 @@ import { Grid, Group, Loader, Stack, Text, Title } from "@mantine/core";
 import { IconAlertTriangle } from "@tabler/icons-react";
 import { useContext } from "react";
 import { VideoPlayerContext } from "../../../api/player/VideoPlayerContext";
+import { useIsMobile } from "../../../hooks/useIsMobile";
 
 export const LayoutTop = () => {
     const { playState, videoInfo } = useContext(VideoPlayerContext);
+    const isMobile = useIsMobile();
 
     return (
         <Stack
@@ -22,14 +24,14 @@ export const LayoutTop = () => {
                 </Grid.Col>
                 <Grid.Col span="auto">
                     <Stack gap={0}>
-                        <Title order={4}>
+                        <Title order={isMobile ? 6 : 4}>
                             {!videoInfo ? (
                                 playState == "error" ? "Error" : "Loading..."
                             ) : (
                                 videoInfo?.title || "Loading..."
                             )}
                         </Title>
-                        <Text c="dimmed">
+                        <Text c="dimmed" fz={isMobile ? "xs" : undefined}>
                             {playState == "error" && (
                                 videoInfo ? "playback error" : "error while fetching details"
                             )}

@@ -1,13 +1,16 @@
 import { ActionIcon, Box, Button, Combobox, Grid, Group, Loader, Stack, Text, TextInput, useCombobox } from "@mantine/core";
 import { useContext, useEffect, useRef, useState } from "react";
 import { APIContext } from "../../api/provider/APIController";
-import { IconAlertTriangle, IconSearch } from "@tabler/icons-react";
+import { IconAlertTriangle, IconPencil, IconSearch } from "@tabler/icons-react";
 import { useLocation, useNavigate, useNavigation, useSearchParams } from "react-router-dom";
 import { useKeyboardSfx } from "../../hooks/useSoundEffect";
 import { useHotkeys } from "@mantine/hooks";
 import { parseSearchShortcut, SearchShortcut, SearchShortcutRenderer, shortcutToLocation } from "./SearchShortcut";
+import { useIsMobile } from "../../hooks/useIsMobile";
+import { highlightSearch } from "../../utils/highlightSearch";
 
 export const SearchBar = () => {
+    const isMobile = useIsMobile();
     const { api } = useContext(APIContext);
     const navigate = useNavigate();
     const location = useLocation();
@@ -30,7 +33,32 @@ export const SearchBar = () => {
 
     const options = (suggestions || []).map((item) => (
         <Combobox.Option value={item} key={item}>
-            {item}
+            <Group justify="space-between" wrap="nowrap">
+                <Text>
+                    {highlightSearch(value, item).map(({
+                        text,
+                        highlight,
+                    }, i) => (
+                        <Text c={highlight ? "dimmed" : undefined} span>
+                            {text}
+                        </Text>
+                    ))}
+                </Text>
+                {isMobile && (
+                    <ActionIcon
+                        variant="light"
+                        color="gray"
+                        onClick={(e) => {
+                            e.stopPropagation();
+
+                            setValue(item);
+                            fetchSuggestions(item);
+                        }}
+                    >
+                        <IconPencil />
+                    </ActionIcon>
+                )}
+            </Group>
         </Combobox.Option>
     ));
 
@@ -77,6 +105,7 @@ export const SearchBar = () => {
                 search(q);
             }}
             withinPortal={false}
+            width={isMobile ? "calc(100vw - (var(--mantine-spacing-xs) * 2))" : "target"}
             store={combobox}
         >
             <Combobox.Target>

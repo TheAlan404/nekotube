@@ -1,4 +1,4 @@
-import { AppShell, Box, Button, Group } from "@mantine/core";
+import { ActionIcon, AppShell, Box, Button, Group } from "@mantine/core";
 import { nprogress } from "@mantine/nprogress";
 import { IconBrandYoutube, IconCat } from "@tabler/icons-react";
 import { useContext, useEffect } from "react";
@@ -47,8 +47,9 @@ export const Root = () => {
         >
             <AppShell.Header>
                 <Group h="100%" px="md">
-                    <Group w="100%" justify="space-between">
+                    <Group w="100%" justify="space-between" wrap="nowrap">
                         <Button
+                            visibleFrom="md"
                             variant="subtle"
                             color="violet"
                             leftSection={<IconBrandYoutube />}
@@ -57,6 +58,17 @@ export const Root = () => {
                         >
                             NekoTube
                         </Button>
+
+                        <ActionIcon
+                            hiddenFrom="md"
+                            variant="subtle"
+                            color="violet"
+                            component={Link}
+                            to="/"
+                        >
+                            <IconBrandYoutube />
+                        </ActionIcon>
+
                         <Box w="30em">
                             <SearchBar />
                         </Box>

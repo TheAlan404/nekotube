@@ -9,10 +9,18 @@ import { IconBrandYoutube, IconLayoutList, IconList, IconMessage } from "@tabler
 import { ChaptersTab } from "./comps/ChaptersTab";
 import { clamp, useHotkeys } from "@mantine/hooks";
 
-export const TabsRenderer = () => {
+export const TabsRenderer = ({
+    isMobile,
+}: {
+    isMobile?: boolean;
+}) => {
     const { currentTab, setCurrentTab, availableTabs } = useContext(TabsContext);
 
-    const height = `calc(100vh - var(--app-shell-header-height) - calc(var(--app-shell-padding) * 2) - 3em)`;
+    const height = isMobile ? (
+        `100%`
+    ) : (
+        `calc(100vh - var(--app-shell-header-height) - calc(var(--app-shell-padding) * 2) - 3em)`
+    );
 
     useHotkeys([
         ["z", () => setCurrentTab(availableTabs[availableTabs.indexOf(currentTab) - 1] || availableTabs[availableTabs.length - 1])],
@@ -58,7 +66,13 @@ export const TabsRenderer = () => {
                     </Tabs.Panel>
                 ))}
 
-                <Tabs.List grow>
+                <Tabs.List grow style={isMobile ? {
+                    position: "absolute",
+                    bottom: "0px",
+                    width: "100%",
+                    backgroundColor: "var(--mantine-color-dark-filled)",
+                    zIndex: "300",
+                } : {}}>
                     <Tooltip.Group>
                         {([
                             {

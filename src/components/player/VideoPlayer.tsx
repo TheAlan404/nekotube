@@ -26,6 +26,8 @@ export const VideoPlayer = () => {
 
     useEffect(() => {
         videoContainerRef.current?.appendChild(videoElement);
+        if(videoElement.paused && videoElement.currentSrc && videoElement.currentTime)
+            videoElement.play();
         return () => {
             videoElement.pause();
         };

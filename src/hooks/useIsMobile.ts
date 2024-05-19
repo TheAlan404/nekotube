@@ -3,5 +3,5 @@ import { useMediaQuery } from "@mantine/hooks";
 
 export const useIsMobile = () => {
     const { breakpoints } = useMantineTheme();
-    return !useMediaQuery(`(min-width: ${breakpoints.md})`);
+    return !useMediaQuery(`(min-width: ${breakpoints.sm})`);
 };

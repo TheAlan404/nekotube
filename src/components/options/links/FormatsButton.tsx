@@ -10,7 +10,6 @@ export const FormatsButton = () => {
         <Tooltip label="Select Format">
             <ActionIcon
                 variant="light"
-                color="violet"
                 onClick={() => {
                     open();
                     setView("formatSelect");

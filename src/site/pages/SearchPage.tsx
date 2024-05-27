@@ -47,7 +47,7 @@ export const SearchPage = () => {
             {!error && !results.length && (
                 <Button
                     variant="light"
-                    color="violet"
+                    
                     size="compact-sm"
                     leftSection={<IconReload />}
                     onClick={() => fetchResults()}

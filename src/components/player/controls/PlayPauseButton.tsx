@@ -23,7 +23,6 @@ export const PlayPauseButton = () => {
             <ActionIcon
                 onClick={() => togglePlay()}
                 variant="light"
-                color="violet"
             >
                 {playing ? (
                     <IconPlayerPause />

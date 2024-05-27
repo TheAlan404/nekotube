@@ -18,7 +18,6 @@ export const InstanceSelect = () => {
             <UnstyledButton
                 className="hoverable"
                 variant="subtle"
-                color="violet"
                 onClick={() => setView("instanceSelect")}
             >
                 <Grid align="center" m="sm">

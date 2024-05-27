@@ -148,7 +148,7 @@ export const SearchBar = () => {
                     <Grid.Col span="content">
                         <ActionIcon
                             variant="light"
-                            color="violet"
+                            
                             size="lg"
                             onClick={() => {
                                 search(value);

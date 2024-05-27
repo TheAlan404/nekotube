@@ -78,7 +78,7 @@ export const ChaptersTab = () => {
                                 <Tooltip label="Clear">
                                     <ActionIcon
                                         variant="light"
-                                        color="violet"
+                                        
                                         onClick={() => setActiveChapters("video")}
                                     >
                                         <IconX />
@@ -181,7 +181,7 @@ const ShowCurrentChapterButton = ({
                         <Button
                             onClick={onClick}
                             variant="light"
-                            color="violet"
+                            
                             leftSection={<IconArrowNarrowUp />}
                             w="100%"
                         >
@@ -259,7 +259,7 @@ const ChapterButton = forwardRef<HTMLDivElement, ChapterButtonProps>(({
                             value={progress}
                             onChange={(v) => seekTo(v)}
                             label={secondsToTimestamp}
-                            color="violet"
+                            
                             thumbSize={0}
                             styles={{
                                 thumb: {

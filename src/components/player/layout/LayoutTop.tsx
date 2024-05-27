@@ -4,7 +4,7 @@ import { useContext } from "react";
 import { VideoPlayerContext } from "../../../api/player/VideoPlayerContext";
 import { useIsMobile } from "../../../hooks/useIsMobile";
 
-export const LayoutTop = () => {
+export const PlayerLayoutTop = () => {
     const { playState, videoInfo } = useContext(VideoPlayerContext);
     const isMobile = useIsMobile();
 

@@ -30,7 +30,7 @@ export const RecommendedTab = () => {
                                     onChange={(e) => set({ autoplay: e.currentTarget.checked })}
                                 />
                                 <Text ta="end">
-                                    {videoInfo.recommended.length} recommended videos
+                                    {(videoInfo?.recommended || []).length} recommended videos
                                 </Text>
                             </Group>
                         </Paper>

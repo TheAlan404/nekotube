@@ -1,5 +1,5 @@
 import { createContext, useMemo, useState } from "react";
-import { TabType } from "./TabTypes";
+import { TabType, UIFlavor } from "./TabTypes";
 
 export interface TabsAPI {
     currentTab: TabType;
@@ -7,6 +7,8 @@ export interface TabsAPI {
     setCurrentTab: (tab: TabType) => void,
     isTabsVisible: boolean,
     setTabsVisible: (v: boolean) => void,
+    flavor: UIFlavor;
+    setFlavor: (f: UIFlavor) => void;
 };
 
 export const TabsContext = createContext<TabsAPI>({
@@ -15,10 +17,13 @@ export const TabsContext = createContext<TabsAPI>({
     setCurrentTab: () => {},
     isTabsVisible: false,
     setTabsVisible: () => {},
+    flavor: "video",
+    setFlavor: () => {},
 });
 
 export const TabsProvider = ({ children }: React.PropsWithChildren) => {
     const [currentTab, setCurrentTab] = useState<TabType>("recommended");
+    const [flavor, setFlavor] = useState<UIFlavor>("video");
     const [isTabsVisible, setTabsVisible] = useState<boolean>(true);
 
     const availableTabs = useMemo(() => {
@@ -38,6 +43,8 @@ export const TabsProvider = ({ children }: React.PropsWithChildren) => {
                 isTabsVisible,
                 setTabsVisible,
                 availableTabs,
+                flavor,
+                setFlavor,
             }}
         >
             {children}

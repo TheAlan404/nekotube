@@ -8,7 +8,6 @@ export const ChangeInstanceButton = () => {
 
     return (
         <Button
-            color="violet"
             variant="light"
             leftSection={<IconSettings />}
             onClick={() => {

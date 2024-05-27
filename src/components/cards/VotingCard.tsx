@@ -14,7 +14,6 @@ export const VotingCard = ({
                 <Button
                     leftSection={<IconThumbUp />}
                     variant="subtle"
-                    color="violet"
                     size="compact-md"
                 >
                     {likeCount}
@@ -24,7 +23,6 @@ export const VotingCard = ({
                 <Button
                     leftSection={<IconThumbDown />}
                     variant="subtle"
-                    color="violet"
                     size="compact-md"
                 >
                     {dislikeCount}

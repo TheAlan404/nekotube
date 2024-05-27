@@ -10,7 +10,6 @@ export const FullscreenButton = () => {
             <ActionIcon
                 onClick={() => toggle()}
                 variant="light"
-                color="violet"
             >
                 {fullscreen ? (
                     <IconMinimize />

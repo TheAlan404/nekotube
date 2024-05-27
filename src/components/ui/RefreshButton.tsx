@@ -10,7 +10,7 @@ export const RefreshButton = ({
         <Tooltip label="Refresh" withArrow>
             <ActionIcon
                 variant="light"
-                color="violet"
+                
                 onClick={onClick}
             >
                 <IconReload />

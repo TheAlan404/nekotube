@@ -16,6 +16,7 @@ export const VideoPlayerProvider = ({
     const videoElement = useMemo(() => {
         let el = document.createElement("video");
         el.autoplay = true;
+        el.crossOrigin = "anonymous";
         el.style.width = "100%";
         el.style.height = "100%";
         return el;

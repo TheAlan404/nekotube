@@ -9,6 +9,7 @@ export interface Preferences {
     useSponsorBlock: boolean;
     useDeArrow: boolean;
     useReturnYoutubeDislike: boolean;
+    useLocalHistory: boolean;
     autoplay: boolean;
 };
 
@@ -20,6 +21,7 @@ export const DefaultPreferences: Preferences = {
     useSponsorBlock: true,
     useDeArrow: false,
     useReturnYoutubeDislike: true,
+    useLocalHistory: true,
     autoplay: true,
 };
 

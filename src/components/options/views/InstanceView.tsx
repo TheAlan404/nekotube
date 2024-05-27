@@ -171,7 +171,6 @@ const InstanceSearch = ({
                 <Tooltip label="Refresh public instances">
                     <ActionIcon
                         variant="light"
-                        color="violet"
                         onClick={() => refreshAvailableInstances()}
                     >
                         <IconReload />

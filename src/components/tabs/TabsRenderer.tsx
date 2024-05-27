@@ -34,7 +34,7 @@ export const TabsRenderer = ({
                 onChange={(v) => setCurrentTab(v as TabType)}
                 keepMounted={true}
                 inverted
-                color="violet"
+                
                 styles={{
                     root: {
                         height: "100%",

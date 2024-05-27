@@ -43,7 +43,7 @@ export const Root = () => {
         <AppShell
             header={{ height: "3em" }}
             padding={0}
-            disabled={fullscreen && !isTabsVisible}
+            disabled={!isTabsVisible}
         >
             <AppShell.Header>
                 <Group h="100%" px="md">
@@ -51,7 +51,7 @@ export const Root = () => {
                         <Button
                             visibleFrom="md"
                             variant="subtle"
-                            color="violet"
+                            
                             leftSection={<IconBrandYoutube />}
                             component={Link}
                             to="/"
@@ -62,7 +62,7 @@ export const Root = () => {
                         <ActionIcon
                             hiddenFrom="md"
                             variant="subtle"
-                            color="violet"
+                            
                             component={Link}
                             to="/"
                         >

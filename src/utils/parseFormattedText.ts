@@ -64,15 +64,19 @@ export const parseFormattedText = (text = "") => {
                         type: "timestamp",
                         time: timestampToSeconds(el.textContent),
                     })
-                } else if (href.startsWith("/channel/")) {
+                } else if (href.startsWith("/channel/") || href.startsWith("/c/") || href.startsWith("/user/")) {
+                    let id = href.split("/")[2];
+
+                    if(id.startsWith("@")) id = id.slice(1);
+                    
                     parts.push({
                         type: "channel",
-                        id: href.split("/")[2],
+                        id: id.split("?")[0],
                     })
                 } else if(href.startsWith("/@")) {
                     parts.push({
                         type: "channel",
-                        id: href.split("/")[1],
+                        id: href.slice(2).split("?")[0],
                     })
                 } else if(href.startsWith("/hashtag/")) {
                     parts.push({
@@ -94,6 +98,13 @@ export const parseFormattedText = (text = "") => {
                         type: "post",
                         data: href.split("/")[2],
                     }) */
+                } else if(href.startsWith("/")) {
+                    parts.push({
+                        type: "text",
+                        data: href,
+                        bold: true,
+                        italic: false,
+                    })
                 } else {
                     parts.push({
                         type: "link",

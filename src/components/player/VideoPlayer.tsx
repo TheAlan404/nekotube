@@ -3,9 +3,9 @@ import { VideoPlayerContext } from "../../api/player/VideoPlayerContext"
 import { Box, Stack, Transition } from "@mantine/core";
 import { useDebouncedCallback, useHotkeys, useHover, useMergedRef } from "@mantine/hooks";
 import { usePreference } from "../../api/pref/Preferences";
-import { LayoutTop } from "./layout/LayoutTop";
-import { LayoutMiddle } from "./layout/LayoutMiddle";
-import { LayoutBottom } from "./layout/LayoutBottom";
+import { PlayerLayoutTop } from "./layout/LayoutTop";
+import { PlayerLayoutMiddle } from "./layout/LayoutMiddle";
+import { PlayerLayoutBottom } from "./layout/LayoutBottom";
 import { useIsMobile } from "../../hooks/useIsMobile";
 
 export const VideoPlayer = () => {
@@ -117,10 +117,10 @@ export const VideoPlayer = () => {
                         }}
                         className="clickListener"
                     >
-                        <LayoutTop />
-                        <LayoutMiddle />
+                        <PlayerLayoutTop />
+                        <PlayerLayoutMiddle />
                         <div ref={ref}>
-                            <LayoutBottom />
+                            <PlayerLayoutBottom />
                         </div>
                     </Stack>
                 )}

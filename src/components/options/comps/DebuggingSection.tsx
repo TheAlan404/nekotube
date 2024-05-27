@@ -11,7 +11,7 @@ export const DebuggingSection = () => {
                 {({ copied, copy }) => (
                     <Button
                         variant="light"
-                        color={copied ? "green" : "violet"}
+                        color={copied ? "green" : undefined}
                         onClick={() => copy()}
                         fullWidth
                     >
@@ -21,7 +21,6 @@ export const DebuggingSection = () => {
             </CopyButton>
             <Button
                 variant="light"
-                color="violet"
                 onClick={() => fetchVideoInfo()}
                 fullWidth
             >

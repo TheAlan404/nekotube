@@ -22,7 +22,6 @@ export const VolumeControls = () => {
             <Tooltip label={muted ? "Unmute (m)" : "Mute (m)"}>
                 <ActionIcon
                     variant="light"
-                    color="violet"
                     onClick={() => setMuted(!muted)}
                 >
                     {muted ? (
@@ -62,7 +61,6 @@ export const VolumeControls = () => {
                                 };
                                 setVolume(clamp(0, videoElement.volume + (e.deltaY / -700), 1));
                             }}
-                            color="violet"
                         />
                     </Group>
                 )}

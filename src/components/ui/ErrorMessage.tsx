@@ -38,7 +38,7 @@ export const ErrorMessage = ({
                     {retry && (
                         <Button
                             variant="light"
-                            color="violet"
+                            
                             size="compact-sm"
                             leftSection={<IconReload />}
                             onClick={() => retry()}

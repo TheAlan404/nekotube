@@ -10,7 +10,6 @@ export const OptionsButton = () => {
         <Tooltip label="Options (o)">
             <ActionIcon
                 variant="light"
-                color="violet"
                 onClick={() => open()}
             >
                 <IconSettings />

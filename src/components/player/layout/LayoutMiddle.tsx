@@ -5,7 +5,7 @@ import { ErrorMessage } from "../../ui/ErrorMessage";
 import Countdown from "react-countdown";
 import { HorizontalVideoCard } from "../../cards/VideoCard";
 
-export const LayoutMiddle = () => {
+export const PlayerLayoutMiddle = () => {
     const {
         playState,
         videoInfo,
@@ -44,7 +44,6 @@ export const LayoutMiddle = () => {
                             <Grid.Col span="content">
                                 <Button
                                     variant="light"
-                                    color="violet"
                                     onClick={() => cancelAutoplay()}
                                 >
                                     Cancel

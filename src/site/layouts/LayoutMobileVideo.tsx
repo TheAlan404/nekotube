@@ -8,20 +8,20 @@ import { useFullscreen, useHotkeys, usePrevious } from "@mantine/hooks";
 import { usePreference } from "../../api/pref/Preferences";
 import { VideoPlayerContext } from "../../api/player/VideoPlayerContext";
 
-export const WatchPageMobile = () => {
+export const LayoutMobileVideo = () => {
     const { activeFormat } = useContext(VideoPlayerContext);
 
     if(activeFormat) 
         console.log(`Aspect Ratio ${activeFormat.width} / ${activeFormat.height}`);
 
     return (
-        <WatchPageLayout
+        <LayoutInner
             aspect={activeFormat ? (activeFormat.width / activeFormat.height) : 16/9}
         />
     );
 };
 
-const WatchPageLayout = ({
+const LayoutInner = ({
     aspect,
 }: {
     aspect: number;

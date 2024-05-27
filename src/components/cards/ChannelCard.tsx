@@ -15,7 +15,6 @@ export const ChannelCard = ({
                     src={(channel.thumbnails || [])[(channel.thumbnails || []).length]?.url || ``}
                     imageProps={{ loading: "lazy" }}
                     size="sm"
-                    color="violet"
                 >
                     {getInitials(channel.title)}
                 </Avatar>

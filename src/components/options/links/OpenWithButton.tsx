@@ -8,7 +8,6 @@ export const OpenWithButton = (props: ButtonProps) => {
 
     return (
         <Button
-            color="violet"
             variant="light"
             rightSection={<IconExternalLink />}
             onClick={() => {

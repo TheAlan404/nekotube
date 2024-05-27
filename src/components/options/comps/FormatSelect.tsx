@@ -17,7 +17,6 @@ export const FormatSelect = () => {
             <UnstyledButton
                 className="hoverable"
                 variant="subtle"
-                color="violet"
                 onClick={() => setView("formatSelect")}
             >
                 {activeFormat ? (

@@ -61,7 +61,7 @@ export const HomePage = () => {
                     <Text>alternative YouTube video player by</Text>
                     <Button
                         variant="light"
-                        color="violet"
+                        
                         rightSection={<IconExternalLink />}
                         size="compact-sm"
                         component="a"

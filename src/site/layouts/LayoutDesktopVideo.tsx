@@ -7,8 +7,9 @@ import { TabsRenderer } from "../../components/tabs/TabsRenderer";
 import { useFullscreen, useHotkeys, usePrevious } from "@mantine/hooks";
 import { usePreference } from "../../api/pref/Preferences";
 import { VideoPlayerContext } from "../../api/player/VideoPlayerContext";
+import { Spectrum } from "../../components/extra/Spectrum";
 
-export const WatchPageDesktop = () => {
+export const LayoutDesktopVideo = () => {
     const { activeFormat } = useContext(VideoPlayerContext);
     const animate = usePreference("watchPageAnimations");
     const { isTabsVisible: sidebarOpen, setTabsVisible } = useContext(TabsContext);
@@ -20,7 +21,7 @@ export const WatchPageDesktop = () => {
     ]);
 
     return (
-        <WatchPageLayout
+        <LayoutInner
             theather={sidebarOpen}
             fullscreen={fullscreen}
             animate={animate}
@@ -29,7 +30,7 @@ export const WatchPageDesktop = () => {
     );
 };
 
-const WatchPageLayout = ({
+const LayoutInner = ({
     theather,
     fullscreen,
     animate,
@@ -59,14 +60,14 @@ const WatchPageLayout = ({
         if(ref.current && aspect) setPosition(aspect * ref.current.getBoundingClientRect().height);
     }, [ref.current, aspect]);
 
-    const height = !theather && fullscreen ? (
+    const height = !theather ? (
         `calc(100vh)`
     ) : (
         `calc(100vh - var(--app-shell-header-height))`
     );
 
     return (
-        <Flex ref={ref} w="100%" h={height} style={{ overflow: "hidden" }}>
+        <Flex ref={ref} w="100%" h={height} style={{ overflow: "hidden", marginBottom: "0px" }}>
             <Box h="100%" style={{
                 width: theather ? position : "100%",
                 transition: (animate && (isOpening || isClosing)) ? "0.5s" : undefined,
@@ -90,6 +91,17 @@ const WatchPageLayout = ({
                 }}>
                 <TabsRenderer />
             </Box>
+            {/* <Spectrum
+                style={{
+                    position: "absolute",
+                    width: "100vw",
+                    height: "1em",
+                    bottom: "0px",
+                    overflow: "clip",
+                    zIndex: "1000",
+                    pointerEvents: "none",
+                }}
+            /> */}
         </Flex>
     );
 };

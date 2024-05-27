@@ -9,7 +9,7 @@ import { ToggleSidebarButton } from "../../tabs/links/ToggleSidebarButton";
 import { FullscreenButton } from "../controls/FullscreenButton";
 import { useIsMobile } from "../../../hooks/useIsMobile";
 
-export const LayoutBottom = (props: StackProps) => {
+export const PlayerLayoutBottom = (props: StackProps) => {
     const isMobile = useIsMobile();
 
     let gap = isMobile ? "5px" : "xs";

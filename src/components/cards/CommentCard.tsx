@@ -1,9 +1,9 @@
-import { ActionIcon, Box, CopyButton, Grid, Group, Paper, Stack, Tooltip } from "@mantine/core";
+import { ActionIcon, Box, Button, CopyButton, Grid, Group, Paper, Stack, Tooltip } from "@mantine/core";
 import { Comment } from "../../api/types/comment";
 import { MarkdownText } from "../ui/MarkdownText";
 import { ChannelCard } from "./ChannelCard";
 import { VotingCard } from "./VotingCard";
-import { IconCopy, IconPencil, IconPinned, IconTableImport, IconTableOff } from "@tabler/icons-react";
+import { IconArrowDown, IconCopy, IconPencil, IconPinned, IconTableImport, IconTableOff } from "@tabler/icons-react";
 import { parseChapters } from "../../utils/parseChapters";
 import { useContext } from "react";
 import { VideoPlayerContext } from "../../api/player/VideoPlayerContext";
@@ -54,10 +54,19 @@ export const CommentCard = ({
                     />
                 </Box>
                 <Group justify="space-between">
-                    <Group>
+                    <Group gap="xs">
                         <VotingCard
                             {...comment}
                         />
+                        {comment.replyKey && (
+                            <Button
+                                variant="subtle"
+                                size="compact-md"
+                                leftSection={<IconArrowDown />}
+                            >
+                                {comment.replyCount} replies
+                            </Button>
+                        )}
                     </Group>
                     <Group>
                         {hasChapters && (

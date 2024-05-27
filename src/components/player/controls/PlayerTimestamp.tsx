@@ -1,13 +1,16 @@
 import { useContext, useState } from "react";
 import { VideoPlayerContext } from "../../../api/player/VideoPlayerContext";
 import { useVideoEventListener } from "../../../hooks/useVideoEventListener";
-import { CopyButton, Group, Text, Tooltip } from "@mantine/core";
+import { Button, CopyButton, Group, Text, Tooltip } from "@mantine/core";
 import { secondsToTimestamp } from "../../../utils/timestamp";
 import { useIsMobile } from "../../../hooks/useIsMobile";
 import { useDisclosure } from "@mantine/hooks";
+import { IconArrowRight } from "@tabler/icons-react";
+import { TabsContext } from "../../tabs/TabsContext";
 
 export const PlayerTimestamp = () => {
     const { videoElement, activeChapters } = useContext(VideoPlayerContext);
+    const { setTabsVisible, setCurrentTab } = useContext(TabsContext);
     const [showRemaining, { toggle: toggleRemaining }] = useDisclosure(false);
     const [progress, setProgress] = useState(0);
     
@@ -60,9 +63,18 @@ export const PlayerTimestamp = () => {
                 ))} {showRemaining && "rem."}
             </Text>
             {currentChapter && (
-                <Text fz={fz}>
+                <Button
+                    variant="subtle"
+                    color="var(--mantine-color-text)"
+                    size={"compact-"+fz}
+                    rightSection={<IconArrowRight />}
+                    onClick={() => {
+                        setTabsVisible(true);
+                        setCurrentTab("chapters");
+                    }}
+                >
                     {currentChapter.label}
-                </Text>
+                </Button>
             )}
         </Group>
     );

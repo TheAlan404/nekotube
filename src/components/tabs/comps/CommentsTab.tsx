@@ -67,7 +67,7 @@ export const CommentsTab = () => {
                 {!isLoading && (
                     <Button
                         variant="light"
-                        color="violet"
+                        
                         onClick={() => fetchComments(true)}
                     >
                         moar comments pwease uwu

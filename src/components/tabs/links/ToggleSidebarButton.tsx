@@ -10,7 +10,7 @@ export const ToggleSidebarButton = () => {
         <Tooltip label={isTabsVisible ? "Hide sidebar (t)" : "Show sidebar (t)"} positionDependencies={[isTabsVisible]}>
             <ActionIcon
                 variant="light"
-                color="violet"
+                
                 onClick={() => setTabsVisible(!isTabsVisible)}
             >
                 {isTabsVisible ? (

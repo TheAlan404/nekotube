@@ -87,7 +87,6 @@ export const OptionsProvider = ({ children }: React.PropsWithChildren) => {
                         {view !== "main" && (
                             <Button
                                 variant="light"
-                                color="violet"
                                 leftSection={<IconArrowLeft />}
                                 onClick={() => setView("main")}
                                 fullWidth

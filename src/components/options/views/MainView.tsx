@@ -9,6 +9,7 @@ import { DebuggingSection } from "../comps/DebuggingSection";
 import { OpenWithButton } from "../links/OpenWithButton";
 import { LoopVideo } from "../comps/LoopVideo";
 import { ThemeSection } from "../comps/ThemeSection";
+import { FlavorOption } from "../comps/Flavor";
 
 export const OptionsMainView = () => {
     const { videoInfo } = useContext(VideoPlayerContext);
@@ -31,6 +32,7 @@ export const OptionsMainView = () => {
                     {loaded && <LoopVideo />}
                     <Divider w="100%" label="Preferences" labelPosition="left" />
                     <PreferencesList />
+                    <FlavorOption />
                     <Divider w="100%" label="Theme" labelPosition="left" />
                     <ThemeSection />
                     <Divider w="100%" label="Debugging" labelPosition="left" />

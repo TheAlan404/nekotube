@@ -9,7 +9,7 @@ export const useIsMobile = () => {
 export const MobileContext = createContext(false);
 export const MobileProvider = ({ children }: React.PropsWithChildren) => {
     const { breakpoints } = useMantineTheme();
-    let value = useMediaQuery(`(min-width: ${breakpoints.sm})`, true);
+    let value = !useMediaQuery(`(min-width: ${breakpoints.sm})`, true);
 
     return (
         <MobileContext.Provider

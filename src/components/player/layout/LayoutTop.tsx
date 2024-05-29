@@ -13,8 +13,8 @@ export const PlayerLayoutTop = () => {
             p="xs"
             onClick={(e) => e.stopPropagation()}
         >
-            <Grid align="center">
-                <Grid.Col span="content">
+            <Grid align="center" gutter={0}>
+                <Grid.Col span="content" pr={(playState == "loading" || playState == "error") ? "md" : 0}>
                     {playState == "loading" && (
                         <Loader size="sm" />
                     )}

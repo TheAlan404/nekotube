@@ -1,22 +1,51 @@
-import { ActionIcon, Box, Button, CopyButton, Grid, Group, Paper, Stack, Tooltip } from "@mantine/core";
+import { ActionIcon, Box, Button, Collapse, CopyButton, Grid, Group, Loader, Paper, Stack, Tooltip } from "@mantine/core";
 import { Comment } from "../../api/types/comment";
 import { MarkdownText } from "../ui/MarkdownText";
 import { ChannelCard } from "./ChannelCard";
 import { VotingCard } from "./VotingCard";
-import { IconArrowDown, IconCopy, IconPencil, IconPinned, IconTableImport, IconTableOff } from "@tabler/icons-react";
+import { IconArrowDown, IconArrowUp, IconCopy, IconPencil, IconPinned, IconTableImport, IconTableOff } from "@tabler/icons-react";
 import { parseChapters } from "../../utils/parseChapters";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { VideoPlayerContext } from "../../api/player/VideoPlayerContext";
 import { parseFormattedText, textPartsToString } from "../../utils/parseFormattedText";
 import { DateCard } from "./DateCard";
 import { TimestampRegex } from "../../utils/timestamp";
+import { useDisclosure } from "@mantine/hooks";
+import { APIContext } from "../../api/provider/APIController";
 
 export const CommentCard = ({
     comment
 }: {
     comment: Comment,
 }) => {
+    const { api } = useContext(APIContext);
     const { activeChapters, setActiveChapters } = useContext(VideoPlayerContext);
+    const [opened, { toggle }] = useDisclosure(false);
+    const [isLoading, setLoading] = useState(true);
+    const [error, setError] = useState();
+    const [replies, setReplies] = useState<Comment[]>([]);
+
+    const onExpand = async () => {
+        toggle();
+
+        // dont fetch when closing
+        if(opened) return;
+
+        // dont fetch if fetched
+        if(replies.length) return;
+
+        setLoading(true);
+        setError(null);
+        setReplies([]);
+
+        try {
+
+        } catch(e) {
+            setError(e);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const hasChapters = comment.content.match(TimestampRegex)?.length > 1;
     const isChaptersSource = activeChapters.type == "comment" && activeChapters.id == comment.id;
@@ -62,7 +91,8 @@ export const CommentCard = ({
                             <Button
                                 variant="subtle"
                                 size="compact-md"
-                                leftSection={<IconArrowDown />}
+                                leftSection={opened ? <IconArrowUp /> : <IconArrowDown />}
+                                onClick={onExpand}
                             >
                                 {comment.replyCount} replies
                             </Button>
@@ -103,6 +133,9 @@ export const CommentCard = ({
                         </CopyButton>
                     </Group>
                 </Group>
+                <Collapse in={opened}>
+                    {isLoading && <Loader />}
+                </Collapse>
             </Stack>
         </Paper>
     );

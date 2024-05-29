@@ -15,11 +15,11 @@ const ContextStack = () => {
         <APIControllerProvider>
             <PreferencesProvider>
                 <VideoPlayerProvider>
-                    <OptionsProvider>
-                        <TabsProvider>
+                    <TabsProvider>
+                        <OptionsProvider>
                             <Root />
-                        </TabsProvider>
-                    </OptionsProvider>
+                        </OptionsProvider>
+                    </TabsProvider>
                 </VideoPlayerProvider>
             </PreferencesProvider>
         </APIControllerProvider>

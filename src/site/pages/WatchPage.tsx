@@ -11,6 +11,7 @@ import { useIsMobile } from "../../hooks/useIsMobile";
 import { LayoutDesktopVideo } from "../layouts/LayoutDesktopVideo";
 import { LayoutMobileVideo } from "../layouts/LayoutMobileVideo";
 import { UIFlavor } from "../../components/tabs/TabTypes";
+import { LayoutDesktopMusic } from "../layouts/LayoutDesktopMusic";
 
 export const WatchPage = () => {
     const { flavor } = useContext(TabsContext);
@@ -20,6 +21,7 @@ export const WatchPage = () => {
         ({
             "d:video": <LayoutDesktopVideo />,
             "m:video": <LayoutMobileVideo />,
+            "d:music": <LayoutDesktopMusic />,
         } as Record<`${"m" | "d"}:${UIFlavor}`, React.ReactNode>)[`${isMobile ? "m" : "d"}:${flavor}`]
     );
 };

@@ -91,17 +91,17 @@ const LayoutInner = ({
                 }}>
                 <TabsRenderer />
             </Box>
-            {/* <Spectrum
+            {false && <Spectrum
                 style={{
                     position: "absolute",
                     width: "100vw",
-                    height: "1em",
+                    height: "5em",
                     bottom: "0px",
                     overflow: "clip",
                     zIndex: "1000",
                     pointerEvents: "none",
                 }}
-            /> */}
+            />}
         </Flex>
     );
 };

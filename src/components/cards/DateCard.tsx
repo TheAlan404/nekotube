@@ -35,7 +35,7 @@ export const DateCard = ({
 
     return (
         <Tooltip label={date.toString()}>
-            <Text c="dimmed">
+            <Text fz="sm" c="dimmed">
                 {text}
             </Text>
         </Tooltip>

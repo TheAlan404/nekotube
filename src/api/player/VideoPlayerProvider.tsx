@@ -9,6 +9,7 @@ import { clamp } from "@mantine/hooks";
 import { PreferencesContext } from "../pref/Preferences";
 import { ActiveChapterList } from "../types/chapter";
 import { useNavigate } from "react-router-dom";
+import { ActivePlaylist } from "../types/playlist";
 
 export const VideoPlayerProvider = ({
     children
@@ -37,6 +38,7 @@ export const VideoPlayerProvider = ({
         type: "video",
         chapters: [],
     });
+    const [activePlaylist, setActivePlaylist] = useState<ActivePlaylist | null>(null);
     const [activeFormat, setActiveFormat] = useState<VideoFormat | null>(null);
     const [availableFormats, setAvailableFormats] = useState<VideoFormat[]>([]);
     const [playState, setPlayState] = useState<PlayState>("loading");
@@ -286,6 +288,8 @@ export const VideoPlayerProvider = ({
                 clearTimeout(autoplayRef.current);
                 setAutoplayDate(null);
             },
+
+            activePlaylist,
         }}>
             {children}
         </VideoPlayerContext.Provider>

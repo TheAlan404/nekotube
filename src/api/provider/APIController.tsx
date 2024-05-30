@@ -1,15 +1,22 @@
 import { createContext, useEffect, useMemo, useState } from "react";
 import { Instance } from "../types/instances";
 import { APIProvider } from "../types/api";
-import { LTAPIProvider } from "../platforms/lt/lighttube";
+import { LTAPIProvider } from "../platforms/ltv2/lighttube";
 import { fetchInvidiousPublicInstances, fetchLightTubePublicInstances, fetchPoketubePublicInstances } from "../platforms/public";
 import { InvidiousAPIProvider } from "../platforms/invid/invidious";
 import { useLocalStorage } from "@mantine/hooks";
 import { DislikeAPI } from "../platforms/ryd/dislikeapi";
 import { SponsorBlockAPI } from "../platforms/sponsorblock/sponsorblock";
+import { LTAPIProviderV3 } from "../platforms/ltv3/lighttube";
 
 const CUSTOM_INSTANCES: Instance[] = [
-    
+    {
+        type: "lighttube",
+        name: "LT nightly",
+        url: "https://tube-nightly.kuylar.dev",
+        version: "3",
+        supportsProxy: true,
+    }
 ];
 
 const DEFAULT_INSTANCE: Instance = {
@@ -90,7 +97,11 @@ export const APIControllerProvider = ({ children }: React.PropsWithChildren) => 
 
     const api = useMemo(() => {
         if(currentInstance.type == "lighttube") {
-            return new LTAPIProvider(currentInstance);
+            if(currentInstance.version == "3") {
+                return new LTAPIProviderV3(currentInstance);
+            } else {
+                return new LTAPIProvider(currentInstance);
+            }
         } else if (currentInstance.type == "invidious") {
             return new InvidiousAPIProvider(currentInstance);
         } else {

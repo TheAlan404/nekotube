@@ -7,6 +7,7 @@ export interface VideoFormat {
     
     itag: string;
     url: string;
+    qualityLabel?: string;
     mimeType: string;
     bitrate: number;
     fps: number;

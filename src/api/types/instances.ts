@@ -8,6 +8,7 @@ export interface BaseInstance {
 
 export interface LTInstance extends BaseInstance {
     type: "lighttube";
+    version?: "2" | "3";
 };
 
 export interface InvidiousInstance extends BaseInstance {

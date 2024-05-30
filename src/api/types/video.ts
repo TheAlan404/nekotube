@@ -1,4 +1,4 @@
-import { Channel } from "./Channel";
+import { Channel } from "./channel";
 import { Chapter } from "./chapter";
 import { VideoFormat } from "./format";
 

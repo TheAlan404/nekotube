@@ -13,6 +13,8 @@ export const Spectrum = (props: BoxProps) => {
     const audioContextRef = useRef<AudioContext>();
     const analyserRef = useRef<AnalyserNode>();
 
+    const spacing = "linear" as "linear" | "logarithmic";
+
     useEffect(() => {
         (async () => {
             if(audioContextRef.current) {
@@ -24,6 +26,7 @@ export const Spectrum = (props: BoxProps) => {
             let analyser = audioContextRef.current.createAnalyser();
     
             analyser.fftSize = 2048 * 2;
+            analyser.smoothingTimeConstant = 0.1;
     
             source.connect(analyser);
             source.connect(audioContextRef.current.destination);
@@ -33,8 +36,10 @@ export const Spectrum = (props: BoxProps) => {
     }, [videoElement]);
 
     const bufferLength = analyserRef.current?.frequencyBinCount || 0;
-    const dataArray = new Uint8Array(bufferLength);
+    let dataArray = new Uint8Array(bufferLength);
+    let peaks = [];
     let gradientOffset = 0;
+    const historyLength = 1000;
 
     const ref = useCanvas((ctx, dt) => {
         if(!analyserRef.current) return;
@@ -61,13 +66,35 @@ export const Spectrum = (props: BoxProps) => {
         ctx.beginPath();
         ctx.moveTo(0, ctx.canvas.height);
 
-        let scale = (Math.log(bufferLength) / ctx.canvas.width);
-        for (let i = 1; i < bufferLength; i++) {
-            let x = Math.log(i) / scale;
-            const v = dataArray[i] / 256;
-            const y = v * v * v* (ctx.canvas.height);
+        let max = 0;
+        for(let v of dataArray) {
+            if(max < v) max = v;
+        }
 
-            ctx.lineTo(x, ctx.canvas.height - y);
+        peaks.push(max);
+        if(peaks.length > historyLength) peaks = peaks.slice(historyLength);
+
+        let ratio = Math.max(...peaks);
+        let pow = 5;
+
+        if(spacing == "logarithmic") {
+            let scale = (Math.log(bufferLength) / ctx.canvas.width);
+            for (let i = 1; i < bufferLength; i++) {
+                let x = Math.log(i) / scale;
+                const v = dataArray[i] / ratio;
+                const y = Math.pow(v, pow) * (ctx.canvas.height);
+    
+                ctx.lineTo(x, ctx.canvas.height - y);
+            }
+        } else {
+            let w = bufferLength / ctx.canvas.width;
+            for (let i = 1; i < bufferLength; i++) {
+                let x = i*w;
+                const v = dataArray[i] / ratio;
+                const y = Math.pow(v, pow) * (ctx.canvas.height);
+    
+                ctx.lineTo(x, ctx.canvas.height - y);
+            }
         }
 
         ctx.lineTo(ctx.canvas.width, ctx.canvas.height);

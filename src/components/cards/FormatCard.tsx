@@ -26,16 +26,18 @@ export const FormatCard = ({
                 <Grid.Col span="auto">
                     <Stack align="start" gap={0}>
                         <Group w="100%" justify="space-between">
-                            <Code>
-                                {format.id}
-                            </Code>
+                            <Group>
+                                <Code>
+                                    {format.id}
+                                </Code>
+                                <Text>
+                                    {format.qualityLabel || format.mimeType.split(";")[0]}
+                                </Text>
+                            </Group>
                             <Code>
                                 {format.itag}
                             </Code>
                         </Group>
-                        <Text>
-                            {format.mimeType}
-                        </Text>
                     </Stack>
                 </Grid.Col>
             </Grid>

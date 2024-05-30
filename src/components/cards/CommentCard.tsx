@@ -85,7 +85,7 @@ export const CommentCard = ({
                     <ChannelCard
                         channel={comment.channel}
                     />
-                    <Group>
+                    <Group wrap="nowrap">
                         <DateCard
                             date={comment.published}
                         />
@@ -165,7 +165,7 @@ export const CommentCard = ({
                     )}
                     {error && <ErrorMessage error={error} />}
                     {!!replies.length && (
-                        <Stack pl="md">
+                        <Stack gap="xs">
                             {replies.map((reply, i) => (
                                 <CommentCard
                                     comment={reply}

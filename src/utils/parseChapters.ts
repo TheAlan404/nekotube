@@ -8,7 +8,7 @@ export const parseChapters = (description: string): Chapter[] => {
     let chapters: Chapter[] = [];
 
     let group = "";
-    let time = null;
+    let time: number | null = null;
     let label = "";
     const flush = () => {
         if(time === null && label) {
@@ -35,7 +35,7 @@ export const parseChapters = (description: string): Chapter[] => {
         if(part.type == "link") label += part.href;
 
         if(part.type == "timestamp") {
-            time = part.time;
+            if(time === null) time = part.time;
         }
     }
 

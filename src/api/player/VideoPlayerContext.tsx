@@ -2,6 +2,7 @@ import { createContext } from "react";
 import { VideoData } from "../types/video";
 import { VideoFormat } from "../types/format";
 import { ActiveChapterList, Chapter } from "../types/chapter";
+import { ActivePlaylist } from "../types/playlist";
 
 export type PlayState = "loading" | "playing" | "paused" | "error";
 
@@ -33,6 +34,8 @@ export interface VideoPlayerAPI {
 
     autoplayDate: Date | null;
     cancelAutoplay: () => void;
+
+    activePlaylist: ActivePlaylist;
 };
 
 // @ts-ignore

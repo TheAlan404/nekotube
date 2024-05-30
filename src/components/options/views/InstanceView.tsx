@@ -136,6 +136,24 @@ export const OptionsInstanceView = () => {
                                         url: e.currentTarget.value,
                                     })}
                                 />
+                                {currentInstance.type == "lighttube" && (
+                                    <Group justify="space-between">
+                                        <Text>
+                                            LightTube Version
+                                        </Text>
+                                        <SegmentedControl
+                                            data={[
+                                                "2",
+                                                "3"
+                                            ]}
+                                            value={currentInstance.version || "2"}
+                                            onChange={(version: "2" | "3") => setInstance({
+                                                ...currentInstance,
+                                                version,
+                                            })}
+                                        />
+                                    </Group>
+                                )}
                             </Stack>
                         </Stack>
                     </Tabs.Panel>

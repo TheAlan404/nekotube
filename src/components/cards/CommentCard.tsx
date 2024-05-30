@@ -12,6 +12,7 @@ import { DateCard } from "./DateCard";
 import { TimestampRegex } from "../../utils/timestamp";
 import { useDisclosure } from "@mantine/hooks";
 import { APIContext } from "../../api/provider/APIController";
+import { ErrorMessage } from "../ui/ErrorMessage";
 
 export const CommentCard = ({
     comment
@@ -19,11 +20,19 @@ export const CommentCard = ({
     comment: Comment,
 }) => {
     const { api } = useContext(APIContext);
-    const { activeChapters, setActiveChapters } = useContext(VideoPlayerContext);
+    const { activeChapters, setActiveChapters, videoID } = useContext(VideoPlayerContext);
     const [opened, { toggle }] = useDisclosure(false);
     const [isLoading, setLoading] = useState(true);
     const [error, setError] = useState();
     const [replies, setReplies] = useState<Comment[]>([]);
+    const [repliesContinuation, setRepliesContinuation] = useState<string | null>(null);
+
+    const fetchReplies = async () => {
+        let replies = await api.getComments(videoID, comment.replyKey);
+        console.log(replies);
+        setReplies(replies.results);
+        setRepliesContinuation(replies.key);
+    }
 
     const onExpand = async () => {
         toggle();
@@ -36,16 +45,31 @@ export const CommentCard = ({
 
         setLoading(true);
         setError(null);
-        setReplies([]);
 
         try {
-
+            await fetchReplies();
         } catch(e) {
             setError(e);
         } finally {
             setLoading(false);
         }
     };
+
+    const fetchMore = async () => {
+        setLoading(true);
+        setError(null);
+
+        try {
+            let replies = await api.getComments(videoID, repliesContinuation);
+            console.log(replies);
+            setReplies(r => [...r, ...replies.results]);
+            setRepliesContinuation(replies.key);
+        } catch(e) {
+            setError(e);
+        } finally  {
+            setLoading(false);
+        }
+    }
 
     const hasChapters = comment.content.match(TimestampRegex)?.length > 1;
     const isChaptersSource = activeChapters.type == "comment" && activeChapters.id == comment.id;
@@ -56,7 +80,7 @@ export const CommentCard = ({
             shadow="md"
             p="xs"
         >
-            <Stack>
+            <Stack gap="xs">
                 <Group justify="space-between">
                     <ChannelCard
                         channel={comment.channel}
@@ -94,7 +118,7 @@ export const CommentCard = ({
                                 leftSection={opened ? <IconArrowUp /> : <IconArrowDown />}
                                 onClick={onExpand}
                             >
-                                {comment.replyCount} replies
+                                {comment.replyCount}
                             </Button>
                         )}
                     </Group>
@@ -134,7 +158,31 @@ export const CommentCard = ({
                     </Group>
                 </Group>
                 <Collapse in={opened}>
-                    {isLoading && <Loader />}
+                    {isLoading && !replies.length && (
+                        <Stack w="100%" align="center">
+                            <Loader />
+                        </Stack>
+                    )}
+                    {error && <ErrorMessage error={error} />}
+                    {!!replies.length && (
+                        <Stack pl="md">
+                            {replies.map((reply, i) => (
+                                <CommentCard
+                                    comment={reply}
+                                />
+                            ))}
+                            {repliesContinuation && (
+                                <Button
+                                    variant="subtle"
+                                    size="compact-md"
+                                    onClick={fetchMore}
+                                    loading={isLoading}
+                                >
+                                    Show More
+                                </Button>
+                            )}
+                        </Stack>
+                    )}
                 </Collapse>
             </Stack>
         </Paper>

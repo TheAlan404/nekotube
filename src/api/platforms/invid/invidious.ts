@@ -145,8 +145,11 @@ export class InvidiousAPIProvider implements APIProvider {
         } as VideoData;
     };
 
-    async getComments(id: string, key?: string) {
-        let data: InvidiousCommentsResponse = await this.request(`comments/${id}`, { query: { continuation: key } });
+    async getComments(id: string, key?: string, isReplies?: boolean) {
+        let data: InvidiousCommentsResponse = await this.request(`comments/${id}`, { query: {
+            continuation: key,
+            action: isReplies ? "action_get_comment_replies" : undefined,
+        } });
 
         return {
             key: data.continuation,

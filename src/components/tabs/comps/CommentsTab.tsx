@@ -64,13 +64,13 @@ export const CommentsTab = () => {
                     error={error}
                     retry={() => fetchComments(!!comments.length)}
                 />
-                {!isLoading && (
+                {continuationKey && (
                     <Button
                         variant="light"
-                        
+                        loading={isLoading}
                         onClick={() => fetchComments(true)}
                     >
-                        moar comments pwease uwu
+                        Show More
                     </Button>
                 )}
                 {isLoading && (

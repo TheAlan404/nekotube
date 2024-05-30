@@ -10,5 +10,5 @@ export interface APIProvider {
     searchSuggestions: (query: string, abort?: AbortSignal) => Promise<SearchSuggestions>;
     search: (query: string, key?: string) => Promise<WithContinuation<Renderer>>;
     getVideoInfo: (id: string) => Promise<VideoData>;
-    getComments: (id: string, key?: string) => Promise<WithContinuation<Comment>>;
+    getComments: (id: string, key?: string, isReplies?: boolean) => Promise<WithContinuation<Comment>>;
 };

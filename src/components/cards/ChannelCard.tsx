@@ -9,21 +9,17 @@ export const ChannelCard = ({
     channel: Channel,
 }) => {
     return (
-        <Grid align="center" gutter="xs" style={{ flexWrap: "nowrap" }}>
-            <Grid.Col span="content">
-                <Avatar
-                    src={(channel.thumbnails || [])[(channel.thumbnails || []).length]?.url || ``}
-                    imageProps={{ loading: "lazy" }}
-                    size="sm"
-                >
-                    {getInitials(channel.title)}
-                </Avatar>
-            </Grid.Col>
-            <Grid.Col span="auto">
-                <TextWithTooltip lineClamp={1} fz="sm">
-                    {channel?.title}
-                </TextWithTooltip>
-            </Grid.Col>
-        </Grid>
+        <Group align="center" gap="xs" wrap="nowrap">
+            <Avatar
+                src={(channel.thumbnails || [])[(channel.thumbnails || []).length]?.url || ``}
+                imageProps={{ loading: "lazy" }}
+                size="sm"
+            >
+                {getInitials(channel.title)}
+            </Avatar>
+            <TextWithTooltip lineClamp={1} fz="sm">
+                {channel?.title}
+            </TextWithTooltip>
+        </Group>
     );
 };

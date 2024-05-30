@@ -89,7 +89,7 @@ const LayoutInner = ({
                     marginLeft: "auto",
                     transition: (animate && (isOpening || isClosing)) ? "0.5s" : undefined,
                 }}>
-                <TabsRenderer />
+                <TabsRenderer panelHeight="calc(100vh - var(--app-shell-header-height) - calc(var(--app-shell-padding) * 2) - 3em)" />
             </Box>
             {false && <Spectrum
                 style={{

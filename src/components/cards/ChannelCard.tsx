@@ -9,7 +9,7 @@ export const ChannelCard = ({
     channel: Channel,
 }) => {
     let thumbnails = channel.thumbnails || [];
-    let thumbnail = thumbnails[thumbnails.length-1];
+    let thumbnail = thumbnails[thumbnails.length-1] || thumbnails[0];
 
     return (
         <Group align="center" gap="xs" wrap="nowrap">

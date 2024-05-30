@@ -1,5 +1,5 @@
-import { Box, Loader, Stack, Tabs, Tooltip } from "@mantine/core";
-import React, { useContext } from "react";
+import { Box, Loader, MantineStyleProp, Stack, Tabs, Tooltip } from "@mantine/core";
+import React, { ReactNode, useContext } from "react";
 import { TabsContext } from "./TabsContext";
 import { TabType } from "./TabTypes";
 import { RecommendedTab } from "./comps/RecommendedTab";
@@ -11,16 +11,18 @@ import { clamp, useHotkeys } from "@mantine/hooks";
 
 export const TabsRenderer = ({
     isMobile,
+    fullWidth,
+    exclude,
+    panelHeight,
+    tabsListStyles,
 }: {
     isMobile?: boolean;
+    fullWidth?: boolean;
+    exclude?: TabType[];
+    panelHeight?: string;
+    tabsListStyles?: MantineStyleProp;
 }) => {
     const { currentTab, setCurrentTab, availableTabs } = useContext(TabsContext);
-
-    const height = isMobile ? (
-        `100%`
-    ) : (
-        `calc(100vh - var(--app-shell-header-height) - calc(var(--app-shell-padding) * 2) - 3em)`
-    );
 
     useHotkeys([
         ["z", () => setCurrentTab(availableTabs[availableTabs.indexOf(currentTab) - 1] || availableTabs[availableTabs.length - 1])],
@@ -37,13 +39,13 @@ export const TabsRenderer = ({
                 
                 styles={{
                     root: {
-                        height: "100%",
+                        //height: "100%",
                         display: "flex",
                         flexDirection: "column",
                     },
                     panel: {
                         flexGrow: 1,
-                        height,
+                        height: panelHeight,
                         width: "100%",
                     },
                 }}
@@ -53,7 +55,7 @@ export const TabsRenderer = ({
                     recommended: <RecommendedTab />,
                     comments: <CommentsTab />,
                     chapters: <ChaptersTab />,
-                } as Record<TabType, React.ReactNode>).map(([type, el], i) => (
+                } as Record<TabType, React.ReactNode>).filter(([type]: [TabType, ReactNode]) => !(exclude || []).includes(type)).map(([type, el], i) => (
                     <Tabs.Panel
                         value={type}
                         key={i}
@@ -66,13 +68,7 @@ export const TabsRenderer = ({
                     </Tabs.Panel>
                 ))}
 
-                <Tabs.List grow style={isMobile ? {
-                    position: "absolute",
-                    bottom: "0px",
-                    width: "100%",
-                    backgroundColor: "var(--mantine-color-dark-filled)",
-                    zIndex: "300",
-                } : {}}>
+                <Tabs.List grow style={tabsListStyles}>
                     <Tooltip.Group>
                         {([
                             {

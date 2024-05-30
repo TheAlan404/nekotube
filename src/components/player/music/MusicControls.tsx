@@ -5,12 +5,29 @@ import { PlayerTimestamp } from "../controls/PlayerTimestamp"
 import { ProgressBar } from "../bar/ProgressBar"
 import { LoopButton } from "../controls/LoopButton"
 import { PlayerLayoutTop } from "../layout/LayoutTop"
+import { useContext } from "react"
+import { VideoPlayerContext } from "../../../api/player/VideoPlayerContext"
+import { ErrorMessage } from "../../ui/ErrorMessage"
 
 export const MusicControls = () => {
+    const { error, playState, videoInfo, fetchVideoInfo, videoElement } = useContext(VideoPlayerContext);
+
     return (
         <Paper withBorder p="sm" bg="dark">
             <Stack>
-                <PlayerLayoutTop />
+                {playState == "error" ? (
+                    <Stack w="100%" bg="dark" py="md">
+                        <ErrorMessage
+                            error={error}
+                            retry={videoInfo ? (() => {
+                                let t = videoElement.currentTime;
+                                videoElement.load();
+                                videoElement.play();
+                                videoElement.currentTime = t;
+                            }) : fetchVideoInfo}
+                        />
+                    </Stack>
+                ) : <PlayerLayoutTop />}
                 <ProgressBar />
                 <Group justify="space-between">
                     <Group>

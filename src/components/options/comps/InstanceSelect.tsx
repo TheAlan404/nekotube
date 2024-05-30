@@ -20,7 +20,7 @@ export const InstanceSelect = () => {
                 variant="subtle"
                 onClick={() => setView("instanceSelect")}
             >
-                <Grid align="center" m="sm">
+                <Grid align="center" mx="sm">
                     <Grid.Col span="auto">
                         <InstanceCard
                             instance={currentInstance}

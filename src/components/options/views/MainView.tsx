@@ -20,10 +20,8 @@ export const OptionsMainView = () => {
         <Grid w="100%">
             <Grid.Col span="auto">
                 <Stack align="center" w="100%">
-                    <Divider w="100%" label="Instance" labelPosition="left" />
-                    <InstanceSelect />
-                    <OpenWithButton fullWidth />
                     <Divider w="100%" label="Video" labelPosition="left" />
+                    <OpenWithButton fullWidth />
                     {!loaded && (
                         <Text>Video not loaded</Text>
                     )}
@@ -32,9 +30,12 @@ export const OptionsMainView = () => {
                     {loaded && <LoopVideo />}
                     <Divider w="100%" label="Preferences" labelPosition="left" />
                     <PreferencesList />
+                    <Divider w="100%" label="UI Flavor" labelPosition="left" />
                     <FlavorOption />
                     <Divider w="100%" label="Theme" labelPosition="left" />
                     <ThemeSection />
+                    <Divider w="100%" label="Instance" labelPosition="left" />
+                    <InstanceSelect />
                     <Divider w="100%" label="Debugging" labelPosition="left" />
                     <DebuggingSection />
                     <Space h="20vh" />

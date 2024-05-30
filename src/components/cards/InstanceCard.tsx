@@ -23,7 +23,7 @@ export const InstanceCard = ({
     const fav = favourited.some(x => x.url == instance.url);
 
     return (
-        <Paper w="100%" withBorder p="xs" bg={isSelected ? "dark.6" : undefined} style={{
+        <Paper w="100%" withBorder p={4} bg={isSelected ? "dark.6" : undefined} style={{
             cursor: "pointer",
         }} onClick={onClick}>
             <Grid>

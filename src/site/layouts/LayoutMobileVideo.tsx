@@ -53,7 +53,18 @@ const LayoutInner = ({
                     overflow: "hidden",
                     height: `calc(100% - ${height - 200}px)`,
                 }}>
-                <TabsRenderer isMobile />
+                <TabsRenderer
+                    isMobile
+                    fullWidth
+                    panelHeight="100%"
+                    tabsListStyles={{
+                        position: "absolute",
+                        bottom: "0px",
+                        width: "100%",
+                        backgroundColor: "var(--mantine-color-dark-filled)",
+                        zIndex: "300",
+                    }}
+                />
             </Box>
         </Stack>
     );

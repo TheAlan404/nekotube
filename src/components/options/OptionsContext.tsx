@@ -5,7 +5,7 @@ import { Button, Drawer, Group, ScrollArea, Text } from "@mantine/core";
 import { OptionsRouter } from "./OptionsRouter";
 import { IconArrowLeft } from "@tabler/icons-react";
 
-export type OptionsView = "main" | "instanceSelect" | "openWith" | "formatSelect";
+export type OptionsView = "main" | "instanceSelect" | "openWith" | "formatSelect" | "history";
 
 export interface OptionsContextAPI {
     opened: boolean;
@@ -56,6 +56,10 @@ export const OptionsProvider = ({ children }: React.PropsWithChildren) => {
 
     useHotkeys([
         ["Ctrl + o", () => toggle()],
+        ["Ctrl + h", () => {
+            open();
+            setView("history");
+        }],
     ], [], true);
 
     return (
@@ -101,6 +105,7 @@ export const OptionsProvider = ({ children }: React.PropsWithChildren) => {
                                 formatSelect: "Select Format",
                                 instanceSelect: "Select Instance",
                                 openWith: "Open with...",
+                                history: "History",
                             } as Record<OptionsView, string>)[view]}
                         </Text>
                     </Group>

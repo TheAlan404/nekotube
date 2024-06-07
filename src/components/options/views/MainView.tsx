@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import { VideoPlayerContext } from "../../../api/player/VideoPlayerContext";
-import { Divider, Grid, Space, Stack, Text } from "@mantine/core";
+import { Button, Divider, Grid, Space, Stack, Text } from "@mantine/core";
 import { InstanceSelect } from "../comps/InstanceSelect";
 import { FormatSelect } from "../comps/FormatSelect";
 import { PlaybackSpeed } from "../comps/PlaybackSpeed";
@@ -10,9 +10,12 @@ import { OpenWithButton } from "../links/OpenWithButton";
 import { LoopVideo } from "../comps/LoopVideo";
 import { ThemeSection } from "../comps/ThemeSection";
 import { FlavorOption } from "../comps/Flavor";
+import { OptionsContext } from "../OptionsContext";
+import { IconClock } from "@tabler/icons-react";
 
 export const OptionsMainView = () => {
     const { videoInfo } = useContext(VideoPlayerContext);
+    const { setView } = useContext(OptionsContext);
 
     const loaded = !!videoInfo;
 
@@ -34,6 +37,15 @@ export const OptionsMainView = () => {
                     <FlavorOption />
                     <Divider w="100%" label="Theme" labelPosition="left" />
                     <ThemeSection />
+                    <Divider w="100%" label="History" labelPosition="left" />
+                    <Button
+                        fullWidth
+                        variant="light"
+                        leftSection={<IconClock />}
+                        onClick={() => setView("history")}
+                    >
+                        History
+                    </Button>
                     <Divider w="100%" label="Instance" labelPosition="left" />
                     <InstanceSelect />
                     <Divider w="100%" label="Debugging" labelPosition="left" />

@@ -1,4 +1,4 @@
-import { Grid, Group, Paper, Stack, Text, Title } from "@mantine/core";
+import { Box, Grid, Group, Loader, Paper, Stack, Text, Title } from "@mantine/core";
 import { ThumbnailRender } from "./ThumbnailRender";
 import { VideoInfo } from "../../api/types/video";
 import { Link } from "react-router-dom";
@@ -9,6 +9,46 @@ import { ViewCountCard } from "./ViewCountCard";
 import { useContext, useEffect, useState } from "react";
 import { usePreference } from "../../api/pref/Preferences";
 import { APIContext } from "../../api/provider/APIController";
+
+export const FetchVideoWrapper = ({
+    id,
+    component: Component,
+}: {
+    id: string,
+    component: ({ video }: { video: VideoInfo }) => any,
+}) => {
+    const { api } = useContext(APIContext);
+    const [video, setVideo] = useState<VideoInfo | null>(null);
+
+    useEffect(() => {
+        (async () => {
+            setVideo(await api.getVideoInfo(id));
+        })()
+    }, []);
+
+    return (
+        <Box>
+            {video ? (
+                <Component video={video} />
+            ) : (
+                <Paper
+                    withBorder
+                    p="md"
+                >
+                    <Group>
+                        <Loader />
+                        <Text>
+                            Fetching video
+                        </Text>
+                        <Text fw="bold">
+                            {id}
+                        </Text>
+                    </Group>
+                </Paper>
+            )}
+        </Box>
+    )
+};
 
 export const HorizontalVideoCard = ({
     video: originalVideo,

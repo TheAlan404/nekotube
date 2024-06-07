@@ -8,12 +8,14 @@ import { SearchBar } from "../components/search/SearchBar";
 import { VideoPlayerContext } from "../api/player/VideoPlayerContext";
 import { useDocumentTitle, useFullscreen } from "@mantine/hooks";
 import { TabsContext } from "../components/tabs/TabsContext";
+import { useNekoTubeHistory } from "../api/pref/History";
 
 export const Root = () => {
     const { setVideoID, videoInfo, muted, playState } = useContext(VideoPlayerContext);
     const { isTabsVisible } = useContext(TabsContext);
     const { fullscreen } = useFullscreen();
     const [searchParams] = useSearchParams();
+    const history = useNekoTubeHistory();
     const location = useLocation();
     const { state } = useNavigation();
 
@@ -26,18 +28,22 @@ export const Root = () => {
         }
     }, [isNavigating]);
 
-    const v = searchParams.get("v");
-    useEffect(() => {
-        setVideoID(v);
-    }, [v]);
-
     useDocumentTitle({
-        "/": "Home - NekoTube",
-        "/search": `🔎 ${searchParams.get("q")} - NekoTube`,
+        "/": "Home | NekoTube",
+        "/search": `🔎 ${searchParams.get("q")} | NekoTube`,
         "/watch": videoInfo ? (
-            `${(playState == "paused" ? "⏸︎ " : (muted ? "🔇 " : "")) + videoInfo.title} - NekoTube`
-        ) : "Loading... - NekoTube",
+            `${(playState == "paused" ? "⏸︎ " : (muted ? "🔇 " : "")) + videoInfo.title} | NekoTube`
+        ) : "Loading... | NekoTube",
     }[location?.pathname] || "NekoTube");
+
+    useEffect(() => {
+        console.log("changed")
+        if(location.pathname == "/search") history.add(["s", searchParams.get("q")]);
+        if(location.pathname == "/watch") {
+            history.add(["v", searchParams.get("v")]);
+            setVideoID(searchParams.get("v"));
+        }
+    }, [location.pathname, location.search]);
 
     return (
         <AppShell

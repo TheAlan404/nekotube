@@ -1,24 +1,32 @@
-import { ActionIcon, Box, Button, Combobox, Grid, Group, Loader, Stack, Text, TextInput, useCombobox } from "@mantine/core";
+import { ActionIcon, Box, Button, Combobox, Grid, Group, Loader, Stack, Text, TextInput, Tooltip, useCombobox } from "@mantine/core";
 import { useContext, useEffect, useRef, useState } from "react";
 import { APIContext } from "../../api/provider/APIController";
-import { IconAlertTriangle, IconPencil, IconSearch } from "@tabler/icons-react";
+import { IconAlertTriangle, IconClock, IconPencil, IconSearch } from "@tabler/icons-react";
 import { useLocation, useNavigate, useNavigation, useSearchParams } from "react-router-dom";
 import { useKeyboardSfx } from "../../hooks/useSoundEffect";
 import { useHotkeys } from "@mantine/hooks";
 import { parseSearchShortcut, SearchShortcut, SearchShortcutRenderer, shortcutToLocation } from "./SearchShortcut";
 import { useIsMobile } from "../../hooks/useIsMobile";
 import { highlightSearch } from "../../utils/highlightSearch";
+import { useNekoTubeHistory } from "../../api/pref/History";
+
+interface SearchSuggestion {
+    text: string;
+    type: "api" | "history";
+    index?: number;
+}
 
 export const SearchBar = () => {
     const isMobile = useIsMobile();
     const { api } = useContext(APIContext);
+    const history = useNekoTubeHistory();
     const navigate = useNavigate();
     const location = useLocation();
     const combobox = useCombobox({
         onDropdownClose: () => combobox.resetSelectedOption(),
     });
     const [loading, setLoading] = useState(false);
-    const [suggestions, setSuggestions] = useState<string[]>([]);
+    const [suggestions, setSuggestions] = useState<SearchSuggestion[]>([]);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [value, setValue] = useState((location.pathname == "/search" ? (new URLSearchParams(location.search).get("q") || "") : ""));
     const [pickedSuggestion, setPickedSuggestion] = useState("");
@@ -31,11 +39,11 @@ export const SearchBar = () => {
         ["ctrl + s", () => ref.current.focus()],
     ], [], true);
 
-    const options = (suggestions || []).map((item) => (
-        <Combobox.Option value={item} key={item}>
+    const options = (suggestions || []).map(({ text, type }, i) => (
+        <Combobox.Option value={text} key={i}>
             <Group justify="space-between" wrap="nowrap">
                 <Text>
-                    {highlightSearch(value, item).map(({
+                    {highlightSearch(value, text).map(({
                         text,
                         highlight,
                     }, i) => (
@@ -44,6 +52,21 @@ export const SearchBar = () => {
                         </Text>
                     ))}
                 </Text>
+                {type == "history" && (
+                    <Tooltip label="Click to remove">
+                        <ActionIcon
+                            variant="light"
+                            color="gray"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                history.setHistory(v => v.filter(([t, d]) => t !== "s" && d !== text));
+                                fetchSuggestions(value);
+                            }}
+                        >
+                            <IconClock />
+                        </ActionIcon>
+                    </Tooltip>
+                )}
                 {isMobile && (
                     <ActionIcon
                         variant="light"
@@ -51,8 +74,8 @@ export const SearchBar = () => {
                         onClick={(e) => {
                             e.stopPropagation();
 
-                            setValue(item);
-                            fetchSuggestions(item);
+                            setValue(text);
+                            fetchSuggestions(text);
                         }}
                     >
                         <IconPencil />
@@ -76,8 +99,21 @@ export const SearchBar = () => {
         setLoading(true);
         setErrorMessage(null);
         try {
-            let sugs = await api.searchSuggestions(query, abortController.current.signal);
-            setSuggestions(sugs);
+            let apiSuggestions = (await api.searchSuggestions(query, abortController.current.signal))
+                .map(s => ({ text: s, type: "api" as const }));
+            
+            let historySuggestions = history.history
+                .filter(([t]) => t == "s")
+                .sort(([_, __, a], [___, ____, b]) => a - b)
+                .map(([_, text]) => text)
+                .filter(text => text.toLowerCase().includes(query.toLowerCase()))
+                .map(text => ({ text, type: "history" as const }));
+            
+            setSuggestions([
+                ...historySuggestions,
+                ...apiSuggestions,
+            ]);
+
             abortController.current = null;
             setLoading(false);
         } catch (e) {
@@ -140,7 +176,7 @@ export const SearchBar = () => {
                                 }
                             }}
                             onKeyUp={(e) => {
-                                setPickedSuggestion(suggestions[combobox.getSelectedOptionIndex()])
+                                setPickedSuggestion(suggestions[combobox.getSelectedOptionIndex()]?.text)
                             }}
                             rightSection={loading && <Loader size={18} />}
                         />
@@ -148,7 +184,6 @@ export const SearchBar = () => {
                     <Grid.Col span="content">
                         <ActionIcon
                             variant="light"
-                            
                             size="lg"
                             onClick={() => {
                                 search(value);

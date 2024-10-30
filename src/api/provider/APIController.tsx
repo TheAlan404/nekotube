@@ -83,9 +83,9 @@ export const APIControllerProvider = ({ children }: React.PropsWithChildren) => 
     const refreshAvailableInstances = async () => {
         setIsRefreshing(true);
         setAvailableInstances([
-            ...await fetchLightTubePublicInstances(),
-            ...await fetchInvidiousPublicInstances(),
-            ...await fetchPoketubePublicInstances(),
+            ...(await fetchLightTubePublicInstances().catch(()=>[]) || []),
+            ...(await fetchInvidiousPublicInstances().catch(()=>[]) || []),
+            ...(await fetchPoketubePublicInstances().catch(()=>[]) || []),
             ...CUSTOM_INSTANCES,
         ]);
         setIsRefreshing(false);

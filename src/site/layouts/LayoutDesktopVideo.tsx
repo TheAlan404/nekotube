@@ -91,7 +91,7 @@ const LayoutInner = ({
                 }}>
                 <TabsRenderer panelHeight="calc(100vh - var(--app-shell-header-height) - calc(var(--app-shell-padding) * 2) - 3em)" />
             </Box>
-            {false && <Spectrum
+            {true && <Spectrum
                 style={{
                     position: "absolute",
                     width: "100vw",

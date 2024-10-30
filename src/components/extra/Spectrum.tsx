@@ -4,6 +4,8 @@ import { Box, BoxProps } from "@mantine/core";
 import { useCanvas } from "../../utils/useCanvas";
 import { useContext, useEffect, useMemo, useRef } from "react";
 import { VideoPlayerContext } from "../../api/player/VideoPlayerContext";
+import { BassDetector, createBassDetector } from "./BassDetector";
+import { Particle, store } from "./Particles";
 
 const RAINBOW = [ "#ef5350", "#f48fb1", "#7e57c2", "#2196f3", "#26c6da", "#43a047", "#eeff41", "#f9a825", "#ff5722" ];
 
@@ -12,6 +14,8 @@ export const Spectrum = (props: BoxProps) => {
 
     const audioContextRef = useRef<AudioContext>();
     const analyserRef = useRef<AnalyserNode>();
+    const bassDetectorRef = useRef<BassDetector>();
+    const particleStore = useRef<(Particle & { t: keyof typeof store })[]>([]);
 
     const spacing = "linear" as "linear" | "logarithmic";
 
@@ -32,6 +36,7 @@ export const Spectrum = (props: BoxProps) => {
             source.connect(audioContextRef.current.destination);
     
             analyserRef.current = analyser;
+            bassDetectorRef.current = createBassDetector(analyserRef.current);
         })();
     }, [videoElement]);
 
@@ -41,8 +46,16 @@ export const Spectrum = (props: BoxProps) => {
     let gradientOffset = 0;
     const historyLength = 1000;
 
+    
     const ref = useCanvas((ctx, dt) => {
         if(!analyserRef.current) return;
+        
+        const spawn = (t: keyof typeof store) => {
+            particleStore.current.push({
+                t,
+                ...store[t].generate(ctx),
+            });
+        };
 
         analyserRef.current.getByteFrequencyData(dataArray);
 
@@ -99,6 +112,21 @@ export const Spectrum = (props: BoxProps) => {
 
         ctx.lineTo(ctx.canvas.width, ctx.canvas.height);
         ctx.stroke();
+
+        if(bassDetectorRef.current.isOnBeat()) {
+            spawn("bass");
+        };
+
+        ctx.fillText(`${bassDetectorRef.current.getBPMGuess()?.conservative} BPM
+        ${particleStore.current.length} particles`, 20, ctx.canvas.height);
+
+        for(let p of particleStore.current) {
+            store[p.t].draw(ctx, p);
+        }
+
+        particleStore.current = particleStore.current
+            .map(p => ({ ...store[p.t].move(ctx, p, dt), t: p.t }))
+            .filter(x => x);
     }, [analyserRef.current]);
     
     return (

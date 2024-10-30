@@ -28,7 +28,11 @@ export class InvidiousAPIProvider implements APIProvider {
             signal: opts?.signal,
         });
 
-        return await res.json() as T;
+        let json = await res.json();
+
+        if(json["error"]) throw new Error(json["error"]);
+
+        return json as T;
     }
 
     convertVideoInfo = (d: InvidiousVideo): Renderer => {
